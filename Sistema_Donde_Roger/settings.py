@@ -76,8 +76,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'Donde_Roger_DB',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'ROGER',
+        'PASSWORD': 'donde_roger',
         'HOST': 'localhost',
         'PORT': '5432',  
         
