@@ -1,0 +1,31 @@
+{% extends 'navegacion.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Registrar Producto</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del producto</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+            <div class="mb-3">
+                <label for="unidadMedida" class="form-label">Unidad de medida</label>
+                <input class="form-control" id="unidadMedida" name="unidadMedida" maxlength="20" required></input>
+            </div>
+            <div class="mb-3">
+                <label for="marcaProducto" class="form-label">Marca de producto </label>
+                <input type="text" class="form-control" id="marcaProducto" name="marcaProducto" maxlength="20" required>
+            </div>
+            <div class="mb-3">
+                <label for="descripcionProducto" class="form-label">Descripcion de Producto</label>
+                <input type="text" class="form-control" id="descripcionProducto" name="descripcionProducto" maxlength="200" required>
+            </div>
+             <div class="mb-3">
+                <label for="descripcionProducto" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcionProducto" name="descripcionProducto" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+{% endblock %}
