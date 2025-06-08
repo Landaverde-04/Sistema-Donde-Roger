@@ -10,16 +10,20 @@
                 <input type="text" class="form-control" id="nombre" name="nombre" required>
             </div>
             <div class="mb-3">
-                <label for="descripcion" class="form-label">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                <label for="unidadMedida" class="form-label">Unidad de medida</label>
+                <input class="form-control" id="unidadMedida" name="unidadMedida" maxlength="20" required></input>
             </div>
             <div class="mb-3">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
+                <label for="marcaProducto" class="form-label">Marca de producto </label>
+                <input type="text" class="form-control" id="marcaProducto" name="marcaProducto" maxlength="20" required>
             </div>
             <div class="mb-3">
-                <label for="stock" class="form-label">Stock</label>
-                <input type="number" class="form-control" id="stock" name="stock" required>
+                <label for="descripcionProducto" class="form-label">Descripcion de Producto</label>
+                <input type="text" class="form-control" id="descripcionProducto" name="descripcionProducto" maxlength="200" required>
+            </div>
+             <div class="mb-3">
+                <label for="descripcionProducto" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcionProducto" name="descripcionProducto" rows="3"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
