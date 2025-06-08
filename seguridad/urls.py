@@ -7,4 +7,4 @@ urlpatterns = [
     path('dashboard/', views.dashboard_view, name='dashboard'),
 ]
 
-print("Cargando seguridad.urls...")
+
