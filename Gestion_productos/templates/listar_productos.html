@@ -1,0 +1,43 @@
+{% extends 'navegacion.html' %}
+
+{% block content %}
+
+    <div class="container mt-3">
+        <h2 class="mb-4">Lista de Productos</h2>
+        <div class="mb-4 text-end">
+            <a href="{% url 'registrar_producto' %}" class="btn btn-success">Registrar Nuevo Producto</a>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Unidad de Medida</th>
+                    <th>Marca</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if productos %}
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.idProducto }}</td>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.unidadMedida }}</td>
+                        <td>{{ producto.marcaProducto }}</td>
+                        <td>{{ producto.descripcionProducto }}</td>
+                        <td><a href="{% url 'actualizar_producto' producto.idProducto %}" class="btn btn-primary">Editar</a></td>
+                        <td><a href="{% url 'eliminar_producto' producto.idProducto %}" class="btn btn-danger">Eliminar</a></td>
+                        <td><a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
+                    </tr>
+                {% endfor %}
+                {% else %}
+                    <div class="container mt-4">
+                        <h2>No hay productos registrados.</h2>
+                    </div>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
