@@ -12,6 +12,10 @@ class Proveedor(models.Model):
     emailProveedor = models.EmailField(max_length=50)
     ubicacionProveedor = models.TextField()
     logoURL = models.TextField()
-    
+    estaHabilitadoProveedor = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'Proveedor'
+
     def __str__(self):
         return self.nombreEncargado+ " - "+ self.nombreEmpresa
