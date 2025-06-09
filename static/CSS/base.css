@@ -1,0 +1,15 @@
+.cerrar_sesion{
+    color: white;
+    background-color: rgb(196, 51, 51);
+    border-radius: 8px;
+    padding: 4px 5px;
+    padding-top: 2px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;    
+}
+
+.nav-item1{
+    display: list-item;
+    margin-top: 8px;
+}
