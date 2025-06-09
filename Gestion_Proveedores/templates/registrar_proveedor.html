@@ -1,15 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 {% extends 'navegacion.html' %}
-
+{% load static %}
 {% block content %}
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}">
+
+
     <title>Registro de proveedor</title>
 </head>
 <body>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum quasi officia aut, mollitia, consequuntur magnam iste necessitatibus hic, consectetur quod quos ipsam? Accusamus repellat quisquam ea optio numquam ullam veniam.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Datos del proveedor</legend>             
+        <input type="text" name="nombre_proveedor" placeholder="Nombre" required>        
+        <input type="text" name="apellido_proveedor" placeholder="Apellido" required>        
+        <input type="text" name="dui_proveedor" placeholder="DUI" required><br><br>        
+        <input type="text" name="correo_proveedor" placeholder="Correo electrónico" required>        
+        <input type="text" name="numero_proveedor" placeholder="Numero de teléfono" required>
+        <label>Tiene IVA</label>
+        <input type="checkbox" name="iva_proveedor"><br><br>
+        </fieldset>
+        <fieldset>
+            <legend>Datos de la empresa</legend>
+            <input type="text" name="nombre_empresa" placeholder="Nombre empresa" required>
+            <input type="file" name="foto_empresa"><br><br>
+            <textarea name="direccion_empresa" id="direccion_empresa" placeholder="Dirección de la empresa" rows="2" cols="100"></textarea><br><br>
+            <label>Hora de apertura</label>
+            <input type="time" name="hora_apertura">
+            <label>Hora de cierre</label>
+            <input type="time" name="hora_cierre"><br>
+            <label>Dias:</label><br>
+            <label>Lunes</label>
+            <input type="checkbox" name="check_lunes"><br>
+            <label>Martes</label>
+            <input type="checkbox" name="check_martes"><br>
+            <label>Miercoles</label>
+            <input type="checkbox" name="check_miercoles"><br>
+            <label>Jueves</label>
+            <input type="checkbox" name="check_jueves"><br>
+            <label>Viernes</label>
+            <input type="checkbox" name="check_viernes"><br>
+            <label>Sabado</label>
+            <input type="checkbox" name="check_sabado"><br>
+            <label>Domingo</label>
+            <input type="checkbox" name="check_domingo"><br><br>
+        </fieldset>
+        <button type="submit" class="btn_guardar">Guardar</button>
+    </form>
 </body>
 </html>
 
