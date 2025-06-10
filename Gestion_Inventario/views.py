@@ -26,6 +26,12 @@ def crear_inventario(request):
 
     return render(request, 'crear_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
 
+def crar_detalle_inventario(request):
+    inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first()
+    # if inventario_activo:
+    
+        
+     
 
 
     
