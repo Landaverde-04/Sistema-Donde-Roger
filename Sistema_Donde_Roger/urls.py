@@ -28,6 +28,8 @@ urlpatterns = [
     path('Productos/', include('Gestion_productos.urls')), 
     path('registrar_empleado/', registrar_empleado,name='registrar_empleado'),  
     path('', include('seguridad.urls')),
+    path('inventario/', include('Gestion_Inventario.urls')),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
