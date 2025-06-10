@@ -1,65 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-{% extends 'navegacion.html' %}
-{% load static %}
-{% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}">
-
+  {% extends 'navegacion.html' %} {% load static %} {% block content %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
 
     <title>Registro de proveedor</title>
-</head>
-<body>
+  </head>
+  <body>
     <form class="form_proveedor" method="post">
-        {% csrf_token %}
-        <fieldset>
-            <legend>Datos del proveedor</legend>             
-        <input class="input_normal" type="text" name="nombre_proveedor" placeholder="Nombre" required>        
-        <input class="input_normal" type="text" name="apellido_proveedor" placeholder="Apellido" required>        
-        <input class="input_normal" type="text" name="dui_proveedor" placeholder="DUI" required><br><br>        
-        <input class="input_normal" type="text" name="correo_proveedor" placeholder="Correo electrónico" required>        
-        <input class="input_normal" type="text" name="numero_proveedor" placeholder="Numero de teléfono" required>
+      {% csrf_token %}
+      <fieldset>
+        <legend>Datos del proveedor</legend>
+        <input
+          class="input_normal"
+          type="text"
+          name="nombre_proveedor"
+          placeholder="Nombre"
+          required
+        />
+        <input
+          class="input_normal"
+          type="text"
+          name="apellido_proveedor"
+          placeholder="Apellido"
+          required
+        />
+        <input
+          class="input_normal"
+          type="text"
+          name="dui_proveedor"
+          placeholder="DUI"
+          required
+        /><br /><br />
+        <input
+          class="input_normal"
+          type="text"
+          name="correo_proveedor"
+          placeholder="Correo electrónico"
+          required
+        />
+        <input
+          class="input_normal"
+          type="text"
+          name="numero_proveedor"
+          placeholder="Numero de teléfono"
+          required
+        />
         <label>Tiene IVA</label>
-        <input type="checkbox" name="iva_proveedor"><br><br>
-        
-        
-            <legend>Datos de la empresa</legend>
-            <input class="input_normal" type="text" name="nombre_empresa" placeholder="Nombre empresa" required>
-            <div class="input-group mb-3">
-            <input type="file" class="form-control" id="inputGroupFile02">
-            <label class="input-group-text" for="inputGroupFile02">Upload</label>
+        <input type="checkbox" name="iva_proveedor" /><br /><br />
+        <legend>Datos de la empresa</legend>
+        <div class="container mb-3">
+          <div class="row">
+            <div class="col-4 d-flex justify-content-start">
+              <input
+                class="input_normal"
+                type="text"
+                name="nombre_empresa"
+                placeholder="Nombre empresa"
+                required
+              />
             </div>
-
-            <textarea name="direccion_empresa" id="direccion_empresa" placeholder="Dirección de la empresa" rows="2" cols="100"></textarea><br><br>
-            <label>Hora de apertura</label>
-            <input type="time" name="hora_apertura">
-            <label>Hora de cierre</label>
-            <input type="time" name="hora_cierre"><br>
-            <label>Dias:</label><br>            
-            <input type="checkbox" name="dias" value="1">
-            <label>Lunes</label>            
-            <input type="checkbox" name="dias" value="2">
-            <label>Martes</label>            
-            <input type="checkbox" name="dias" value="3">
-            <label>Miercoles</label>            
-            <input type="checkbox" name="dias" value="4">
-            <label>Jueves</label>            
-            <input type="checkbox" name="dias" value="5">
-            <label>Viernes</label>            
-            <input type="checkbox" name="dias" value="6">
-            <label>Sabado</label>            
-            <input type="checkbox" name="dias" value="7">
-            <label>Domingo</label><br><br>
-            <div class="text-center mt-3">
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <a href="#" class="btn btn-danger">Cancelar</a>
+            <div class="col-8">
+              <input type="file" class="form-control" id="inputGroupFile02" />
             </div>
-        </fieldset>
-        
+          </div>
+        </div>
+        <textarea
+          name="direccion_empresa"
+          id="direccion_empresa"
+          placeholder="Dirección de la empresa"
+          rows="2"
+          cols="100"
+        ></textarea
+        ><br /><br />
+        <label>Hora de apertura</label>
+        <input type="time" name="hora_apertura" />
+        <label>Hora de cierre</label>
+        <input type="time" name="hora_cierre" /><br />
+        <label>Dias:</label><br />
+        <input type="checkbox" name="dias" value="1" />
+        <label>Lunes</label>
+        <input type="checkbox" name="dias" value="2" />
+        <label>Martes</label>
+        <input type="checkbox" name="dias" value="3" />
+        <label>Miercoles</label>
+        <input type="checkbox" name="dias" value="4" />
+        <label>Jueves</label>
+        <input type="checkbox" name="dias" value="5" />
+        <label>Viernes</label>
+        <input type="checkbox" name="dias" value="6" />
+        <label>Sabado</label>
+        <input type="checkbox" name="dias" value="7" />
+        <label>Domingo</label><br /><br />
+        <div class="text-center mt-3">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <a href="#" class="btn btn-danger">Cancelar</a>
+        </div>
+      </fieldset>
     </form>
-</body>
+  </body>
 </html>
 
 {% endblock %}
