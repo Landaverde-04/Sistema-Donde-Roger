@@ -12,6 +12,7 @@ env/
 *.pot
 *.pyc
 db.sqlite3
+migrations/
 
 # VSCode
 .vscode/

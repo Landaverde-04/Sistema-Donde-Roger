@@ -7,7 +7,7 @@ class Inventario(models.Model):
     idUsuario = models.CharField(max_length=4)
     fechaInventario = models.DateField()
     horaInventario = models.TimeField(auto_now_add=True)
-    estadoInventario = models.BooleanField()
+    sePuedeEditar = models.BooleanField(default=True)
     
     class Meta:
         db_table = 'Inventario'
