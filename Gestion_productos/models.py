@@ -10,8 +10,8 @@ class Producto(models.Model):
     marcaProducto = models.CharField(max_length=20)
     descripcionProducto = models.TextField()
 
-    class Meta:
-        db_table = 'Producto'
+    # class Meta:
+    #     db_table = 'Producto'
         
     def __str__(self):
         return self.nombreProducto
