@@ -1,26 +1,36 @@
 fieldset{
     border: 1px solid;
-    border-radius: 5px;            
-    margin: 20px auto;
-    padding: 20px;
+    border-radius: 8px;            
+    margin: 5% auto;
+    padding: 20px;   
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-form{
+.input-group-text{
+
+    padding-right: 0px;
+    margin: 0px;
+}
+
+.form_proveedor{    
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 12px;    
+    width: 100%;
+    justify-content: center;      
+    
 }
 
-legend{
-    
+legend{    
     padding: 0 10px;
     font-weight: bold;
 }
 
-input{
-    border-radius: 7px;
+.input_normal{
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
 }
 
-.btn_guardar{
-    margin:0px 50px ;
-}
+
