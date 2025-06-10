@@ -1,16 +1,22 @@
 fieldset{
     border: 1px solid;
     border-radius: 8px;            
-    margin: 20px auto;
+    margin: 5% auto;
     padding: 20px;   
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.input-group-text{
+
+    padding-right: 0px;
+    margin: 0px;
 }
 
 .form_proveedor{    
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;    
     width: 100%;
     justify-content: center;      
     
