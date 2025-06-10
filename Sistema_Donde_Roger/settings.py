@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'seguridad',
     'Gestion_Proveedores',
     'Gestion_productos',
+    'Gestion_Inventario'
 ]
 
 MIDDLEWARE = [
