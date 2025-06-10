@@ -19,6 +19,8 @@ from django.urls import path, include
 from Gestion_Proveedores.views import registrar_proveedor
 from Gestion_productos.views import registrar_producto
 from empleado.views import registrar_empleado
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
@@ -26,4 +28,7 @@ urlpatterns = [
     path('Productos/', include('Gestion_productos.urls')), 
     path('registrar_empleado/', registrar_empleado,name='registrar_empleado'),  
     path('', include('seguridad.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
+
