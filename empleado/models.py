@@ -14,7 +14,8 @@ class Empleado(models.Model):
     salarioEmpleado = models.DecimalField(max_digits=6, decimal_places=2)
     experienciaLaboral = models.TextField()
     fechaContratacion = models.DateField()
-    contratoEmpleado = models.TextField()
+    contratoEmpleado = models.FileField(upload_to='contratos/')
+
 
     def __str__(self):
         return f"{self.nombresEmpleado} {self.apellidosEmpleado}"
