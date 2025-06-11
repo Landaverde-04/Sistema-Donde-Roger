@@ -46,3 +46,10 @@ def registrar_proveedor(request):
 
     return render(request, 'registrar_proveedor.html')
 
+@login_required
+def listar_proveedor(request):
+
+    proveedores = Proveedor.objects.all()
+
+    return render(request, 'listar_proveedores.html', {'proveedores': proveedores})
+
