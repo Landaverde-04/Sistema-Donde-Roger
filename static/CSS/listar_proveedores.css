@@ -1,0 +1,23 @@
+table{
+    text-align: center;
+}
+.w-5{
+    width: 5%;
+}
+.w-15{
+    width: 15%;
+}
+.w-10{
+    width: 20%;
+}
+.w-7{
+    width: 10%;
+}
+.div-table{
+    border: 1px solid rgba(126, 125, 125, 0.267);
+    margin-top: 2%;
+    
+}
+h2{
+    text-align: center;
+}
