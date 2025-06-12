@@ -15,7 +15,7 @@ def registrar_proveedor(request):
         numero_proveedor = request.POST.get('numero_proveedor')
         nombre_empresa = request.POST.get('nombre_empresa')
         direccion_empresa = request.POST.get('direccion_empresa')
-        iva_proveedor = 'tiene_iva' in request.POST
+        iva_proveedor = 'iva_proveedor' in request.POST
         
         #Seccion de tabla horarios
         hora_apertura = request.POST.get('hora_apertura')
@@ -41,7 +41,7 @@ def registrar_proveedor(request):
             diaSemana = dias_texto
         )
 
-        return redirect('/')
+        return redirect('listar_proveedores')
 
 
     return render(request, 'registrar_proveedor.html')
