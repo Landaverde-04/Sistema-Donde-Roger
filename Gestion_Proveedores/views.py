@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from Gestion_Proveedores.models import Proveedor, HorarioProveedor
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -49,7 +50,11 @@ def registrar_proveedor(request):
 @login_required
 def listar_proveedor(request):
 
-    proveedores = Proveedor.objects.all()
+    proveedores = Proveedor.objects.all().order_by('idProveedor')#objeto de proveedor ordenado por id
+    paginator = Paginator(proveedores, 10) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
 
-    return render(request, 'listar_proveedores.html', {'proveedores': proveedores})
+    page_number = request.GET.get('page') #guardamos el # de pagina actual en la url
+    page = paginator.get_page(page_number) #asignamos el numero de pagina
+
+    return render(request, 'listar_proveedores.html', {'proveedores_paginados': page})#aca en vez de mandar un objeto de proveedores mandamos el de la paginacion que contiene tambien el listado de proveedores
 

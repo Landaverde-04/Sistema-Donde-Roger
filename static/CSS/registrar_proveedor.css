@@ -40,10 +40,10 @@ h3{
 }
 
 .div-archivo{
-     display: flex;
-  align-items: center; /* Alinea verticalmente los elementos */
-  gap: 1rem;            /* Espacio entre los elementos */
-  flex-wrap: nowrap;    /* Impide que bajen de línea */
+    display: flex;
+    align-items: center; /* Alinea verticalmente los elementos */
+    gap: 1rem;            /* Espacio entre los elementos */
+    flex-wrap: nowrap;    /* Impide que bajen de línea */
     margin-left: 5.5%;
     margin-right: 5.5%;
     margin-bottom: 3%;
