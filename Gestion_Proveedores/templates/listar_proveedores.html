@@ -21,8 +21,8 @@
             </tr>
         </thead>
         <tbody>
-            {% if proveedores %}
-            {% for proveedor in proveedores %}
+            {% if proveedores_paginados.object_list %}
+            {% for proveedor in proveedores_paginados %}
                 <tr>
                     <td>{{ proveedor.idProveedor }}</td>
                     <td>{{ proveedor.nombreEncargado }}</td>
@@ -47,6 +47,35 @@
         </tbody>
     </table>
     </div>
+    <div class="paginacion-proveedores">
+    <nav aria-label="Paginación de proveedores">
+  <ul class="pagination justify-content-center">
+    {% if proveedores_paginados.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">&laquo; Primero</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ proveedores_paginados.previous_page_number }}">Anterior</a>
+      </li>
+    {% endif %}
+
+    <li class="page-item active">
+      <span class="page-link">
+        Página {{ proveedores_paginados.number }} de {{ proveedores_paginados.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if proveedores_paginados.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ proveedores_paginados.next_page_number }}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ proveedores_paginados.paginator.num_pages }}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+</div>
 </div>
 
 {% endblock %}
