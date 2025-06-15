@@ -31,3 +31,13 @@ class HorarioProveedor(models.Model):
 
         class Meta:
             db_table = 'HorarioProveedor'
+
+
+class ProductoProveedor(models.Model):
+     
+     idProveedor = models.ForeignKey(Proveedor, on_delete=models.CASCADE)
+     nombreProductoProveedor = models.CharField()
+     precioProductoProveedor = models.DecimalField(max_digits=10, decimal_places=2)
+
+     class Meta:
+          db_table = 'ProductoProveedor'

@@ -1,65 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
-{% extends 'navegacion.html' %}
-{% load static %}
-{% block content %}
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}">
-
-
+  {% extends 'navegacion.html' %} {% load static %} {% block content %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
+    <script src="{% static 'JS/registrar_proveedor.js' %}"></script>
     <title>Registro de proveedor</title>
-</head>
-<body>
+  </head>
+  <body>
     <form class="form_proveedor" method="post">
-        {% csrf_token %}
-        <fieldset>
-            <legend>Datos del proveedor</legend>             
-        <input class="input_normal" type="text" name="nombre_proveedor" placeholder="Nombre" required>        
-        <input class="input_normal" type="text" name="apellido_proveedor" placeholder="Apellido" required>        
-        <input class="input_normal" type="text" name="dui_proveedor" placeholder="DUI" required><br><br>        
-        <input class="input_normal" type="text" name="correo_proveedor" placeholder="Correo electrónico" required>        
-        <input class="input_normal" type="text" name="numero_proveedor" placeholder="Numero de teléfono" required>
+      {% csrf_token %}
+      <div class="card">
+        <div class="div-errores">
+          {% if messages %} <!--Este if es para mostrar los mensajes de error-->
+            {% for message in messages %}
+            <div class="alert alert-warning">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <div class="div-contenido">          
+        <h3>Datos del proveedor</h3>
+        <input
+          class="input_normal"
+          type="text"
+          name="nombre_proveedor"
+          placeholder="Nombre"
+          value="{{ data.nombre_proveedor }}"
+          pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios"
+          required
+        /><!--El value es para no perder los datos metidos en caso de error y recargar la pagina-->
+        <!--El pattern es para validar el tipo de dato introducido-->
+        <!--tittle es para decirle al usuario el tipo de validacion requerida-->
+        <input
+          class="input_normal"
+          type="text"
+          name="apellido_proveedor"
+          placeholder="Apellido"
+          value="{{ data.apellido_proveedor }}"
+          pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios"
+          required
+        />
+        <input
+          class="input_normal"
+          type="text"
+          name="dui_proveedor"
+          placeholder="DUI"
+          value="{{ data.dui_proveedor }}"
+          pattern="\d{8}-\d"
+          title="Formato: 00000000-0"
+          maxlength="10"
+          required
+        /><br /><br />
+        <input
+          class="input_normal"
+          type="text"
+          name="correo_proveedor"
+          placeholder="Correo electrónico"
+          value="{{ data.correo_proveedor }}"          
+        />
+        <input
+          class="input_normal"
+          type="text"
+          name="numero_proveedor"
+          placeholder="Numero de teléfono"
+          value="{{ data.numero_proveedor }}"
+          pattern="\d{8}"
+          title="Debe contener 8 numeros"
+          maxlength="9"
+          required
+        />
         <label>Tiene IVA</label>
-        <input type="checkbox" name="iva_proveedor"><br><br>
-        
-        
-            <legend>Datos de la empresa</legend>
-            <input class="input_normal" type="text" name="nombre_empresa" placeholder="Nombre empresa" required>
-            <div class="input-group mb-3">
-            <input type="file" class="form-control" id="inputGroupFile02">
-            <label class="input-group-text" for="inputGroupFile02">Upload</label>
-            </div>
-
-            <textarea name="direccion_empresa" id="direccion_empresa" placeholder="Dirección de la empresa" rows="2" cols="100"></textarea><br><br>
-            <label>Hora de apertura</label>
-            <input type="time" name="hora_apertura">
-            <label>Hora de cierre</label>
-            <input type="time" name="hora_cierre"><br>
-            <label>Dias:</label><br>            
-            <input type="checkbox" name="dias" value="1">
-            <label>Lunes</label>            
-            <input type="checkbox" name="dias" value="2">
-            <label>Martes</label>            
-            <input type="checkbox" name="dias" value="3">
-            <label>Miercoles</label>            
-            <input type="checkbox" name="dias" value="4">
-            <label>Jueves</label>            
-            <input type="checkbox" name="dias" value="5">
-            <label>Viernes</label>            
-            <input type="checkbox" name="dias" value="6">
-            <label>Sabado</label>            
-            <input type="checkbox" name="dias" value="7">
-            <label>Domingo</label><br><br>
-            <div class="text-center mt-3">
-            <button type="submit" class="btn btn-success">Guardar</button>
-            <a href="#" class="btn btn-danger">Cancelar</a>
-            </div>
-        </fieldset>
-        
+        <input type="checkbox" name="iva_proveedor" /><br /><br />   
+        <h3>Datos de la empresa</h3>
+        </div>        
+        <div class="div-archivo">            
+              <input
+                class="input_normal"
+                type="text"
+                name="nombre_empresa"
+                placeholder="Nombre empresa"
+                value="{{ data.nombre_empresa }}"
+                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                title="Solo letras y espacios"
+                required
+              />
+              <label class="label-archivo">Logo:</label>              
+              <input type="file" class="input-archivo" />          
+        </div>
+        <div class="div-textarea">
+        <textarea
+          name="direccion_empresa"
+          id="direccion_empresa"
+          placeholder="Dirección de la empresa"          
+          rows="2"
+          cols="80"{{ data.direccion_empresa }}
+        ></textarea
+        ><br /><br />
+        <label>Hora de apertura</label>
+        <input type="time" name="hora_apertura" required/>
+        <label>Hora de cierre</label>
+        <input type="time" name="hora_cierre" required/><br />
+        </div>     
+        <div class="div-dias">
+        <label>Dias de atención:</label><br />
+        <input type="checkbox" name="dias" value="1" />
+        <label>Lunes</label>
+        <input type="checkbox" name="dias" value="2" />
+        <label>Martes</label>
+        <input type="checkbox" name="dias" value="3" />
+        <label>Miercoles</label>
+        <input type="checkbox" name="dias" value="4" />
+        <label>Jueves</label>
+        <input type="checkbox" name="dias" value="5" />
+        <label>Viernes</label>
+        <input type="checkbox" name="dias" value="6" />
+        <label>Sabado</label>
+        <input type="checkbox" name="dias" value="7" />
+        <label>Domingo</label><br /><br />
+        </div>
+        <div class="div-producto">
+          <h3>Productos del proveedor</h3>
+          <table class="table table-bordered" id="tabla-productos">
+            <thead>
+              <tr>
+                <th class="w-15">Nombre del producto</th>
+                <th class="w-10">Precio</th>
+                <th class="w-9">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="fila-producto">
+                <td><input class="input-producto" type="text" name="producto_nombre[]" required></td>
+                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0"></td>
+                <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
+              </tr>
+            </tbody>
+          </table>
+          <button type="button" class="btn btn-primary" onclick="agregarFila()" id="agregar-fila">Añadir producto</button>
+        </div>
+        <div class="div-botones">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <a href="/Proveedor/listar_proveedores" class="btn btn-danger" onclick="return confirm('¿Seguro que quieres cancelar registro? Se perdera todo el progreso.');">Cancelar</a>
+        </div>
+        </div>            
     </form>
-</body>
+  </body>
 </html>
 
 {% endblock %}
