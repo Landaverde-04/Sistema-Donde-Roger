@@ -1,51 +1,78 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from Gestion_Proveedores.models import Proveedor, HorarioProveedor
+from Gestion_Proveedores.models import Proveedor, HorarioProveedor, ProductoProveedor
 from django.core.paginator import Paginator
-
+from django.contrib import messages
+from django.urls import reverse#esta importacion es para manejar la url y pasar el paremetro de validacion a js
 
 # Create your views here.
 @login_required
 def registrar_proveedor(request):
     if request.method == 'POST':
-        #Seccion para tabla Proveedor
-        nombre_proveedor = request.POST.get('nombre_proveedor')
-        apellido_proveedor = request.POST.get('apellido_proveedor')
-        dui_proveedor =request.POST.get('dui_proveedor')
-        correo_proveedor = request.POST.get('correo_proveedor')
-        numero_proveedor = request.POST.get('numero_proveedor')
-        nombre_empresa = request.POST.get('nombre_empresa')
-        direccion_empresa = request.POST.get('direccion_empresa')
-        iva_proveedor = 'iva_proveedor' in request.POST
+        try:#incluimos el try para poder mostrar de una mejor manera los errores
+            #Seccion para tabla Proveedor
+            nombre_proveedor = request.POST.get('nombre_proveedor')
+            apellido_proveedor = request.POST.get('apellido_proveedor')
+            dui_proveedor =request.POST.get('dui_proveedor')
+            correo_proveedor = request.POST.get('correo_proveedor')
+            numero_proveedor = request.POST.get('numero_proveedor')
+            nombre_empresa = request.POST.get('nombre_empresa')
+            direccion_empresa = request.POST.get('direccion_empresa')
+            iva_proveedor = 'iva_proveedor' in request.POST
+            
+            #Seccion de tabla horarios
+            hora_apertura = request.POST.get('hora_apertura')
+            hora_cierre = request.POST.get('hora_cierre')
+            dias = request.POST.getlist('dias')
+            dias_texto = ",".join(dias)
+                   
+            proveedor = Proveedor.objects.create(
+                nombreEncargado = nombre_proveedor,
+                apellidoEncargado = apellido_proveedor,
+                nombreEmpresa = nombre_empresa,
+                tieneIva = iva_proveedor,
+                telProveedor = numero_proveedor,
+                duiEncargado = dui_proveedor,
+                emailProveedor = correo_proveedor,
+                ubicacionProveedor = direccion_empresa,            
+            )
+
+            HorarioProveedor.objects.create(
+                idProveedor = proveedor,
+                horaApertura = hora_apertura,
+                horaCierre = hora_cierre,
+                diaSemana = dias_texto
+            )
+            
+            # Crear productos del proveedor
+            nombres_productos = request.POST.getlist('producto_nombre[]')
+            precios_productos = request.POST.getlist('producto_precio[]')
+
+            for nombre, precio in zip(nombres_productos, precios_productos):
+                ProductoProveedor.objects.create(
+                    idProveedor=proveedor,
+                    nombreProductoProveedor=nombre,
+                    precioProductoProveedor=precio
+                )
+
+
+            #aca ponemos la url para que el js pueda leer el ?exito=1
+            url= reverse('listar_proveedores')#guardamos el enlace principa
+            return redirect(f'{url}?exito=1')#aparte del enlace principal añadimos el ?exito=1 para que js lo lea
         
-        #Seccion de tabla horarios
-        hora_apertura = request.POST.get('hora_apertura')
-        hora_cierre = request.POST.get('hora_cierre')
-        dias = request.POST.getlist('dias')
-        dias_texto = ",".join(dias)
+        #Esta es la excepcion que cierra el try
+        except Exception as e:
+            #Si hay un error se mostrara este mensaje
+            messages.error(request, f"Error al registrar proveedor: {e}")
 
-        proveedor = Proveedor.objects.create(
-            nombreEncargado = nombre_proveedor,
-            apellidoEncargado = apellido_proveedor,
-            nombreEmpresa = nombre_empresa,
-            tieneIva = iva_proveedor,
-            telProveedor = numero_proveedor,
-            duiEncargado = dui_proveedor,
-            emailProveedor = correo_proveedor,
-            ubicacionProveedor = direccion_empresa,            
-        )
-
-        HorarioProveedor.objects.create(
-            idProveedor = proveedor,
-            horaApertura = hora_apertura,
-            horaCierre = hora_cierre,
-            diaSemana = dias_texto
-        )
-
-        return redirect('listar_proveedores')
-
+            #Retornamos la misma pagina, pero el 'data': request.POST
+            #sirve para poder hacer un reseteo de la data al ser post
+            return render(request, 'registrar_proveedor.html', {
+                'data': request.POST
+            })
 
     return render(request, 'registrar_proveedor.html')
+
 
 @login_required
 def listar_proveedor(request):
