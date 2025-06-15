@@ -6,65 +6,67 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
-        <!-- Nombres y Apellidos en una fila -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="nombresEmpleado" class="form-label">Nombres</label>
-                <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30" required>
-            </div>
-            <div class="col-md-6">
-                <label for="apellidosEmpleado" class="form-label">Apellidos</label>
-                <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" required>
-            </div>
+        <!-- Nombres -->
+        <div class="mb-3">
+            <label for="nombresEmpleado" class="form-label">Nombres</label>
+            <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30" required>
         </div>
 
-        <!-- DUI, Teléfono, Tel. Emergencia -->
-        <div class="row mb-3">
-            <div class="col-md-4">
-                <label for="duiEmpleado" class="form-label">DUI</label>
-                <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" required>
-            </div>
-            <div class="col-md-4">
-                <label for="telEmpleado" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="8" required>
-            </div>
-            <div class="col-md-4">
-                <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
-                <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="8" required>
-            </div>
+        <!-- Apellidos -->
+        <div class="mb-3">
+            <label for="apellidosEmpleado" class="form-label">Apellidos</label>
+            <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" required>
         </div>
 
-        <!-- Fecha de nacimiento -->
+        <!-- DUI -->
+        <div class="mb-3">
+            <label for="duiEmpleado" class="form-label">DUI</label>
+            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" required>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="mb-3">
+            <label for="telEmpleado" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="8" required>
+        </div>
+
+        <!-- Teléfono Emergencia -->
+        <div class="mb-3">
+            <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
+            <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="8" required>
+        </div>
+
+        <!-- Fecha de Nacimiento -->
         <div class="mb-3">
             <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required>
         </div>
 
-        <!-- Salario + Fecha de contratación -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="salarioEmpleado" class="form-label">Salario</label>
-                <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" required>
-            </div>
-            <div class="col-md-6">
-                <label for="fechaContratacion" class="form-label">Fecha de Contratación</label>
-                <input type="date" class="form-control" id="fechaContratacion" name="fechaContratacion" required>
-            </div>
+        <!-- Salario -->
+        <div class="mb-3">
+            <label for="salarioEmpleado" class="form-label">Salario</label>
+            <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" required>
         </div>
 
-        <!-- Experiencia -->
+        <!-- Fecha de Contratación -->
+        <div class="mb-3">
+            <label for="fechaContratacion" class="form-label">Fecha de Contratación</label>
+            <input type="date" class="form-control" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required>
+        </div>
+
+        <!-- Experiencia Laboral -->
         <div class="mb-3">
             <label for="experienciaLaboral" class="form-label">Experiencia Laboral</label>
-            <textarea class="form-control" id="experienciaLaboral" name="experienciaLaboral" rows="3"></textarea>
+            <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado"  rows="3" required></textarea>
         </div>
 
-        <!-- Contrato (archivo PDF) -->
+        <!-- Contrato PDF -->
         <div class="mb-3">
-            <label for="contratoEmpleado" class="form-label">Contrato (PDF)</label>
-            <input type="file" class="form-control" id="contratoEmpleado" name="contratoEmpleado" accept="application/pdf" required>
+            <label for="contratoEmpleado">Contrato (PDF)</label>
+             <input type="file" id="contratoEmpleado" name="contratoEmpleado" accept=".pdf" required> <br>
         </div>
 
-        <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="submit" class="btn btn-primary">Registrar Empleado</button>
     </form>
 </div>
 {% endblock %}
