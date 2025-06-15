@@ -2,7 +2,13 @@
 
 {% load static %}{% block content %}
 <link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
+<script src="{% static 'JS/registrar_proveedor.js' %}"></script>
 <div class="container mt-3">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
     <h2 class="mb-4">Lista de proveedores</h2>
     <div>
         <a href="{% url 'registrar_proveedor' %}" class="btn btn-success">Registrar nuevo proveedor</a>

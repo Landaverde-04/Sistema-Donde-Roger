@@ -27,7 +27,7 @@ h3{
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 10px;
+  padding: 20px;
   max-width: 100%; 
   margin: 44px auto;
   box-shadow: 0px 0px 45px #0007;
@@ -37,6 +37,10 @@ h3{
 .div-contenido{
     text-align: justify;
     margin-left: 5.5%;
+    
+}
+.div-errores{
+    margin: 0 5.5%;
 }
 
 .div-archivo{
@@ -74,4 +78,34 @@ textarea{
     text-align: justify;
     margin-left: 5.5%;
     margin-right: 5.5%;
+}
+.div-producto{
+    padding: 5%;
+    padding-top: 0%;
+}
+#tabla-productos{
+    text-align: center;
+    width: 100%;
+}
+.input-precio{
+    width: 100px;
+    box-sizing: border-box;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+.input-producto{
+    width: 100%;
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+}
+.w-10{
+    width: 15%;
+}
+.w-15{
+    width: 60%;
+}
+.w-9{
+    width: 25%;
 }
