@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 import datetime
 from . import models
 
-def ver_inventario(request):
+def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
     if ultimo_inventario is None:
         return redirect('crear_inventario')
@@ -12,13 +13,14 @@ def ver_inventario(request):
         return render(request, 'ver-inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
     
     
-def crear_inventario(request):
+@login_required
+def crear_inventario(request): # Funcion que renderiza la pantalla de creacion de inventario
     ultimo_inventario = models.Inventario.objects.all().last()
     if ultimo_inventario is None or ultimo_inventario.sePuedeEditar == False:
         current_date = datetime.datetime.now()
         fechaInventario = current_date.strftime('%Y-%m-%d')
         horaInventario = current_date.strftime('%H:%M:%S')
-        inventario = models.Inventario.objects.create(idUsuario="si", fechaInventario=fechaInventario, horaInventario=horaInventario)
+        inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
         inventario.save()
     elif ultimo_inventario.sePuedeEditar == True:
         fechaInventario = ultimo_inventario.fechaInventario
@@ -26,8 +28,13 @@ def crear_inventario(request):
 
     return render(request, 'crear_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
 
-def crar_detalle_inventario(request):
-    inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first()
+@login_required
+def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
+    inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first() #obtener el inventario activo en proceso
+    if inventario_activo is None:
+        return redirect('crear_inventario')
+    else:
+        return render(request, 'crear_detalle_inventario.html')
     # if inventario_activo:
     
         

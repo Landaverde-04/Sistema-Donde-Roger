@@ -1,10 +1,10 @@
 from django.db import models
-from Gestion_productos import models as models_productos
+from Gestion_productos import models as models_productos    #Importar los modelos de los productos
+from seguridad import models as models_seguridad    #importar los modelos de seguridad
 
-class Inventario(models.Model):
+class Inventario(models.Model): #Tabla de la bd para los inventarios
     idIventario = models.AutoField(primary_key=True)
-    # idUsuario = models.ForeignKey('Usuario', on_delete=models.CASCADE, db_column='idUsuario')
-    idUsuario = models.CharField(max_length=4)
+    idUsuario = models.ForeignKey(models_seguridad.Usuario, on_delete=models.CASCADE, db_column='idUsuario', null=False)
     fechaInventario = models.DateField()
     horaInventario = models.TimeField(auto_now_add=True)
     sePuedeEditar = models.BooleanField(default=True)
