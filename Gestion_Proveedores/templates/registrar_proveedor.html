@@ -9,7 +9,7 @@
     <title>Registro de proveedor</title>
   </head>
   <body>
-    <form class="form_proveedor" method="post">
+    <form class="form_proveedor" method="post" id="form-proveedor" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="card">
         <div class="div-errores">
@@ -56,10 +56,13 @@
         /><br /><br />
         <input
           class="input_normal"
-          type="text"
+          type="email"
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          title="Debe tener un formato válido como ejemplo@correo.com"
           name="correo_proveedor"
           placeholder="Correo electrónico"
-          value="{{ data.correo_proveedor }}"          
+          value="{{ data.correo_proveedor }}"
+          required          
         />
         <input
           class="input_normal"
@@ -67,8 +70,8 @@
           name="numero_proveedor"
           placeholder="Numero de teléfono"
           value="{{ data.numero_proveedor }}"
-          pattern="\d{8}"
-          title="Debe contener 8 numeros"
+          pattern="\d{4}-\d{4}"
+          title="Formato requerido 0000-0000"
           maxlength="9"
           required
         />
@@ -88,7 +91,7 @@
                 required
               />
               <label class="label-archivo">Logo:</label>              
-              <input type="file" class="input-archivo" />          
+              <input type="file" class="input-archivo" name="logo" accept="image/*" required/>          
         </div>
         <div class="div-textarea">
         <textarea
@@ -134,7 +137,7 @@
             <tbody>
               <tr class="fila-producto">
                 <td><input class="input-producto" type="text" name="producto_nombre[]" required></td>
-                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0"></td>
+                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0" required></td>
                 <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
               </tr>
             </tbody>
