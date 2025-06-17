@@ -11,7 +11,7 @@ class Proveedor(models.Model):
     duiEncargado = models.CharField(max_length=10)
     emailProveedor = models.EmailField(max_length=50)
     ubicacionProveedor = models.TextField()
-    logoURL = models.TextField()
+    logo = models.ImageField(upload_to='logos/', null=True, blank=True)
     estaHabilitadoProveedor = models.BooleanField(default=True)
 
     class Meta:
