@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
   {% extends 'navegacion.html' %} {% load static %} {% block content %}
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
     <script src="{% static 'JS/registrar_proveedor.js' %}"></script>
-    <title>Registro de proveedor</title>
+    <title>Editar proveedor</title>
   </head>
   <body>
     <form class="form_proveedor" method="post" id="form-proveedor" enctype="multipart/form-data">
@@ -26,7 +24,7 @@
           type="text"
           name="nombre_proveedor"
           placeholder="Nombre"
-          value="{{ data.nombre_proveedor }}"
+          value="{{ proveedor.nombreEncargado }}"
           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
           title="Solo letras y espacios"
           required
@@ -38,7 +36,7 @@
           type="text"
           name="apellido_proveedor"
           placeholder="Apellido"
-          value="{{ data.apellido_proveedor }}"
+          value="{{ proveedor.apellidoEncargado }}"
           pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
           title="Solo letras y espacios"
           required
@@ -48,7 +46,7 @@
           type="text"
           name="dui_proveedor"
           placeholder="DUI"
-          value="{{ data.dui_proveedor }}"
+          value="{{ proveedor.duiEncargado }}"
           pattern="\d{8}-\d"
           title="Formato: 00000000-0"
           maxlength="10"
@@ -61,7 +59,7 @@
           title="Debe tener un formato válido como ejemplo@correo.com"
           name="correo_proveedor"
           placeholder="Correo electrónico"
-          value="{{ data.correo_proveedor }}"
+          value="{{ proveedor.emailProveedor }}"
           required          
         />
         <input
@@ -69,14 +67,14 @@
           type="text"
           name="numero_proveedor"
           placeholder="Numero de teléfono"
-          value="{{ data.numero_proveedor }}"
+          value="{{ proveedor.telProveedor }}"
           pattern="\d{4}-\d{4}"
           title="Formato requerido 0000-0000"
           maxlength="9"
           required
         />
         <label>Tiene IVA</label>
-        <input type="checkbox" name="iva_proveedor" /><br /><br />   
+        <input type="checkbox" name="iva_proveedor" {% if proveedor.tieneIva %}checked{% endif %} /><br /><br />   
         <h3>Datos de la empresa</h3>
         </div>        
         <div class="div-archivo">            
@@ -85,47 +83,49 @@
                 type="text"
                 name="nombre_empresa"
                 placeholder="Nombre empresa"
-                value="{{ data.nombre_empresa }}"
+                value="{{ proveedor.nombreEmpresa }}"
                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
                 title="Solo letras y espacios"
                 required
               />
               <label class="label-archivo">Logo:</label>              
-              <input type="file" class="input-archivo" name="logo" accept="image/*" required/>          
+              <input type="file" class="input-archivo" name="logo" accept="image/*"/>          
         </div>
         <div class="div-textarea">
         <textarea
-          name="direccion_empresa"
+          name="direccion_empresa"          
           id="direccion_empresa"
           placeholder="Dirección de la empresa"          
           rows="2"
           cols="80"
-        >{{ data.direccion_empresa }}</textarea
+        >{{ proveedor.ubicacionProveedor }}</textarea
         ><br /><br />
         <label>Hora de apertura</label>
-        <input type="time" name="hora_apertura" required/>
+        {% for horario in horario %}        
+        <input type="time" name="hora_apertura"  value="{{ horario.horaApertura|time:'H:i' }}" required/>
         <label>Hora de cierre</label>
-        <input type="time" name="hora_cierre" required/><br />
-        </div>     
+        <input type="time" name="hora_cierre" value="{{ horario.horaCierre|time:'H:i' }}" required/><br />
+        </div>
+        {% endfor %}
         <div class="div-dias">
         <label>Dias de atención:</label><br />
-        <input type="checkbox" name="dias" value="1" />
+        <input type="checkbox" name="dias" value="1" {% if 1 in dias_guardados %}checked{% endif %}/>
         <label>Lunes</label>
-        <input type="checkbox" name="dias" value="2" />
+        <input type="checkbox" name="dias" value="2" {% if 2 in dias_guardados %}checked{% endif %}/>
         <label>Martes</label>
-        <input type="checkbox" name="dias" value="3" />
+        <input type="checkbox" name="dias" value="3" {% if 3 in dias_guardados %}checked{% endif %}/>
         <label>Miercoles</label>
-        <input type="checkbox" name="dias" value="4" />
+        <input type="checkbox" name="dias" value="4" {% if 4 in dias_guardados %}checked{% endif %}/>
         <label>Jueves</label>
-        <input type="checkbox" name="dias" value="5" />
+        <input type="checkbox" name="dias" value="5" {% if 5 in dias_guardados %}checked{% endif %}/>
         <label>Viernes</label>
-        <input type="checkbox" name="dias" value="6" />
+        <input type="checkbox" name="dias" value="6" {% if 6 in dias_guardados %}checked{% endif %}/>
         <label>Sabado</label>
-        <input type="checkbox" name="dias" value="7" />
+        <input type="checkbox" name="dias" value="7" {% if 7 in dias_guardados %}checked{% endif %}/>
         <label>Domingo</label><br /><br />
         </div>
         <div class="div-producto">
-          <h3>Productos del proveedor</h3>
+          <h3>Productos del proveedor</h3>          
           <table class="table table-bordered" id="tabla-productos">
             <thead>
               <tr>
@@ -135,17 +135,26 @@
               </tr>
             </thead>
             <tbody>
+                {% for producto in productos %}
               <tr class="fila-producto">
-                <td><input class="input-producto" type="text" name="producto_nombre[]" required></td>
-                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0" required></td>
+                <td><input class="input-producto" type="text" name="producto_nombre[]" value="{{ producto.nombreProductoProveedor }}" required></td>
+                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0" value="{{ producto.precioProductoProveedor }}" required></td>
                 <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
               </tr>
+              {% endfor %}
+            {% if productos|length == 0 %}
+                <tr class="fila-producto">
+                <td><input type="text" name="producto_nombre[]" required></td>
+                <td><input type="number" name="producto_precio[]" step="0.01" required></td>
+                <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
+                </tr>
+            {% endif %}
             </tbody>
           </table>
           <button type="button" class="btn btn-primary" onclick="agregarFila()" id="agregar-fila">Añadir producto</button>
         </div>
         <div class="div-botones">
-          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="submit" class="btn btn-success">Guardar cambios</button>
           <a href="/Proveedor/listar_proveedores" class="btn btn-danger" onclick="return confirm('¿Seguro que quieres cancelar registro? Se perdera todo el progreso.');">Cancelar</a>
         </div>
         </div>            

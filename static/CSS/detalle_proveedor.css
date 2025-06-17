@@ -31,6 +31,12 @@ img{
     text-align: justify;
     padding: 1% 15%;
 }
+.div-botones{
+    display: flex;
+    margin-bottom: 5%;
+    justify-content: space-between;
+    padding: 0 15%;
+}
 .str-tel{
     margin-left: 8%;
 }

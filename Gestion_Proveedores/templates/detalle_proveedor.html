@@ -55,6 +55,11 @@
         <p>No hay productos registrados.</p>
     {% endif %}
     </div>
+    <div class="div-botones">
+        <a href="{% url 'listar_proveedores' %}" class="btn btn-danger" id="btn-atras">Regresar</a>
+        <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary" id="btn-editar">Editar proveedor</a>
+                  
+    </div>
     </div>
     </div>
 </body>
