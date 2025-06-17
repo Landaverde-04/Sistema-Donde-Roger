@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import Empleado
 
@@ -15,7 +15,6 @@ def registrar_empleado(request):
         experienciaLaboralEmpleado = request.POST.get('experienciaLaboralEmpleado')
         fechaContratacionEmpleado = request.POST.get('fechaContratacionEmpleado')
         contratoEmpleado = request.FILES.get('contratoEmpleado')  # Recoger el archivo subido
-        estaHabilitadoEmpleado = request.POST.get('estaHabilitadoEmpleado') == 'on'
 
         try:
             # Crear un nuevo empleado sin necesidad de incluir idEmpleado
@@ -30,7 +29,7 @@ def registrar_empleado(request):
                 experienciaLaboralEmpleado=experienciaLaboralEmpleado,
                 fechaContratacionEmpleado=fechaContratacionEmpleado,
                 contratoEmpleado=contratoEmpleado,
-                estaHabilitadoEmpleado=estaHabilitadoEmpleado
+                estaHabilitadoEmpleado= True
             )
             return redirect('empleado_lista')  # Redirige a la lista de empleados o donde prefieras
         except Exception as e:
@@ -39,5 +38,34 @@ def registrar_empleado(request):
     return render(request, 'registrar_empleado.html')
 
 def empleado_lista(request):
-    empleados = Empleado.objects.all()  # Obtener todos los empleados
+    empleados = Empleado.objects.all()
     return render(request, 'empleado_lista.html', {'empleados': empleados})
+
+
+def modificar_empleado(request, idEmpleado):
+    empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
+    if request.method == 'POST':
+        empleado.nombresEmpleado = request.POST.get('nombresEmpleado')
+        empleado.apellidosEmpleado = request.POST.get('apellidosEmpleado')
+        empleado.duiEmpleado = request.POST.get('duiEmpleado')
+        empleado.fechaNacimientoEmpleado = request.POST.get('fechaNacimientoEmpleado')
+        empleado.telEmpleado = request.POST.get('telEmpleado')
+        empleado.telEmergenciaEmpleado = request.POST.get('telEmergenciaEmpleado')
+        empleado.salarioEmpleado = request.POST.get('salarioEmpleado')
+        empleado.experienciaLaboralEmpleado = request.POST.get('experienciaLaboralEmpleado')
+        empleado.fechaContratacionEmpleado = request.POST.get('fechaContratacionEmpleado')
+        # Si sube nuevo contrato:
+        if request.FILES.get('contratoEmpleado'):
+            empleado.contratoEmpleado = request.FILES.get('contratoEmpleado')
+        empleado.save()
+        return redirect('empleado_lista')
+    return render(request, 'modificar_empleado.html', {'empleado': empleado})
+
+
+def eliminar_empleado(request, idEmpleado):
+    empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
+    if request.method == 'POST':
+        empleado.delete()
+        return redirect('empleado_lista')
+    return render(request, 'eliminar_empleado.html', {'empleado': empleado})
+

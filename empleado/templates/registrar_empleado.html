@@ -1,6 +1,11 @@
 {% extends 'navegacion.html' %}
 
 {% block content %}
+<!-- Bootstrap Icons para el ícono PDF -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<!-- Flatpickr CSS para el datepicker -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <div class="container mt-4">
     <h2>Registrar Empleado</h2>
     <form method="post" enctype="multipart/form-data">
@@ -9,7 +14,8 @@
         <!-- Nombres -->
         <div class="mb-3">
             <label for="nombresEmpleado" class="form-label">Nombres</label>
-            <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30" required>
+            <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado"  maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios" required>
         </div>
 
         <!-- Apellidos -->
@@ -21,7 +27,7 @@
         <!-- DUI -->
         <div class="mb-3">
             <label for="duiEmpleado" class="form-label">DUI</label>
-            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" required>
+            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" placeholder="06718918-3" required>
         </div>
 
         <!-- Teléfono -->
@@ -36,37 +42,63 @@
             <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="8" required>
         </div>
 
-        <!-- Fecha de Nacimiento -->
-        <div class="mb-3">
-            <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required>
+        <!-- Fechas en una sola fila -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
+                <input type="text" class="form-control fecha" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required autocomplete="off">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="fechaContratacionEmpleado" class="form-label">Fecha de Contratación</label>
+                <input type="text" class="form-control fecha" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required autocomplete="off">
+            </div>
         </div>
 
-        <!-- Salario -->
+        <!-- Salario debajo -->
         <div class="mb-3">
             <label for="salarioEmpleado" class="form-label">Salario</label>
             <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" required>
         </div>
 
-        <!-- Fecha de Contratación -->
-        <div class="mb-3">
-            <label for="fechaContratacion" class="form-label">Fecha de Contratación</label>
-            <input type="date" class="form-control" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required>
-        </div>
-
         <!-- Experiencia Laboral -->
         <div class="mb-3">
-            <label for="experienciaLaboral" class="form-label">Experiencia Laboral</label>
-            <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado"  rows="3" required></textarea>
+            <label for="experienciaLaboralEmpleado" class="form-label">Experiencia Laboral</label>
+            <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado" rows="3" required></textarea>
         </div>
 
-        <!-- Contrato PDF -->
+        <!-- Contrato PDF bonito -->
         <div class="mb-3">
-            <label for="contratoEmpleado">Contrato (PDF)</label>
-             <input type="file" id="contratoEmpleado" name="contratoEmpleado" accept=".pdf" required> <br>
+            <label for="contratoEmpleado" class="form-label d-flex align-items-center">
+                <i class="bi bi-file-earmark-arrow-up" style="color: #d32f2f; font-size: 1.5rem; margin-right: 8px;"></i>
+                Subir contrato (PDF)
+            </label>
+            <input class="form-control" type="file" id="contratoEmpleado" name="contratoEmpleado" accept=".pdf" required onchange="mostrarArchivo()">
+            <div id="nombreArchivo" class="text-success mt-1"></div>
+            <small class="form-text text-muted">Formato PDF, máximo 5MB.</small>
         </div>
 
         <button type="submit" class="btn btn-primary">Registrar Empleado</button>
     </form>
 </div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr(".fecha", {
+        dateFormat: "Y-m-d",
+        locale: "es"
+    });
+
+    // Mostrar nombre del archivo PDF seleccionado
+    function mostrarArchivo() {
+        const input = document.getElementById('contratoEmpleado');
+        const divNombre = document.getElementById('nombreArchivo');
+        if (input.files && input.files[0]) {
+            divNombre.textContent = 'Archivo seleccionado: ' + input.files[0].name;
+        } else {
+            divNombre.textContent = '';
+        }
+    }
+</script>
 {% endblock %}
+

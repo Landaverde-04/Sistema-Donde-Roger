@@ -1,7 +1,43 @@
+<!-- empleado_lista.html -->
 {% extends 'navegacion.html' %}
-
 {% block content %}
 <div class="container mt-4">
-    <h1> lista de Empleados</h1>
+    <h2>Lista de Empleados</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>DUI</th>
+                <th>Teléfono</th>
+                <th>Salario</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for empleado in empleados %}
+            <tr>
+                <td>{{ empleado.idEmpleado }}</td>
+                <td>{{ empleado.nombresEmpleado }}</td>
+                <td>{{ empleado.apellidosEmpleado }}</td>
+                <td>{{ empleado.duiEmpleado }}</td>
+                <td>{{ empleado.telEmpleado }}</td>
+                <td>{{ empleado.salarioEmpleado }}</td>
+                <td>
+                    <!-- Enlace a modificar -->
+                    <a href="{% url 'modificar_empleado' empleado.idEmpleado %}" class="btn btn-primary btn-sm">Modificar</a>
+                    <!-- Enlace a eliminar -->
+                    <a href="{% url 'eliminar_empleado' empleado.idEmpleado %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar este empleado?');">Eliminar</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No hay empleados registrados</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'registrar_empleado' %}" class="btn btn-success">Registrar nuevo empleado</a>
 </div>
 {% endblock %}

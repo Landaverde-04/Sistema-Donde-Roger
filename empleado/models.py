@@ -1,7 +1,7 @@
 from django.db import models
 
 class Empleado(models.Model):
-    idEmpleado = models.AutoField(primary_key=True)
+    idEmpleado = models.AutoField(primary_key=True)  # Clave primaria autoincremental
     nombresEmpleado = models.CharField(max_length=30)
     apellidosEmpleado = models.CharField(max_length=30)
     duiEmpleado = models.CharField(max_length=10)
@@ -14,9 +14,5 @@ class Empleado(models.Model):
     contratoEmpleado = models.FileField(upload_to='contratos/', null=True, blank=True)
     estaHabilitadoEmpleado = models.BooleanField(default=True)
 
-
     def __str__(self):
         return f"{self.nombresEmpleado} {self.apellidosEmpleado}"
-    
-
-
