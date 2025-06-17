@@ -22,7 +22,18 @@ img{
     
 }
 .div-tabla{
-    padding: 1% 10%;
-    text-align: center;
+    padding: 1% 15%;
+    text-align: justify;
     box-sizing: border-box;
+    margin-bottom: 3%;
+}
+.div-contenido{
+    text-align: justify;
+    padding: 1% 15%;
+}
+.str-tel{
+    margin-left: 8%;
+}
+.str-hcierre{
+    margin-left: 5%;
 }

@@ -12,24 +12,26 @@
         <p><img src="{{ proveedor.logo.url }}" alt="Logo" width="150"></p>
     {% endif %}    
     <h3>Información general</h3>
-    <p><strong>Nombre:</strong> {{ proveedor.nombreEncargado }} {{ proveedor.apellidoEncargado }}</p>
-    <p><strong>Empresa:</strong> {{ proveedor.nombreEmpresa }}</p>
+    <div class="div-contenido">
+    <p><strong>Nombre:</strong> {{ proveedor.nombreEncargado }} {{ proveedor.apellidoEncargado }}</p>    
+    <p><strong>DUI:</strong> {{ proveedor.duiEncargado }}   <strong class="str-tel">Teléfono:</strong> {{ proveedor.telProveedor }}  </p>
     <p><strong>Correo:</strong> {{ proveedor.emailProveedor }}</p>
-    <p><strong>Teléfono:</strong> {{ proveedor.telProveedor }}</p>
+    <p><strong>Empresa:</strong> {{ proveedor.nombreEmpresa }}</p>    
     <p><strong>Dirección:</strong> {{ proveedor.ubicacionProveedor }}</p>
     <p><strong>Tiene IVA:</strong> {{ proveedor.tieneIva|yesno:"Sí,No" }}</p>
-    <h3>Horario</h3>
+    <h3>Horario de atención</h3>
     {% if horario %}
         <p><strong>Días:</strong>
             {% for dia in dias_mostrados %}
                 {{ dia }}{% if not forloop.last %}, {% endif %}
             {% endfor %}
         </p>
-        <p><strong>Hora de apertura:</strong> {{ horario.horaApertura }}</p>
-        <p><strong>Hora de cierre:</strong> {{ horario.horaCierre }}</p>
+        <p><strong>Hora Apertura:</strong> {{ horario.horaApertura }}
+        <strong class="str-hcierre">Hora Cierre:</strong> {{ horario.horaCierre }}</p>
     {% else %}
         <p>No se ha asignado horario.</p>
     {% endif %}
+    </div>
     <div class="div-tabla">
     <h3>Productos</h3>
     {% if productos %}
