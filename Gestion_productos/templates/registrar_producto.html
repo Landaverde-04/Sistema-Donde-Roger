@@ -1,27 +1,61 @@
 {% extends 'navegacion.html' %}
-
+{% load static %}
 {% block content %}
-    <div class="container mt-4">
-        <h2>Registrar Producto</h2>
-        <form method="post">
-            {% csrf_token %}
-            <div class="mb-3">
-                <label for="nombre" class="form-label">Nombre del producto</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" required>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/registrar_producto.css' %}">
+    <script src="{% static 'JS/actualizar_producto.js' %}"></script>
+    <title>Registrar Producto</title>
+</head>
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Registrar Producto</h2>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del producto</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="50"  required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios"  value="{{ data.nombre|default:'' }}">
+                </div>
+                <div class="mb-3">
+                    <label for="unidadMedida" class="form-label">Unidad de medida</label>
+                    <input class="form-control" id="unidadMedida" name="unidadMedida" maxlength="20" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required value="{{ data.unidadMedida|default:'' }}">
+                </div>
+                <div class="mb-3">
+                    <label for="marcaProducto" class="form-label">Marca de producto</label>
+                    <input type="text" class="form-control" id="marcaProducto" name="marcaProducto"  maxlength="20" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" value="{{ data.marcaProducto|default:'' }}">
+                </div>
+                <div class="mb-3">
+                    <label for="descripcionProducto" class="form-label">Descripción producto</label>
+                    <textarea class="form-control" id="descripcionProducto" name="descripcionProducto"  rows="3">{{ data.descripcionProducto|default:'' }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalExitoLabel">Registrar</button>
+            </form>
+            <!-- Modal de éxito Bootstrap -->
+            <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content border-success">
+                  <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="modalExitoLabel">Registro satisfactorio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                  </div>
+                  <div class="modal-body">
+                    ¡Producto registrado exitosamente!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-                <label for="unidadMedida" class="form-label">Unidad de medida</label>
-                <input class="form-control" id="unidadMedida" name="unidadMedida" maxlength="20" required></input>
-            </div>
-            <div class="mb-3">
-                <label for="marcaProducto" class="form-label">Marca de producto </label>
-                <input type="text" class="form-control" id="marcaProducto" name="marcaProducto" maxlength="20" required>
-            </div>
-             <div class="mb-3">
-                <label for="descripcionProducto" class="form-label">Descripción producto</label>
-                <textarea class="form-control" id="descripcionProducto" name="descripcionProducto" rows="3"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
+        </div>
     </div>
+</div>
+{% if messages %}
+<script>
+  var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+  modalExito.show();
+</script>
+{% endif %}
 {% endblock %}
