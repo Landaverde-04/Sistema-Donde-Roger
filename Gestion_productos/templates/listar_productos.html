@@ -1,10 +1,15 @@
 {% extends 'navegacion.html' %}
-
+{% load static %}
 {% block content %}
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/listar_producto.css' %}">
+    <title>Lista de Productos</title>
+</head>
     <div class="container mt-3">
         <h2 class="mb-4">Lista de Productos</h2>
-        <div class="mb-4 text-end">
+        <div class="mb-4 text-start">
             <a href="{% url 'registrar_producto' %}" class="btn btn-success">Registrar Nuevo Producto</a>
         </div>
         {% if messages %}
@@ -12,7 +17,7 @@
                 <div class="alert alert-success">{{ message }}</div>
             {% endfor %}
         {% endif %}
-        
+        <div class="div-table">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -62,6 +67,7 @@
                 {% endif %}
             </tbody>
         </table>
+        </div>
     </div>
     <div class="paginacion-proveedores">
     <nav aria-label="Paginación de proveedores">
