@@ -7,6 +7,12 @@
         <div class="mb-4 text-end">
             <a href="{% url 'registrar_producto' %}" class="btn btn-success">Registrar Nuevo Producto</a>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -27,10 +33,27 @@
                         <td>{{ producto.unidadMedida }}</td>
                         <td>{{ producto.marcaProducto }}</td>
                         <td>{{ producto.descripcionProducto }}</td>
-                        <td><a href="{% url 'actualizar_producto' producto.idProducto %}" class="btn btn-primary">Editar</a></td>
-                        <td><a href="{% url 'eliminar_producto' producto.idProducto %}" class="btn btn-danger">Eliminar</a></td>
-                        <td><a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
+                        <td><a href="{% url 'actualizar_producto' producto.idProducto %}" class="btn btn-primary">Editar</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#EliminarModal" onclick="document.getElementById('EliminarModal').dataset.productoId = '{{ producto.idProducto }}';">Eliminar</button>
+                        <a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
                     </tr>
+                    <div class="modal fade" id="EliminarModal" tabindex="-1" aria-labelledby="EliminarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EliminarModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">Cancelar</button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que deseas eliminar este producto?
+                        <form method="post" action="{% url 'eliminar_producto' producto.idProducto %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
                 {% endfor %}
                 {% else %}
                     <div class="container mt-4">

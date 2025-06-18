@@ -5,18 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/registrar_producto.css' %}">
-    <script src="{% static 'JS/registrar_producto.js' %}"></script>
+    <script src="{% static 'JS/actualizar_producto.js' %}"></script>
     <title>Registrar Producto</title>
 </head>
 <div class="container mt-4">
     <div class="card mx-auto" style="max-width: 500px;">
         <div class="card-body">
             <h2 class="card-title mb-4">Registrar Producto</h2>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
             <form method="post">
                 {% csrf_token %}
                 <div class="mb-3">
@@ -35,9 +30,32 @@
                     <label for="descripcionProducto" class="form-label">Descripción producto</label>
                     <textarea class="form-control" id="descripcionProducto" name="descripcionProducto"  rows="3">{{ data.descripcionProducto|default:'' }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                <button type="submit" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#modalExitoLabel">Registrar</button>
             </form>
+            <!-- Modal de éxito Bootstrap -->
+            <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content border-success">
+                  <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="modalExitoLabel">Registro satisfactorio</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                  </div>
+                  <div class="modal-body">
+                    ¡Producto registrado exitosamente!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
     </div>
 </div>
+{% if messages %}
+<script>
+  var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+  modalExito.show();
+</script>
+{% endif %}
 {% endblock %}
