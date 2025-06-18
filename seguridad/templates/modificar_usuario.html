@@ -1,45 +1,39 @@
 {% extends "navegacion.html" %}
-{% load static %}
-
 {% block content %}
 <div class="container-fluid min-vh-100 d-flex justify-content-center align-items-center" style="background: #f8f9fa;">
     <div style="width: 700px; max-width: 90%;">
-        <h2 class="mb-4 text-center">Crear Usuario</h2>
-        <form method="POST" class="shadow-sm p-4 bg-white rounded" >
+        <h2 class="mb-4 text-center">Modificar Usuario</h2>
+        <form method="POST" class="shadow-sm p-4 bg-white rounded">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="empleado" class="form-label">Empleado:</label>
                 <select name="empleado" class="form-select" required>
                     <option value="">Seleccione un empleado</option>
                     {% for empleado in empleados %}
-                    <option value="{{ empleado.idEmpleado }}">{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}</option>
+                    <option value="{{ empleado.idEmpleado }}" {% if usuario.idEmpleado and usuario.idEmpleado.idEmpleado == empleado.idEmpleado %}selected{% endif %}>{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="username" class="form-label">Nombre de Usuario:</label>
-                <input type="text" name="username" class="form-control" value=""   required>
+                <input type="text" name="username" class="form-control" value="{{ usuario.username }}" required>
             </div>
             <div class="mb-3">
     <label for="email" class="form-label">Correo electrónico:</label>
-    <input type="email" name="email" class="form-control" required>
+    <input type="email" name="email" class="form-control" value="{{ usuario.email }}" required>
 </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña:</label>
-                <input type="password" name="password" class="form-control" value=""  required>
-            </div>
             <div class="mb-3">
                 <label for="grupo" class="form-label">Rol:</label>
                 <select name="grupo" class="form-select" required>
                     <option value="">Seleccione un rol</option>
                     {% for grupo in grupos %}
-                    <option value="{{ grupo.id }}">{{ grupo.name }}</option>
+                    <option value="{{ grupo.id }}" {% if usuario.groups.first and usuario.groups.first.id == grupo.id %}selected{% endif %}>{{ grupo.name }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">Crear Usuario</button>
+                <button type="submit" class="btn btn-primary btn-lg">Guardar Cambios</button>
             </div>
         </form>
     </div>

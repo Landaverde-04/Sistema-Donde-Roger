@@ -1,0 +1,20 @@
+{% extends "navegacion.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-danger text-white">
+            <h4>Eliminar Usuario</h4>
+        </div>
+        <div class="card-body">
+            <p>¿Seguro que desea eliminar al usuario <strong>{{ usuario.username }}</strong>?</p>
+            <form method="post">
+                {% csrf_token %}
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a href="{% url 'usuario_lista' %}" class="btn btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

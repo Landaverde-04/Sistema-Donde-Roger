@@ -1,0 +1,21 @@
+{% extends "navegacion.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4>Detalle de Usuario</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>ID:</strong> {{ usuario.id }}</p>
+            <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+            <p><strong>Empleado:</strong> {{ usuario.idEmpleado }}</p>
+            <p><strong>Correo:</strong> {{ usuario.email }}</p>
+            <p><strong>Rol:</strong> {% for group in usuario.groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+            <div class="d-flex gap-2">
+                <a href="{% url 'usuario_lista' %}" class="btn btn-secondary">Atrás</a>
+                <a href="{% url 'modificar_usuario' usuario.id %}" class="btn btn-success">Modificar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
