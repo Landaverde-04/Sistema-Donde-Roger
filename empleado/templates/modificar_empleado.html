@@ -1,0 +1,88 @@
+{% extends 'navegacion.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Modificar Empleado</h2>
+    <form method="post" enctype="multipart/form-data" class="mt-3">
+        {% csrf_token %}
+
+        <!-- Nombres y Apellidos en una fila -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="nombresEmpleado" class="form-label">Nombres</label>
+                <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30" required value="{{ empleado.nombresEmpleado }}">
+            </div>
+            <div class="col-md-6">
+                <label for="apellidosEmpleado" class="form-label">Apellidos</label>
+                <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" required value="{{ empleado.apellidosEmpleado }}">
+            </div>
+        </div>
+
+        <!-- DUI, Teléfono, Tel. Emergencia -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="duiEmpleado" class="form-label">DUI</label>
+                <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" required value="{{ empleado.duiEmpleado }}">
+            </div>
+            <div class="col-md-4">
+                <label for="telEmpleado" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="9" required value="{{ empleado.telEmpleado }}">
+            </div>
+            <div class="col-md-4">
+                <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
+                <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="9" required value="{{ empleado.telEmergenciaEmpleado }}">
+            </div>
+        </div>
+
+        <!-- Fecha de Nacimiento y Fecha de Contratación en una fila -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required value="{{ empleado.fechaNacimientoEmpleado|date:'Y-m-d' }}">
+            </div>
+            <div class="col-md-6">
+                <label for="fechaContratacionEmpleado" class="form-label">Fecha de Contratación</label>
+                <input type="date" class="form-control" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required value="{{ empleado.fechaContratacionEmpleado|date:'Y-m-d' }}">
+            </div>
+        </div>
+        <div class="mb-3">
+    <label for="direccionEmpleado" class="form-label">Dirección</label>
+    <input type="text" class="form-control" id="direccionEmpleado" name="direccionEmpleado" maxlength="100" value="{{ empleado.direccionEmpleado }}">
+</div>
+
+        <!-- Salario -->
+        <div class="mb-3">
+            <label for="salarioEmpleado" class="form-label">Salario</label>
+            <input type="number" step="0.01" class="form-control" id="salarioEmpleado" name="salarioEmpleado" required value="{{ empleado.salarioEmpleado }}">
+        </div>
+
+        <!-- Experiencia Laboral -->
+        <div class="mb-3">
+            <label for="experienciaLaboralEmpleado" class="form-label">Experiencia Laboral</label>
+            <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado" maxlength="200">{{ empleado.experienciaLaboralEmpleado }}</textarea>
+        </div>
+
+        <!-- Contrato PDF actual y nuevo -->
+        <div class="mb-3">
+            <label class="form-label">Contrato (PDF)</label>
+            {% if empleado.contratoEmpleado %}
+                <div class="mb-2">
+                    <a href="{{ empleado.contratoEmpleado.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        Ver contrato actual
+                    </a>
+                </div>
+            {% else %}
+                <div class="mb-2 text-muted">No hay contrato subido.</div>
+            {% endif %}
+            <input type="file" class="form-control" id="contratoEmpleado" name="contratoEmpleado" accept="application/pdf">
+            <div class="form-text">Solo suba un archivo si desea reemplazar el contrato actual.</div>
+        </div>
+
+        <!-- Botones -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'empleado_lista' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

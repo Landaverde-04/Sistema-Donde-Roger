@@ -1,0 +1,43 @@
+{% extends 'navegacion.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow mx-auto" style="max-width: 650px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Detalle de Empleado</h4>
+        </div>
+        <div class="card-body">
+            <ul class="list-group mb-4">
+                <li class="list-group-item"><strong>Nombres:</strong> {{ empleado.nombresEmpleado }}</li>
+                <li class="list-group-item"><strong>Apellidos:</strong> {{ empleado.apellidosEmpleado }}</li>
+                <li class="list-group-item"><strong>DUI:</strong> {{ empleado.duiEmpleado }}</li>
+                <li class="list-group-item"><strong>Teléfono:</strong> {{ empleado.telEmpleado }}</li>
+                <li class="list-group-item"><strong>Tel. Emergencia:</strong> {{ empleado.telEmergenciaEmpleado }}</li>
+                <li class="list-group-item"><strong>Fecha de Nacimiento:</strong> {{ empleado.fechaNacimientoEmpleado|date:"d/m/Y" }}</li>
+                <li class="list-group-item"><strong>Fecha de Contratación:</strong> {{ empleado.fechaContratacionEmpleado|date:"d/m/Y" }}</li>
+                <li class="list-group-item"><strong>Dirección:</strong> {{ empleado.direccionEmpleado }}</li>
+                <li class="list-group-item"><strong>Salario:</strong> ${{ empleado.salarioEmpleado }}</li>
+                <li class="list-group-item"><strong>Experiencia Laboral:</strong> <br> <span class="ms-2">{{ empleado.experienciaLaboralEmpleado }}</span></li>
+                <li class="list-group-item">
+                    <strong>Contrato PDF:</strong>
+                    {% if empleado.contratoEmpleado %}
+                        <a href="{{ empleado.contratoEmpleado.url }}" target="_blank" class="btn btn-sm btn-outline-primary ms-2">
+                            Ver contrato
+                        </a>
+                    {% else %}
+                        <span class="text-muted ms-2">No disponible</span>
+                    {% endif %}
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <a href="{% url 'empleado_lista' %}" class="btn btn-secondary">
+                    Atrás
+                </a>
+                <a href="{% url 'modificar_empleado' empleado.idEmpleado %}" class="btn btn-success">
+                    <i class="bi bi-pencil"></i> Modificar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
