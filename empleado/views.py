@@ -14,6 +14,7 @@ def registrar_empleado(request):
         salarioEmpleado = request.POST.get('salarioEmpleado')
         experienciaLaboralEmpleado = request.POST.get('experienciaLaboralEmpleado')
         fechaContratacionEmpleado = request.POST.get('fechaContratacionEmpleado')
+        direccionEmpleado = request.POST.get('direccionEmpleado')
         contratoEmpleado = request.FILES.get('contratoEmpleado')  # Recoger el archivo subido
 
         try:
@@ -28,6 +29,7 @@ def registrar_empleado(request):
                 salarioEmpleado=salarioEmpleado,
                 experienciaLaboralEmpleado=experienciaLaboralEmpleado,
                 fechaContratacionEmpleado=fechaContratacionEmpleado,
+                 direccionEmpleado=direccionEmpleado,
                 contratoEmpleado=contratoEmpleado,
                 estaHabilitadoEmpleado= True
             )
@@ -50,6 +52,7 @@ def modificar_empleado(request, idEmpleado):
         empleado.duiEmpleado = request.POST.get('duiEmpleado')
         empleado.fechaNacimientoEmpleado = request.POST.get('fechaNacimientoEmpleado')
         empleado.telEmpleado = request.POST.get('telEmpleado')
+        empleado.direccionEmpleado = request.POST.get('direccionEmpleado')
         empleado.telEmergenciaEmpleado = request.POST.get('telEmergenciaEmpleado')
         empleado.salarioEmpleado = request.POST.get('salarioEmpleado')
         empleado.experienciaLaboralEmpleado = request.POST.get('experienciaLaboralEmpleado')
@@ -60,6 +63,10 @@ def modificar_empleado(request, idEmpleado):
         empleado.save()
         return redirect('empleado_lista')
     return render(request, 'modificar_empleado.html', {'empleado': empleado})
+
+def ver_empleado(request, idEmpleado):
+    empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
+    return render(request, 'ver_empleado.html', {'empleado': empleado})
 
 
 def eliminar_empleado(request, idEmpleado):

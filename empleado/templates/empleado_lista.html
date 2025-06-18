@@ -1,4 +1,3 @@
-<!-- empleado_lista.html -->
 {% extends 'navegacion.html' %}
 {% block content %}
 <div class="container mt-4">
@@ -25,6 +24,8 @@
                 <td>{{ empleado.telEmpleado }}</td>
                 <td>{{ empleado.salarioEmpleado }}</td>
                 <td>
+                    <!-- Botón Ver -->
+                    <a href="{% url 'ver_empleado' empleado.idEmpleado %}" class="btn btn-info btn-sm">Ver</a>
                     <!-- Enlace a modificar -->
                     <a href="{% url 'modificar_empleado' empleado.idEmpleado %}" class="btn btn-primary btn-sm">Modificar</a>
                     <!-- Enlace a eliminar -->

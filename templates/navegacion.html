@@ -53,7 +53,15 @@
           </ul>
         </li>
         <li> <a class="nav-link" href="#">Asistencia</a></li>
-        <li> <a class="nav-link" href="/seguridad/crear_usuario">Crear Usuario</a></li>
+        <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Usuarios
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
+    <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuario</a></li>
+  </ul>
+</li>
         </ul>
         <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
         </div>
