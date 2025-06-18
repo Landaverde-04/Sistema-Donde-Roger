@@ -1,0 +1,67 @@
+{% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/detalle_proveedor.css' %}" />
+    <title>Detalle del Proveedor</title>
+
+</head>
+<body>
+    <div class="pre-card">
+    <div class="card">
+    {% if proveedor.logo %}
+        <p><img src="{{ proveedor.logo.url }}" alt="Logo" width="150"></p>
+    {% endif %}    
+    <h3>Información general</h3>
+    <div class="div-contenido">
+    <p><strong>Nombre:</strong> {{ proveedor.nombreEncargado }} {{ proveedor.apellidoEncargado }}</p>    
+    <p><strong>DUI:</strong> {{ proveedor.duiEncargado }}   <strong class="str-tel">Teléfono:</strong> {{ proveedor.telProveedor }}  </p>
+    <p><strong>Correo:</strong> {{ proveedor.emailProveedor }}</p>
+    <p><strong>Empresa:</strong> {{ proveedor.nombreEmpresa }}</p>    
+    <p><strong>Dirección:</strong> {{ proveedor.ubicacionProveedor }}</p>
+    <p><strong>Tiene IVA:</strong> {{ proveedor.tieneIva|yesno:"Sí,No" }}</p>
+    <h3>Horario de atención</h3>
+    {% if horario %}
+        <p><strong>Días:</strong>
+            {% for dia in dias_mostrados %}
+                {{ dia }}{% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        <p><strong>Hora Apertura:</strong> {{ horario.horaApertura }}
+        <strong class="str-hcierre">Hora Cierre:</strong> {{ horario.horaCierre }}</p>
+    {% else %}
+        <p>No se ha asignado horario.</p>
+    {% endif %}
+    </div>
+    <div class="div-tabla">
+    <h3>Productos</h3>
+    {% if productos %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.nombreProductoProveedor }}</td>
+                        <td>${{ producto.precioProductoProveedor }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No hay productos registrados.</p>
+    {% endif %}
+    </div>
+    <div class="div-botones">
+        <a href="{% url 'listar_proveedores' %}" class="btn btn-danger" id="btn-atras">Regresar</a>
+        <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary" id="btn-editar">Editar proveedor</a>
+                  
+    </div>
+    </div>
+    </div>
+</body>
+</html>
+{% endblock %}

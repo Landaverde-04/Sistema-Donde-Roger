@@ -18,6 +18,7 @@ def registrar_proveedor(request):
             numero_proveedor = request.POST.get('numero_proveedor')
             nombre_empresa = request.POST.get('nombre_empresa')
             direccion_empresa = request.POST.get('direccion_empresa')
+            logo = request.FILES.get('logo')
             iva_proveedor = 'iva_proveedor' in request.POST
             
             #Seccion de tabla horarios
@@ -34,7 +35,8 @@ def registrar_proveedor(request):
                 telProveedor = numero_proveedor,
                 duiEncargado = dui_proveedor,
                 emailProveedor = correo_proveedor,
-                ubicacionProveedor = direccion_empresa,            
+                ubicacionProveedor = direccion_empresa,
+                logo = logo           
             )
 
             HorarioProveedor.objects.create(
@@ -92,3 +94,101 @@ def deshabilitar_proveedor(request, id):#se pasa de argumento el id para que exa
     proveedor.estaHabilitadoProveedor = False #deshabilitamos el campo de habilitacion del proveedor
     proveedor.save()
     return redirect('listar_proveedores') #se redirige a la misma vista de listar proveedores
+
+@login_required
+def detalle_proveedor(request, id_proveedor):
+    proveedor = get_object_or_404(Proveedor, pk=id_proveedor) #Obtenemos el id del proveedor
+    horario = HorarioProveedor.objects.filter(idProveedor=proveedor).first() #filtramos los horarios por el id del proveedor
+    productos = ProductoProveedor.objects.filter(idProveedor=proveedor) #filtramos de igual manera los productos asociados por el id del proveedor
+
+    dias_semana = {
+        '1': 'Lunes',
+        '2': 'Martes',
+        '3': 'Miércoles',
+        '4': 'Jueves',
+        '5': 'Viernes',
+        '6': 'Sábado',
+        '7': 'Domingo'
+    }
+
+    dias_mostrados = []
+    if horario and horario.diaSemana:
+        numeros = horario.diaSemana.split(',')
+        dias_mostrados = [dias_semana.get(num.strip(), 'Desconocido') for num in numeros]
+
+
+    #Creamos un bloque de contexto para enviarle al html eso y pueda llamar cada una de las tablas
+    context = {
+        'proveedor': proveedor,
+        'horario': horario,
+        'productos': productos,
+        'dias_mostrados': dias_mostrados,
+    }
+
+    return render(request, 'detalle_proveedor.html', context)
+
+
+@login_required
+def editar_proveedor(request, id):
+    proveedor = get_object_or_404(Proveedor, pk=id)
+    horario = HorarioProveedor.objects.filter(idProveedor=proveedor)
+    productos = ProductoProveedor.objects.filter(idProveedor=proveedor)
+    dias_guardados = []
+    for h in horario:
+        dias_guardados.extend(int(d) for d in h.diaSemana.split(','))
+    
+
+    if request.method == 'POST':
+        proveedor.nombreEncargado = request.POST.get('nombre_proveedor')
+        proveedor.apellidoEncargado = request.POST.get('apellido_proveedor')
+        proveedor.nombreEmpresa = request.POST.get('nombre_empresa')
+        proveedor.duiEncargado = request.POST.get('dui_proveedor')
+        proveedor.telProveedor = request.POST.get('numero_proveedor')
+        proveedor.emailProveedor = request.POST.get('correo_proveedor')
+        proveedor.ubicacionProveedor = request.POST.get('direccion_empresa')
+        proveedor.tieneIva = bool(request.POST.get('iva_proveedor'))
+        if request.FILES.get('logo'):
+            proveedor.logo = request.FILES['logo']
+        
+        proveedor.save()
+
+        #Para horarios
+        dias = request.POST.getlist('dias')
+        dias_texto = ",".join(dias)        
+
+        hora_apertura = request.POST.get('hora_apertura')
+        hora_cierre = request.POST.get('hora_cierre')
+
+        # Eliminar horarios antiguos
+        horario.delete()
+
+        HorarioProveedor.objects.create(
+            idProveedor=proveedor,
+            diaSemana=dias_texto,
+            horaApertura=hora_apertura,
+            horaCierre=hora_cierre
+            )
+             
+        #Eliminar productos anteriores
+        productos.delete()
+
+        #Creamos el nuevo productos o lista
+        nombres_productos = request.POST.getlist('producto_nombre[]')
+        precios_productos = request.POST.getlist('producto_precio[]')
+
+        for nombre, precio in zip(nombres_productos, precios_productos):
+                ProductoProveedor.objects.create(
+                    idProveedor=proveedor,
+                    nombreProductoProveedor=nombre,
+                    precioProductoProveedor=precio
+                )
+        return redirect('listar_proveedores')
+    
+    contexto ={
+        'proveedor': proveedor,
+        'horario': horario,
+        'dias_guardados': dias_guardados,
+        'productos': productos
+    }
+
+    return render(request, 'editar_proveedor.html', contexto)
