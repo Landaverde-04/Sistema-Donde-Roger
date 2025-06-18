@@ -87,13 +87,3 @@ def detalle_producto(request, producto_id):
     producto = Producto.objects.get(idProducto=producto_id)
 
     return render(request, 'detalle_producto.html', {'producto': producto})
-
-
-
-#Este metodo funciona para que se deshabilite el proveedor y ya no aparezca en el cuadro de listado de proveedores, se define su respectiva url y en el html se pasa el argumento de la vista en el boton elimiar, incluyendo un mensaje de confirmación con "oneclick"
-@login_required
-def deshabilitar_producto(request, id):#se pasa de argumento el id para que exactamente en la bd busque el id de la fila de la tabla
-    producto = get_object_or_404(Producto, pk=id) #mandamos el get object 404 para que si no hay id muestre que no existe la pagina
-    producto.estaHabilitadoProducto = False #deshabilitamos el campo de habilitacion del proveedor
-    producto.save()
-    return redirect('listar_productos') #se redirige a la misma vista de listar proveedores
