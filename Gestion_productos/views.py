@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Producto
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 # Create your views here.
@@ -12,7 +13,7 @@ def registrar_producto(request):
         # Aquí podrías manejar la lógica para registrar un producto
         # Por ejemplo, guardar los datos del formulario en la base de datos
         # Asegúrate de que los campos del formulario coincidan con los del modelo Producto
-        # producto = Producto() 
+        # producto = Producto() Definimos un objeto Producto para guardar los datos 
         # producto.nombreProducto = request.POST.get('nombre')
         # producto.unidadMedida = request.POST.get('unidad_medida')
         # producto.marcaProducto = request.POST.get('marca')
@@ -28,6 +29,7 @@ def registrar_producto(request):
         producto.unidadMedida = unidad_medida
         producto.marcaProducto = marca
         producto.descripcionProducto = descripcion
+        producto.estaHabilitadoProveedor = True  # Asignamos el estado de habilitación por defecto
         # Guarda el producto en la base de datos
         producto.save()
         return redirect('listar_productos')
@@ -37,15 +39,12 @@ def registrar_producto(request):
 # Vista para registrar un producto
 @login_required
 def listar_productos(request):
-    if request.method == 'POST':
-        # Aquí podrías manejar la lógica para registrar un producto
-        # Por ejemplo, guardar los datos del formulario en la base de datos
-        pass
-    
-    # Aquí podrías obtener los productos de la base de datos
-    # productos = Producto.objects.all()
-    productos = Producto.objects.all()
-    return render(request, 'listar_productos.html', {'productos': productos})
+    productos = Producto.objects.filter(estaHabilitadoProducto=True).order_by('idProducto')
+    paginator = Paginator(productos, 10)  # Cambia 10 por la cantidad que desees por página
+    # Obtener el número de página desde la solicitud GET
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'listar_productos.html', {'productos': page})
 
 ## Vista para actualizar un producto
 @login_required
@@ -78,3 +77,13 @@ def detalle_producto(request, producto_id):
     # producto = Producto.objects.get(id=producto_id)
     producto = None
     return render(request, 'detalle_producto.html', {'producto': producto})
+
+
+
+#Este metodo funciona para que se deshabilite el proveedor y ya no aparezca en el cuadro de listado de proveedores, se define su respectiva url y en el html se pasa el argumento de la vista en el boton elimiar, incluyendo un mensaje de confirmación con "oneclick"
+@login_required
+def deshabilitar_producto(request, id):#se pasa de argumento el id para que exactamente en la bd busque el id de la fila de la tabla
+    producto = get_object_or_404(Producto, pk=id) #mandamos el get object 404 para que si no hay id muestre que no existe la pagina
+    producto.estaHabilitadoProveedor = False #deshabilitamos el campo de habilitacion del proveedor
+    producto.save()
+    return redirect('listar_productos') #se redirige a la misma vista de listar proveedores
