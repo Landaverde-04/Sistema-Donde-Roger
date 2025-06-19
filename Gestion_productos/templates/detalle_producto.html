@@ -1,4 +1,57 @@
 {% extends 'navegacion.html' %}
-{%block content%}
-<h2>Detalles del Producto</h2>
-{%endblock%}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Detalle del Producto</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Información general</h5>
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item"><strong>ID:</strong> {{ producto.idProducto|default:"001" }}</li>
+                <li class="list-group-item"><strong>Nombre:</strong> {{ producto.nombreProducto|default:"Ejemplo de Producto" }}</li>
+                <li class="list-group-item"><strong>Unidad de Medida:</strong> {{ producto.unidadMedida|default:"KG" }}</li>
+                <li class="list-group-item"><strong>Marca:</strong> {{ producto.marcaProducto|default:"Marca Ejemplo" }}</li>
+                <li class="list-group-item"><strong>Descripción:</strong> {{ producto.descripcionProducto|default:"Producto de ejemplo para mostrar el detalle." }}</li>
+            </ul>
+            <h5 class="card-title mt-4">Historial de compra</h5>
+            <div class="alert alert-info">
+                Próximamente se mostrará el historial de compras de este producto.
+            </div>
+            <!-- Ejemplo de tabla estática -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cantidad</th>
+                        <th>Proveedor</th>
+                        <th>Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-06-01</td>
+                        <td>20</td>
+                        <td>Proveedor Ejemplo</td>
+                        <td>$2.50</td>
+                    </tr>
+                    <tr>
+                        <td>2025-05-15</td>
+                        <td>10</td>
+                        <td>Proveedor Ejemplo 2</td>
+                        <td>$2.60</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 class="card-title mt-4">Stock actual</h5>
+            <div class="alert alert-success">
+                Stock disponible: <strong>35</strong> unidades
+            </div>
+        </div>
+        <div class="card-footer text-end">
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Volver a la lista</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

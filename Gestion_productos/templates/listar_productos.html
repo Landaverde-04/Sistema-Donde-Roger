@@ -1,12 +1,23 @@
 {% extends 'navegacion.html' %}
-
+{% load static %}
 {% block content %}
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/listar_producto.css' %}">
+    <title>Lista de Productos</title>
+</head>
     <div class="container mt-3">
         <h2 class="mb-4">Lista de Productos</h2>
-        <div class="mb-4 text-end">
+        <div class="mb-4 text-start">
             <a href="{% url 'registrar_producto' %}" class="btn btn-success">Registrar Nuevo Producto</a>
         </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="div-table">
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -19,18 +30,35 @@
                 </tr>
             </thead>
             <tbody>
-                {% if productos %}
+                {% if productos.object_list %}
                 {% for producto in productos %}
                     <tr>
                         <td>{{ producto.idProducto }}</td>
-                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.nombreProducto }}</td>
                         <td>{{ producto.unidadMedida }}</td>
                         <td>{{ producto.marcaProducto }}</td>
                         <td>{{ producto.descripcionProducto }}</td>
-                        <td><a href="{% url 'actualizar_producto' producto.idProducto %}" class="btn btn-primary">Editar</a></td>
-                        <td><a href="{% url 'eliminar_producto' producto.idProducto %}" class="btn btn-danger">Eliminar</a></td>
-                        <td><a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
+                        <td><a href="{% url 'actualizar_producto' producto.idProducto %}" class="btn btn-primary">Editar</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#EliminarModal" onclick="document.getElementById('EliminarModal').dataset.productoId = '{{ producto.idProducto }}';">Eliminar</button>
+                        <a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
                     </tr>
+                    <div class="modal fade" id="EliminarModal" tabindex="-1" aria-labelledby="EliminarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EliminarModalLabel">Confirmar Eliminación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar">Cancelar</button>
+                    </div>
+                    <div class="modal-body">
+                        ¿Estás seguro de que deseas eliminar este producto?
+                        <form method="post" action="{% url 'eliminar_producto' producto.idProducto %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
                 {% endfor %}
                 {% else %}
                     <div class="container mt-4">
@@ -39,5 +67,36 @@
                 {% endif %}
             </tbody>
         </table>
+        </div>
     </div>
+    <div class="paginacion-proveedores">
+    <nav aria-label="Paginación de proveedores">
+  <ul class="pagination justify-content-center">
+    {% if productos.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">&laquo; Primero</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.previous_page_number }}">Anterior</a>
+      </li>
+    {% endif %}
+
+    <li class="page-item active">
+      <span class="page-link">
+        Página {{ productos.number }} de {{ productos.paginator.num_pages }}
+      </span>
+    </li>
+
+    {% if productos.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.next_page_number }}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.paginator.num_pages }}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+</div>
+</div>
 {% endblock %}

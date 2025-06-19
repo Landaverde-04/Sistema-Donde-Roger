@@ -1,4 +1,71 @@
 {% extends 'navegacion.html' %}
+{% load static %}
 {%block content%}
-<h2>Actualizar Producto</h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/actualizar_producto.css' %}">
+    <script src="{% static 'JS/actualizar_producto.js' %}"></script>
+    <title>Actualizar Producto</title>
+</head>
+<div class="container mt-4">
+    <div class="card mx-auto" style="max-width: 500px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4">Actualizar Producto</h2>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Nombre del producto</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" maxlength="50" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" value="{{ producto.nombreProducto|default:'' }}">
+                </div>
+
+                <div class="mb-3">
+                    <label for="unidadMedida" class="form-label">Unidad de medida</label>
+                    <input class="form-control" id="unidadMedida" name="unidadMedida" maxlength="20" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required value="{{ producto.unidadMedida|default:'' }}">
+                </div>
+                <div class="mb-3">
+                    <label for="marcaProducto" class="form-label">Marca de producto</label>
+                    <input type="text" class="form-control" id="marcaProducto" name="marcaProducto" maxlength="20" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" value="{{ producto.marcaProducto|default:'' }}">
+                </div>
+                <div class="mb-3">
+                    <label for="descripcionProducto" class="form-label">Descripción producto</label>
+                    <textarea class="form-control" id="descripcionProducto" name="descripcionProducto" rows="3">{{ producto.descripcionProducto|default:'' }}</textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Volver a la lista</a>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ActualizarModal">
+                        Actualizar
+                    </button>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="ActualizarModal" tabindex="-1" aria-labelledby="ActualizarModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ActualizarModalLabel">Confirmar Actualización</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas actualizar este producto?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <!-- Este botón envía el formulario -->
+                                <button type="submit" class="btn btn-primary">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {%endblock%}

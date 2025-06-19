@@ -9,6 +9,7 @@ class Producto(models.Model):
     unidadMedida = models.CharField(max_length=20)
     marcaProducto = models.CharField(max_length=20)
     descripcionProducto = models.TextField()
+    estaHabilitadoProducto = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'Producto'
