@@ -16,4 +16,5 @@ db.sqlite3
 
 # VSCode
 .vscode/
-media/
+media/logos
+media/contratos
