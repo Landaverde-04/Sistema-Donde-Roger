@@ -1,11 +1,27 @@
 //metodo para mostrar mensaje de exito al registrar proveedor
+function mostrarModal(mensaje) {
+  document.getElementById('modalMensajeTexto').textContent = mensaje;
+  const modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+  modal.show();
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   if (params.get("exito") === "1") {
-    alert("¡Proveedor registrado exitosamente!");
+    mostrarModal("¡Proveedor registrado exitosamente!");
   }
 });
 
+//metodo para cancelar registro
+  document.addEventListener('DOMContentLoaded', function () {
+    var btnCancelar = document.getElementById('btnCancelar');
+    var myModal = new bootstrap.Modal(document.getElementById('modalCancelar'));
+
+    btnCancelar.addEventListener('click', function (event) {
+      event.preventDefault();  // Evita navegación
+      myModal.show();          // Muestra el modal
+    });
+  });
 //metodo que agrega fila a la tabla producto
 function agregarFila() {
     const tabla = document.querySelector("#tabla-productos tbody");
@@ -26,21 +42,12 @@ function eliminarFila(boton) {
     const filas = tabla.querySelectorAll("tr");
 
     if (fila === filas[0]) {
-        alert("¡No puedes eliminar la primera fila!");
+        mostrarModal("¡No puedes eliminar la primera fila!");
         return;
     }
 
     fila.remove();
 }
-document.querySelectorAll('input[name="producto_precio[]"]').forEach(input => {
-  input.addEventListener('input', () => {
-    if (input.value !== '' && Number(input.value) < 0) {
-      input.value = '';
-      alert('El precio no puede ser negativo');
-    }
-  });
-});
-
 //metodo para validar checkbox que seleccione al menos 1
 document.addEventListener("DOMContentLoaded", function () {
   const formulario = document.getElementById("form-proveedor");
@@ -57,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!alMenosUnoMarcado) {
       e.preventDefault(); // Evita que el formulario se envíe
-      alert("Debe seleccionar al menos un día de atención.");
+      mostrarModal("Debe seleccionar al menos un día de atención.");
     }
   });
 });

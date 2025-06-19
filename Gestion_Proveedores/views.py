@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from Gestion_Proveedores.models import Proveedor, HorarioProveedor, ProductoProveedor
 from django.core.paginator import Paginator
 from django.contrib import messages
+from seguridad.decoradores import groups_required
 from django.urls import reverse#esta importacion es para manejar la url y pasar el paremetro de validacion a js
 
 # Create your views here.
+@groups_required('Jefe', 'Gerente')
 @login_required
 def registrar_proveedor(request):
     if request.method == 'POST':
@@ -77,6 +79,7 @@ def registrar_proveedor(request):
 
 
 @login_required
+@groups_required('Jefe', 'Gerente', 'Colaborador')
 def listar_proveedor(request):
 
     proveedores = Proveedor.objects.filter(estaHabilitadoProveedor=True).order_by('idProveedor')#objeto de proveedor ordenado por id
@@ -89,6 +92,7 @@ def listar_proveedor(request):
 
 #Este metodo funciona para que se deshabilite el proveedor y ya no aparezca en el cuadro de listado de proveedores, se define su respectiva url y en el html se pasa el argumento de la vista en el boton elimiar, incluyendo un mensaje de confirmación con "oneclick"
 @login_required
+@groups_required('Jefe')
 def deshabilitar_proveedor(request, id):#se pasa de argumento el id para que exactamente en la bd busque el id de la fila de la tabla
     proveedor = get_object_or_404(Proveedor, pk=id) #mandamos el get object 404 para que si no hay id muestre que no existe la pagina
     proveedor.estaHabilitadoProveedor = False #deshabilitamos el campo de habilitacion del proveedor
