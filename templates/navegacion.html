@@ -60,7 +60,16 @@
             {% endif %}          
           </ul>
         </li>
-        <li> <a class="nav-link" href="#">Asistencia</a></li>
+               <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Asistencia
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+    <li><a class="dropdown-item" href="/empleado/marcar_asistencia/">Marcar Asistencia</a></li>
+    {% if user.groups.first.name == 'Jefe' %}
+    <li><a class="dropdown-item" href="/empleado/historial_asistencia">Lista de Asistencias</a></li>
+    {% endif %}
+  </ul>        
         {% if user.groups.first.name == 'Jefe' %}
         <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
