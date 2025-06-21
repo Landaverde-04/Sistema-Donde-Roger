@@ -1,7 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 import datetime
 from . import models
+from Gestion_productos import models as models_productos
+
+def api_productos(request):
+    productos = list(models_productos.Producto.objects.all().order_by('nombreProducto').values())
+    return JsonResponse(productos, safe=False)
 
 def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
@@ -34,9 +40,15 @@ def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de crea
     if inventario_activo is None:
         return redirect('crear_inventario')
     else:
+        # if request.method == 'POST':
+        #     detalle = models.DetalleInventario.objects.create();
+        #     detalle.idInventario = inventario_activo
+        #     detalle.idProducto = request.POST['product']
+            
         return render(request, 'crear_detalle_inventario.html')
     # if inventario_activo:
     
+
         
      
 

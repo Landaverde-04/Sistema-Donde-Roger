@@ -1,71 +1,85 @@
 {% extends 'navegacion.html' %} {%load static%}
 {% block content %}
+
 <head>
-    
+
 </head>
+<form method="post" action="{% url 'crear_detalle_inventario' %}" autocomplete="off">
+    {%csrf_token%}
+    <div class="container justify-content-center">
+        <div class="row text-center mt-4">
+            <h1>Crear detalle de inventario</h1>
+        </div>
 
-<div class="container justify-content-center">
-    <div class="row text-center mt-4">
-        <h1>Crear detalle de inventario</h1>
-    </div>
+        <div class="row my-2">
+            <div class="col-5 text-end">
+                <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
+            </div>
+            <div class="col-5 text-center">
+                <h5>Hora de creacion: {{ hora_inventario }}</h5>
+            </div>
+            <!-- <div class="col-2 align-content-start text-start">
+                <button type="button" class="btn btn-primary" style="border-radius:50px;">Crear detalle</button>
+            </div> -->
+        </div>
+        <div class="row my-2 px-2 justify-content-center" style="background-color: #f3edd9;">
+            <div class="col-6 align-content-end">
+                <h3 class="text-center">Producto:</h3>
+            </div>
+            <div class="col-6 justify-content-start" id="productos-container">
+                <input class="form-control w-100 col-5" id="product_input" name="product" />
+                <!-- <div class="position-absolute">
+                    <ul class="list-group list-group-flush w-100" id="productos">
+                        <li class="list-group-item">
+                            <button type="button" style="background-color: white; border: none;">Producto 1</button>
+                        </li>
+                        <li class="list-group-item">Producto 2</li>
+                        <li class="list-group-item">Producto 3</li>
+                    </ul>
+                </div> -->
+            </div>
+        </div>
+        <div class="row my-2 px-2 justify-content-center">
+            <div class="col-auto py-1 d-flex align-items-center">
+                <label for="unidad_de_medida" class="mb-0">Unidad de medida:</label>
+            </div>
+            <div class="col-sm-4">
+                <input type="text" readonly class="form-control-plaintext w-100" id="unidad_de_medida"/>
+            </div>
+            <div class="col-auto py-1 d-flex align-items-center">
+                <label for="marca" class="mb-0">Marca:</label>
+            </div>
+            <div class="col-sm-4">
+                <input type="text" readonly class="form-control-plaintext w-100" id="marca"/>
+            </div>
+        </div>
 
-    <div class="row my-2">
-        <div class="col-5 text-end">
-            <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
-        </div>
-        <div class="col-5 text-center">
-            <h5>Hora de creacion: {{ hora_inventario }}</h5>
-        </div>
-        <!-- <div class="col-2 align-content-start text-start">
-            <button type="button" class="btn btn-primary" style="border-radius:50px;">Crear detalle</button>
-        </div> -->
-    </div>
-    <div class="row my-2 px-2 justify-content-center" style="background-color: #f3edd9;">
-        <div class="col-6 align-content-end">
-            <h3 class="text-center">Producto:</h3>
-        </div>
-        <div class="col-6 justify-content-start">
-            <input class="form-control w-100 col-5" id="product_select" />
-        </div>
-    </div>
-    <div class="row my-2 px-2 justify-content-center">
-        <div class="col-auto py-1 d-flex align-items-center">
-            <label for="unidad_de_medida" class="mb-0">Unidad de medida:</label>
-        </div>
-        <div class="col-sm-4">
-            <select class="form-control w-100" id="unidad_de_medida">
-                <option>unidad de medida</option>
-            </select>
-        </div>
-        <div class="col-auto py-1 d-flex align-items-center">
-            <label for="marca" class="mb-0">Marca:</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" readonly class="form-control-plaintext w-100" id="marca" value="Coca" />
-        </div>
-    </div>
+        <div class="row mt-2">
+            <div class="col-10">
+                <table class="table table-borderless text-center" id="tabla-cantidades">
+                    <thead>
+                        <tr>
+                            <th style="width: auto;">Cantidad</th>
+                            <th>Fecha y hora de ingreso</th>
+                            <th>Fecha de caducidad</th>
+                            <th style="width: auto;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-    <div class="row mt-2">
-        <div class="col-10">
-            <table class="table table-borderless text-center" id="tabla-cantidades">
-                <thead>
-                    <tr>
-                        <th style="width: auto;">Cantidad</th>
-                        <th>Fecha y hora de ingreso</th>
-                        <th>Fecha de caducidad</th>
-                        <th style="width: auto;">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-primary" style="border-radius: 50px;" id="btnNuevafila">Agregar
+                    nueva cantidad </button>
+            </div>
         </div>
-        <div class="col-2">
-            <button type="button" class="btn btn-primary" style="border-radius: 50px;" id="btnNuevafila">Agregar nueva cantidad </button>
+        <div class="row justify-content-end">
+            <button type="button" class="btn btn-success" id="btnGuardar">Guardar detalle</button>
         </div>
     </div>
-</div>
+</form>
 
 <script src="{% static 'JS/crear_detalle_inventario.js' %}"></script>
 {% endblock %}
