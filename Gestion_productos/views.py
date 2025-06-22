@@ -3,10 +3,12 @@ from .models import Producto
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from seguridad.decoradores import groups_required
 
 
 # Create your views here.
 # viem de registrar un producto
+@groups_required('Jefe')
 @login_required
 def registrar_producto(request):
     if request.method == 'POST':
@@ -37,6 +39,7 @@ def registrar_producto(request):
     return render(request, 'registrar_producto.html')
 
 # Vista para registrar un producto
+@groups_required('Jefe')
 @login_required
 def listar_productos(request):
     productos = Producto.objects.filter(estaHabilitadoProducto=True).order_by('idProducto')
@@ -47,6 +50,7 @@ def listar_productos(request):
     return render(request, 'listar_productos.html', {'productos': page})
 
 ## Vista para actualizar un producto
+@groups_required('Jefe')
 @login_required
 def actualizar_producto(request, producto_id):
     if request.method == 'POST':
@@ -69,9 +73,10 @@ def actualizar_producto(request, producto_id):
     producto = Producto.objects.get(idProducto=producto_id)
     return render(request, 'actualizar_producto.html', {'producto': producto})
 ## Vista para eliminar un producto
+@groups_required('Jefe')
 @login_required
 def eliminar_producto(request, producto_id):
-    if request.method == 'post':
+    if request.method == 'POST':
         # Aquí podrías manejar la lógica para eliminar un producto
         producto = Producto.objects.get(idProducto=producto_id)
         producto.estaHabilitadoProducto = False  # Deshabilitamos el producto en lugar de eliminarlo
@@ -82,6 +87,7 @@ def eliminar_producto(request, producto_id):
         # Si no es una solicitud GET, redirigimos a la lista de productos
         return redirect('listar_productos')
 # Vista para ver los detalles de un producto
+@groups_required('Jefe')
 @login_required
 def detalle_producto(request, producto_id):
     producto = Producto.objects.get(idProducto=producto_id)
