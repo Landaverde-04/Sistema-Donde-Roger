@@ -1,14 +1,13 @@
 {% extends 'navegacion.html' %}
 
 {% load static %}{% block content %}
+<head>
 <link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
-<script src="{% static 'JS/registrar_proveedor.js' %}"></script>
+<script src="{% static 'JS/listar_proveedores.js' %}"></script>
+<title>Proveedores</title>
+</head>
 <div class="container mt-3">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-success">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
+
     <h2 class="mb-4">Lista de proveedores</h2>
     <div>
         <a href="{% url 'registrar_proveedor' %}" class="btn btn-success">Registrar nuevo proveedor</a>
@@ -40,8 +39,21 @@
                     {% else %}
                     <td>No</td>
                     {% endif %}
-                    <td><a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
-                        <a href="{% url 'deshabilitar_proveedor' proveedor.idProveedor %}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar al proveedor {{ proveedor.nombreEncargado }}?');">Eliminar</a>
+                    <td>
+                      {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+                      <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
+                        
+                      <button 
+                      type="button" 
+                      class="btn btn-danger" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#modalConfirmarEliminar"
+                      data-id="{{ proveedor.idProveedor }}"
+                      data-nombre="{{ proveedor.nombreEncargado }}"
+                    >
+                      Eliminar
+                    </button>
+                    {% endif %}
                         <a href="{% url 'detalle_proveedor' proveedor.idProveedor %}" class="btn btn-info">Ver</a></td>
                 </tr>
             {% endfor %}
@@ -99,5 +111,24 @@
     </div>
   </div>
 </div>
-
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-check-circle"></i>  Registro satisfactorio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de eliminar al proveedor <strong id="modalNombreProveedor"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnEliminarProveedor" class="btn btn-danger">Sí, eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% if messages %}
+  <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
+{% endif %}
 {% endblock %}
