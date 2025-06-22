@@ -1,123 +1,131 @@
-{% extends "navegacion.html" %}
+{% extends 'navegacion.html' %}
+{% load static %}
 {% block content %}
-<div class="container mt-4">
-    <h2>Usuarios</h2>
-    <table class="table table-bordered">
+<head>
+<link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
+<script src="{% static 'JS/listar_proveedores.js' %}"></script>
+<title>Usuarios</title>
+</head>
+<div class="container mt-3">
+
+    <h2 class="mb-4">Lista de usuarios</h2>
+    <div>
+        <a href="{% url 'crear_usuario' %}" class="btn btn-success">Crear Usuario</a>
+    </div>
+    <div class="div-table">
+    <table class="table table-striped w-85 mx-auto">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Empleado</th>
-                <th>Correo</th>
-                <th>Rol</th>
-                <th>Acciones</th>
+                <th class="w-5">ID</th>
+                <th class="w-15">Usuario</th>
+                <th class="w-15">Empleado</th>
+                <th class="w-15">Correo</th>
+                <th class="w-7">Rol</th>
+                <th class="w-10">Acciones</th>
             </tr>
         </thead>
         <tbody>
-        {% for usuario in usuarios %}
+        {% if usuarios %}
+            {% for usuario in usuarios %}
+                <tr>
+                    <td>{{ usuario.id }}</td>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.idEmpleado }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                      {% for group in usuario.groups.all %}
+                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>
+                      <a href="{% url 'modificar_usuario' usuario.id %}" class="btn btn-primary">Editar</a>
+                      <button 
+                          type="button"
+                          class="btn btn-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modalConfirmarEliminar"
+                          data-id="{{ usuario.id }}"
+                          data-nombre="{{ usuario.username }}"
+                          >
+                        Eliminar
+                      </button>
+                      <a href="{% url 'ver_usuario' usuario.id %}" class="btn btn-info">Ver</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
             <tr>
-                <td>{{ usuario.id }}</td>
-                <td>{{ usuario.username }}</td>
-                <td>{{ usuario.idEmpleado }}</td>
-                <td>{{ usuario.email }}</td>
-                <td>{% for group in usuario.groups.all %}{{ group.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
-                <td>
-                    <a href="{% url 'ver_usuario' usuario.id %}" class="btn btn-info btn-sm">Ver</a>
-                    <a href="{% url 'modificar_usuario' usuario.id %}" class="btn btn-primary btn-sm">Modificar</a>
-                <button 
-                    type="button" 
-                    class="btn btn-danger btn-sm" 
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalEliminar"
-                    data-url="{% url 'eliminar_usuario' usuario.id %}"
-                    data-nombre="{{ usuario.username }}">
-                    Eliminar
-                </button>
-                </td>
+                <td colspan="6" class="text-center">No hay usuarios registrados</td>
             </tr>
-        {% empty %}
-            <tr>
-                <td colspan="5" class="text-center">No hay usuarios registrados</td>
-            </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
-    <a href="{% url 'crear_usuario' %}" class="btn btn-success">Crear Usuario</a>
+    </div>
+    {# Si quieres paginación, la puedes agregar aquí igual que en proveedores #}
 </div>
 
-
-<div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+<!-- Modal de Éxito -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title" id="modalExitoLabel">
-            <i class="bi bi-check-circle-fill me-2"></i>Éxito
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="mensajeModalLabel"><i class="bi bi-check-circle"></i> Registro satisfactorio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-      <div class="modal-body" id="contenidoModalExito">
-        <!-- Aquí se pondrá el mensaje -->
+      <div class="modal-body" id="modalMensajeTexto">
+        Aquí va el mensaje
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal de Confirmación de Eliminación -->
-<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+<!-- Modal Confirmar Eliminar -->
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-danger">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="modalEliminarLabel">
-            <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+    <div class="modal-content">
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-octagon-fill"></i> Confirmar eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">
-        <span id="textoEliminar"></span>
+        ¿Estás seguro de eliminar al usuario <strong id="modalNombreUsuario"></strong>?
       </div>
       <div class="modal-footer">
-        <form id="formEliminar" method="post" action="">
-            {% csrf_token %}
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-danger">Eliminar</button>
-        </form>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnEliminarUsuario" class="btn btn-danger">Sí, eliminar</a>
       </div>
     </div>
   </div>
 </div>
 
 {% if messages %}
-  {% for message in messages %}
-    {% if message.tags == "success" %}
-      <script>
-        window.addEventListener('DOMContentLoaded', function() {
-          document.getElementById('contenidoModalExito').innerText = "{{ message|escapejs }}";
-          var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
-          modalExito.show();
-        });
-      </script>
-    {% endif %}
-  {% endfor %}
+  <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
 {% endif %}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  var modalEliminar = document.getElementById('modalEliminar');
+  // Modal eliminar usuario: configura el link con el id correcto
+  var modalEliminar = document.getElementById('modalConfirmarEliminar');
   if (modalEliminar) {
     modalEliminar.addEventListener('show.bs.modal', function (event) {
       var button = event.relatedTarget;
-      var url = button.getAttribute('data-url');
+      var idUsuario = button.getAttribute('data-id');
       var nombreUsuario = button.getAttribute('data-nombre');
-      document.getElementById('textoEliminar').innerHTML = 
-        '¿Estás seguro que deseas eliminar al usuario <b class="text-danger">' + nombreUsuario + '</b>?';
-      var form = document.getElementById('formEliminar');
-      form.action = url;
+      document.getElementById('modalNombreUsuario').innerText = nombreUsuario;
+      var btnEliminar = document.getElementById('btnEliminarUsuario');
+      btnEliminar.href = "/usuarios/eliminar/" + idUsuario + "/"; // Modifica la ruta si es diferente
     });
+  }
+  // Modal de éxito desde Django messages
+  var mensajeExito = document.getElementById('mensajeExito');
+  if (mensajeExito && mensajeExito.value) {
+    var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+    document.getElementById('modalMensajeTexto').innerText = mensajeExito.value;
+    modal.show();
   }
 });
 </script>
-
 {% endblock %}
