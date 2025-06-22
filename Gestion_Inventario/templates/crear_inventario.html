@@ -1,4 +1,5 @@
 {% extends 'navegacion.html' %}
+{%load static%}
 {% block content %}
 
 <div class="container-fluid">
@@ -7,14 +8,20 @@
     </div>
 
     <div class="row my-2">
-        <div class="col-5 text-end">
+        <div class="col-4 text-center">
             <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
         </div>
-        <div class="col-5 text-center">
+        <div class="col-4 text-center">
             <h5>Hora de creacion: {{ hora_inventario }}</h5>
         </div>
-        <div class="col-2 align-content-start text-start">
-            <a type="button" class="btn btn-primary" style="border-radius:50px;" href = {% url 'crear_detalle_inventario' %}>Crear detalle</a>
+        <div class="col-2 text-end">
+            <a type="button" class="btn btn-primary" style="border-radius:50px;"
+                href="{% url 'crear_detalle_inventario' %}">Crear detalle</a>
+        </div>
+        <div class="col-2 text-start">
+
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-confirmacion" style="border-radius:50px;">Guadar inventario</button>
+
         </div>
     </div>
 
@@ -27,9 +34,57 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+            <tbody>
+                {%for producto,stock in detalles.items%}
+                <tr>
+                    <td>{{ producto }}</td>
+                    <td>{{ stock }}</td>
+                    <td>
+                        <a class="btn btn-primary">Ver producto</a>
+                        <a class="btn btn-success">Editar detalle</a>
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
         </table>
+    </div>
+    <!-- modal de exito para detalle de inventario -->
+    <div class="modal fade" id="modal-exito" tabindex="-1" aria-labelledby="modal-exito" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-success text-white fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">Exito</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    Se ha creado el detalle de inventario con exito
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal de confirmacion para guardar inventario -->
+    <div class="modal fade" id="modal-confirmacion" tabindex="-1" aria-labelledby="modal-confirmacion"
+        aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content ">
+            <div class="modal-header bg-warning text-black fw-bold">
+                <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                ¿Está seguro de que desea guardar el inventario?, luego no se podran editar los detalles de inventario
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" action="{% url 'crear_inventario' %}">
+                    {%csrf_token%}
+                    <button type="submit" class="btn btn-success" style="border-radius:50px;">Guadar inventario</button>
+                </form>
+            </div>
+        </div>
     </div>
 
 </div>
-
+<script src="{% static 'JS/crear_inventario.js' %}"></script>
 {% endblock %}

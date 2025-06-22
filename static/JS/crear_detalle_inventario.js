@@ -1,4 +1,5 @@
 document.getElementById("btnNuevafila").addEventListener("click", addRow);
+addRow();
 // document.querySelector('#btnGuardar').addEventListener('click', crearListadoProductos);
 const inputProducto = document.getElementById("product_input")
 inputProducto.addEventListener("focus", crearListadoProductos);
@@ -22,6 +23,14 @@ function addRow() {
     const eliminar = row.insertCell(3);
 
 
+    //Recuperar fecha y hora actuales
+    const now = new Date();
+    const localISOString = now.toISOString(); // UTC
+    const offset = now.getTimezoneOffset(); // en minutos
+
+    const localDate = new Date(now.getTime() - offset * 60000); // ajustar al horario local
+    const result = localDate.toISOString().slice(0, 16);
+
     //Creamos los elementos dentro de las celdas
     const inputCantidad = cantidad.appendChild(document.createElement("input"));
     inputCantidad.classList.add("form-control");
@@ -34,6 +43,7 @@ function addRow() {
     const inputIngreso = ingreso.appendChild(document.createElement("input"));
     inputIngreso.classList.add("form-control");
     inputIngreso.type = "datetime-local";
+    inputIngreso.value = result;
     inputIngreso.id = "ingreso-" + row.rowIndex;
     inputIngreso.name = "ingreso-" + row.rowIndex;
     inputIngreso.required = true;
@@ -176,7 +186,7 @@ function validarProducto() {
         console.log("Validacion eliminada");
     }
 
-     inputProducto.classList.remove("is-valid", "is-invalid");
+    inputProducto.classList.remove("is-valid", "is-invalid");
 
     if (nomProducto.length > 0) {
         const producto = productos.find(producto => producto.nombreProducto.toLowerCase() == nomProducto);
@@ -209,6 +219,7 @@ async function obtenerProductos() {
         .then(response => response.json())
         .then(data => {
             productos = data;
+            console.log(productos);
         })
 }
 
@@ -218,18 +229,18 @@ async function obtenerProductos() {
 
     // Fetch all the forms we want to apply custom Bootstrap validation styles to
     const forms = document.querySelectorAll('.needs-validation')
-    
-    
-    
+
+
+
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
-            
-
+            const modal = new bootstrap.Modal(document.getElementById('modal-exito'));
             if (!form.checkValidity()) {
                 event.preventDefault()
                 event.stopPropagation()
             }
+            modal.show();
             form.classList.add('was-validated')
         }, false)
     })
