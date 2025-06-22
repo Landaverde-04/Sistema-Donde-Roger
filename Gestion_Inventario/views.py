@@ -38,14 +38,26 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
 def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
     inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first() #obtener el inventario activo en proceso
     if inventario_activo is None:
-        return redirect('crear_inventario')
+        return redirect('ver_inventario')
     else:
-        # if request.method == 'POST':
-        #     detalle = models.DetalleInventario.objects.create();
-        #     detalle.idInventario = inventario_activo
-        #     detalle.idProducto = request.POST['product']
-            
-        return render(request, 'crear_detalle_inventario.html')
+        if request.method == 'POST':
+            print(request.POST)
+            indices_keys = [key for key in request.POST.keys() if key.startswith('cantidad-')]
+            for i in range(len(indices_keys)):
+                detalle = models.DetalleInventario();
+                detalle.idInventario = inventario_activo
+                detalle.idProducto_id = request.POST['product']
+                detalle.cantidadProducto = request.POST['cantidad-' + str(i+1)]
+                detalle.fechaIngreso = request.POST['ingreso-' + str(i+1)][0:10].format('YYYY-MM-DD')
+                detalle.horaIngreso = request.POST['ingreso-'+ str(i+1)][11:16].format('HH:MM:SS')
+                detalle.fechaCaducidad = request.POST['caducidad-'+ str(i+1)].format('YYYY-MM-DD')
+                detalle.save()
+                print(detalle)
+            return redirect('crear_inventario')
+        elif request.method == 'GET':
+            fecha_inventario = inventario_activo.fechaInventario
+            hora_inventario = inventario_activo.horaInventario
+            return render(request, 'crear_detalle_inventario.html', {'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
     # if inventario_activo:
     
 
