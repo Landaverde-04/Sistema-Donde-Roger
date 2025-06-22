@@ -36,7 +36,7 @@ def registrar_producto(request):
         # Guarda el producto en la base de datos
         producto.save()
         # ...validaciones y guardado...
-        messages.success(request, "¡Producto registrado exitosamente!")
+        messages.success(request, "¡Producto registrado exitosamente!", extra_tags='producto')
         return redirect('listar_productos')
 
     return render(request, 'registrar_producto.html')
