@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.http import HttpResponse
 from .models import Empleado
+from django.contrib import messages
+
 
 def registrar_empleado(request):
     if request.method == 'POST':
@@ -33,6 +35,7 @@ def registrar_empleado(request):
                 contratoEmpleado=contratoEmpleado,
                 estaHabilitadoEmpleado= True
             )
+            messages.success(request, "Empleado registrado con éxito")
             return redirect('empleado_lista')  # Redirige a la lista de empleados o donde prefieras
         except Exception as e:
             return HttpResponse(f"Error al registrar empleado: {e}", status=400)
@@ -61,6 +64,7 @@ def modificar_empleado(request, idEmpleado):
         if request.FILES.get('contratoEmpleado'):
             empleado.contratoEmpleado = request.FILES.get('contratoEmpleado')
         empleado.save()
+        messages.success(request, "Actualización realizada con éxito")
         return redirect('empleado_lista')
     return render(request, 'modificar_empleado.html', {'empleado': empleado})
 
@@ -73,6 +77,7 @@ def eliminar_empleado(request, idEmpleado):
     empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
     if request.method == 'POST':
         empleado.delete()
+        messages.success(request, "Empleado eliminado exitosamente.")
         return redirect('empleado_lista')
-    return render(request, 'eliminar_empleado.html', {'empleado': empleado})
-
+    # Si por accidente alguien entra a GET, simplemente redirige:
+    return redirect('empleado_lista')
