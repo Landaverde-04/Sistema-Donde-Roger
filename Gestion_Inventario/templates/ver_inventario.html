@@ -28,12 +28,12 @@
                 </tr>
             </thead>
             <tbody>
-                 {%for producto,stock in detalles.items%}
+                 {%for producto,datos in detalles.items%}
                 <tr>
-                    <td>{{ producto }}</td>
-                    <td>{{ stock }}</td>
+                    <td>{{ datos.0 }}</td>
+                    <td>{{ datos.1 }}</td>
                     <td>
-                        <a class="btn btn-primary">Ver producto</a>
+                        <a class="btn btn-primary" href="{% url 'detalle_producto' producto %}">Ver producto</a>
                         <a class="btn btn-success">Ver detalle</a>
                     </td>
                 </tr>

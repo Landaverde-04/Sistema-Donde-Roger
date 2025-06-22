@@ -26,17 +26,18 @@ def api_productos(request):
 def resumir_inventario(QuerySet):
     if QuerySet is not None:
         resumen = {}
-        for producto in QuerySet:
-            nombre = producto.idProducto.nombreProducto
-            if nombre not in resumen:
-                resumen.update({nombre: producto.cantidadProducto})
-            elif nombre in resumen:
-                resumen[nombre] += producto.cantidadProducto
+        for detalle in QuerySet:
+            id = detalle.idProducto.idProducto
+            if id not in resumen:
+                resumen.update({id: [detalle.idProducto.nombreProducto, detalle.cantidadProducto]})
+            elif id in resumen:
+                resumen[id][1] += detalle.cantidadProducto
+        print(resumen)
         return resumen
     
 @login_required
 def ver_inventario(request, inventarioId=None): #Funcion que renderiza el invetario solicitado, de no tener parametro renderiza el actual
-    if inventarioId:
+    if inventarioId is not None:
         try:
             inventario = models.Inventario.objects.get(idInventario=inventarioId)
             if inventario is not None:
@@ -53,13 +54,13 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
             return redirect('crear_inventario')
         else:
             detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
-            resumenDetalles = {}
-            for detalle in detallesInventario:
-                nombre = detalle.idProducto.nombreProducto
-                if nombre not in resumenDetalles:
-                    resumenDetalles.update({nombre: detalle.cantidadProducto})
-                elif nombre in resumenDetalles:
-                    resumenDetalles[nombre] += detalle.cantidadProducto
+            resumenDetalles = resumir_inventario(detallesInventario)
+            # for detalle in detallesInventario:
+            #     nombre = detalle.idProducto.nombreProducto
+            #     if nombre not in resumenDetalles:
+            #         resumenDetalles.update({nombre: detalle.cantidadProducto})
+            #     elif nombre in resumenDetalles:
+            #         resumenDetalles[nombre] += detalle.cantidadProducto
             print(resumenDetalles)
             fechaInventario = ultimo_inventario.fechaInventario
             horaInventario = ultimo_inventario.horaInventario
