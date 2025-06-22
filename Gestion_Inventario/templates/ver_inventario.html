@@ -34,7 +34,7 @@
                     <td>{{ datos.1 }}</td>
                     <td>
                         <a class="btn btn-primary" href="{% url 'detalle_producto' producto %}">Ver producto</a>
-                        <a class="btn btn-success">Ver detalle</a>
+                        <a class="btn btn-success" href="{% url 'ver_detalle_inventario' inventarioId producto %}">Ver detalle</a>
                     </td>
                 </tr>
                 {%endfor%}

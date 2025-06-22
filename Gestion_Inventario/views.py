@@ -45,7 +45,7 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
                 horaInventario = inventario.horaInventario
                 detallesInventario = models.DetalleInventario.objects.filter(idInventario=inventario)
                 resumenDetalles = resumir_inventario(detallesInventario)
-                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles})
+                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles, 'inventarioId': inventarioId})
         except:
             return redirect('ver_inventario')
     else:    
@@ -55,6 +55,7 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
         else:
             detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
             resumenDetalles = resumir_inventario(detallesInventario)
+            inventarioId = ultimo_inventario.idInventario
             # for detalle in detallesInventario:
             #     nombre = detalle.idProducto.nombreProducto
             #     if nombre not in resumenDetalles:
@@ -64,7 +65,7 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
             print(resumenDetalles)
             fechaInventario = ultimo_inventario.fechaInventario
             horaInventario = ultimo_inventario.horaInventario
-            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles})
+            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles,'inventarioId':inventarioId})
     
     
 @login_required
@@ -120,7 +121,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
 #Funcion que renderiza la pantalla de creacion de inventario: busca el inventario activo en proceso, de no encontrarlo
 #redirige a la pantalla de ver inventario, si lo encuentra, muestra la pantalla de creacion de inventario.
 @login_required
-def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
+def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
     inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first() #obtener el inventario activo en proceso
     if inventario_activo is None:
         return redirect('ver_inventario')
@@ -145,7 +146,22 @@ def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de crea
             hora_inventario = inventario_activo.horaInventario
             return render(request, 'crear_detalle_inventario.html', {'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
     # if inventario_activo:
-    
+
+def ver_detalle_inventario(request, inventarioId=None, productoId=None):
+    if productoId is not None and inventarioId is not None:
+        inventario = models.Inventario.objects.get(idInventario=inventarioId)
+        producto = models_productos.Producto.objects.get(idProducto=productoId)
+        if inventario and producto:
+            fecha_inventario = inventario.fechaInventario
+            hora_inventario = inventario.horaInventario
+            listadoDetalles = models.DetalleInventario.objects.all().filter(idInventario=inventario).filter(idProducto=producto)
+            if listadoDetalles:
+                detalles = []
+                for detalle in listadoDetalles:
+                    detalles.append(detalle)
+                return render(request, 'ver_detalle_inventario.html', {'producto': producto, 'detalles': detalles, 'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
+    else:
+        return render(request, 'ver_detalle_inventario.html')   
 
         
      
