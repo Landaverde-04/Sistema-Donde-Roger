@@ -5,7 +5,5 @@ document.addEventListener('DOMContentLoaded', () => {
     modal.show();
   }
 
-  setTimeout(() => {
-      modal.dismmiss();
-    }, 3000);
+  
 });
