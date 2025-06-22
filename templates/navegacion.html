@@ -27,7 +27,7 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'ver_inventario'%}">Ver inventario actual</a></li>
-            <li><a class="dropdown-item" href="">Lista de inventarios</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}"}>Lista de inventarios</a></li>
           </ul>
         </li>
           {% if user.groups.first.name == 'Jefe'%}
@@ -36,8 +36,8 @@
             Productos
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/Productos/registrar_producto/">Registrar Producto</a></li>
-            <li><a class="dropdown-item" href="/Productos/listar_productos/">Lista de Productos</a></li>
+            <li><a class="dropdown-item" href="{%url 'registrar_producto' %}">Registrar Producto</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_productos'  %}">Lista de Productos</a></li>
           </ul>
         </li>
         {% endif %}

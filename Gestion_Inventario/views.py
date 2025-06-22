@@ -5,6 +5,9 @@ from django.urls import reverse
 import datetime
 from . import models
 from Gestion_productos import models as models_productos
+from seguridad.decoradores import groups_required
+from django.core.paginator import Paginator
+
 
 #API para consultar los productos, inicialemente trae todos los productos, pero se modifico para traer solo
 #los que no cuentan con un detalle de inventario para el inventario actual.
@@ -111,8 +114,17 @@ def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de crea
             return render(request, 'crear_detalle_inventario.html', {'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
     # if inventario_activo:
     
-
-        
+#listar inventarios, muestra los inventarios creados, ordenados por fecha de creacion
+@groups_required('Jefe')
+@login_required
+def listar_inventario(request):
+    
+    inventarios = models.Inventario.objects.all().order_by('idIventario')
+    paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
+    # Obtener el número de página desde la solicitud GET
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'listar_inventario.html', {'inventarios': page})
      
 
 
