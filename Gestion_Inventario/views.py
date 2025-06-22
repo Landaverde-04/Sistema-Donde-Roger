@@ -22,14 +22,48 @@ def api_productos(request):
     
     return JsonResponse(productos, safe=False)
 
-def ver_inventario(request): #Funcion que renderiza el invetario actual
-    ultimo_inventario = models.Inventario.objects.all().last()
-    if ultimo_inventario is None:
-        return redirect('crear_inventario')
-    else:
-        fechaInventario = ultimo_inventario.fechaInventario
-        horaInventario = ultimo_inventario.horaInventario
-        return render(request, 'ver-inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
+##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
+def resumir_inventario(QuerySet):
+    if QuerySet is not None:
+        resumen = {}
+        for producto in QuerySet:
+            nombre = producto.idProducto.nombreProducto
+            if nombre not in resumen:
+                resumen.update({nombre: producto.cantidadProducto})
+            elif nombre in resumen:
+                resumen[nombre] += producto.cantidadProducto
+        return resumen
+    
+@login_required
+def ver_inventario(request, inventarioId=None): #Funcion que renderiza el invetario solicitado, de no tener parametro renderiza el actual
+    if inventarioId:
+        try:
+            inventario = models.Inventario.objects.get(idInventario=inventarioId)
+            if inventario is not None:
+                fechaInventario = inventario.fechaInventario
+                horaInventario = inventario.horaInventario
+                detallesInventario = models.DetalleInventario.objects.filter(idInventario=inventario)
+                resumenDetalles = resumir_inventario(detallesInventario)
+                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles})
+        except:
+            return redirect('ver_inventario')
+    else:    
+        ultimo_inventario = models.Inventario.objects.all().last()
+        if ultimo_inventario is None:
+            return redirect('crear_inventario')
+        else:
+            detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
+            resumenDetalles = {}
+            for detalle in detallesInventario:
+                nombre = detalle.idProducto.nombreProducto
+                if nombre not in resumenDetalles:
+                    resumenDetalles.update({nombre: detalle.cantidadProducto})
+                elif nombre in resumenDetalles:
+                    resumenDetalles[nombre] += detalle.cantidadProducto
+            print(resumenDetalles)
+            fechaInventario = ultimo_inventario.fechaInventario
+            horaInventario = ultimo_inventario.horaInventario
+            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles})
     
     
 @login_required

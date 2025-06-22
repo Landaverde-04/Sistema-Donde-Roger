@@ -27,6 +27,18 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
+            <tbody>
+                 {%for producto,stock in detalles.items%}
+                <tr>
+                    <td>{{ producto }}</td>
+                    <td>{{ stock }}</td>
+                    <td>
+                        <a class="btn btn-primary">Ver producto</a>
+                        <a class="btn btn-success">Ver detalle</a>
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
         </table>
     </div>
 
