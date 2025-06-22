@@ -4,6 +4,7 @@
 <head>
 <link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
 <script src="{% static 'JS/listar_proveedores.js' %}"></script>
+<script> src="{% static 'JS/modales.js' %}"</script>
 <title>Usuarios</title>
 </head>
 <div class="container mt-3">
@@ -61,7 +62,6 @@
         </tbody>
     </table>
     </div>
-    {# Si quieres paginación, la puedes agregar aquí igual que en proveedores #}
 </div>
 
 <!-- Modal de Éxito -->
@@ -105,27 +105,4 @@
   <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
 {% endif %}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Modal eliminar usuario: configura el link con el id correcto
-  var modalEliminar = document.getElementById('modalConfirmarEliminar');
-  if (modalEliminar) {
-    modalEliminar.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      var idUsuario = button.getAttribute('data-id');
-      var nombreUsuario = button.getAttribute('data-nombre');
-      document.getElementById('modalNombreUsuario').innerText = nombreUsuario;
-      var btnEliminar = document.getElementById('btnEliminarUsuario');
-      btnEliminar.href = "/usuarios/eliminar/" + idUsuario + "/"; // Modifica la ruta si es diferente
-    });
-  }
-  // Modal de éxito desde Django messages
-  var mensajeExito = document.getElementById('mensajeExito');
-  if (mensajeExito && mensajeExito.value) {
-    var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
-    document.getElementById('modalMensajeTexto').innerText = mensajeExito.value;
-    modal.show();
-  }
-});
-</script>
 {% endblock %}
