@@ -26,10 +26,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),    
     path('Proveedor/', include('Gestion_Proveedores.urls')),
     path('Productos/', include('Gestion_productos.urls')), 
-    path('', include('seguridad.urls')),
+    path('',include('Gestion_Inventario.urls')),
     path('inventario/', include('Gestion_Inventario.urls')),
     path('empleado/', include('empleado.urls',)),
-     path('seguridad/', include('seguridad.urls',)),
+    path('seguridad/', include('seguridad.urls',)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

@@ -21,7 +21,7 @@ def api_productos(request):
     ).order_by('nombreProducto').values())
     
     return JsonResponse(productos, safe=False)
-
+@login_required
 def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
     if ultimo_inventario is None:
