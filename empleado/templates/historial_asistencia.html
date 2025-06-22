@@ -1,0 +1,99 @@
+{% extends 'navegacion.html' %}
+{% load static %} 
+{% block content %}
+<head>
+<script src="{% static 'JS/historial_asistencia.js' %}"></script>
+<title>Historial Asistencias</title>
+</head>
+<div class="container mt-4">
+  <h3>Historial de Asistencias</h3>
+
+  <form method="get" class="row g-3 mt-3 mb-3">
+    <div class="col-md-6">
+      <input
+        type="text"
+        name="nombre"
+        id="busquedaEmpleado"
+        class="form-control"
+        placeholder="Buscar por nombre de empleado..."
+        value="{{ nombre }}"
+      >
+    </div>
+    <div class="col-md-6">
+      <input
+        type="date"
+        name="fecha"
+        id="busquedaFecha"
+        class="form-control"
+        value="{{ fecha }}"
+      >
+    </div>
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+      <a href="{% url 'historial_asistencia' %}" class="btn btn-secondary">Limpiar</a>
+    </div>
+  </form>
+
+  {% if page_obj %}
+    <table class="table table-striped mt-3" id="tablaAsistencias">
+      <thead class="table-dark">
+        <tr>
+          <th>Empleado</th>
+          <th>Fecha</th>
+          <th>Hora de Entrada</th>
+          <th>Hora de Salida</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asistencia in page_obj %}
+          <tr>
+            <td class="col-nombre">{{ asistencia.usuario.idEmpleado.nombresEmpleado }} {{ asistencia.usuario.idEmpleado.apellidosEmpleado }}</td>
+            <td class="col-fecha" data-fecha="{{ asistencia.fecha|date:'Y-m-d' }}">{{ asistencia.fecha }}</td>
+            <td>{{ asistencia.horaEntrada|default:"-" }}</td>
+            <td>{{ asistencia.horaSalida|default:"-" }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&nombre={{ nombre }}&fecha={{ fecha }}" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&laquo;</span>
+          </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+          {% if page_obj.number == num %}
+            <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" href="?page={{ num }}&nombre={{ nombre }}&fecha={{ fecha }}">{{ num }}</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}&nombre={{ nombre }}&fecha={{ fecha }}" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link" aria-hidden="true">&raquo;</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% else %}
+    <div class="alert alert-info">No hay registros de asistencia.</div>
+  {% endif %}
+</div>
+{% endblock %}

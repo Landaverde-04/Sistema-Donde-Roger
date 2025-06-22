@@ -186,7 +186,8 @@ def editar_proveedor(request, id):
                     nombreProductoProveedor=nombre,
                     precioProductoProveedor=precio
                 )
-        return redirect('listar_proveedores')
+        url = reverse('listar_proveedores')
+        return redirect(f'{url}?exito=2')
     
     contexto ={
         'proveedor': proveedor,
