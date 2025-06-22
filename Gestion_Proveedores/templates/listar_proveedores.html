@@ -1,8 +1,11 @@
 {% extends 'navegacion.html' %}
 
 {% load static %}{% block content %}
+<head>
 <link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
 <script src="{% static 'JS/listar_proveedores.js' %}"></script>
+<title>Proveedores</title>
+</head>
 <div class="container mt-3">
 
     <h2 class="mb-4">Lista de proveedores</h2>
@@ -36,8 +39,11 @@
                     {% else %}
                     <td>No</td>
                     {% endif %}
-                    <td><a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
-                        <button 
+                    <td>
+                      {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+                      <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
+                        
+                      <button 
                       type="button" 
                       class="btn btn-danger" 
                       data-bs-toggle="modal" 
@@ -47,6 +53,7 @@
                     >
                       Eliminar
                     </button>
+                    {% endif %}
                         <a href="{% url 'detalle_proveedor' proveedor.idProveedor %}" class="btn btn-info">Ver</a></td>
                 </tr>
             {% endfor %}
