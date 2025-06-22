@@ -11,8 +11,8 @@ class Producto(models.Model):
     descripcionProducto = models.TextField()
     estaHabilitadoProducto = models.BooleanField(default=True)
 
-    # class Meta:
-    #     db_table = 'Producto'
+    class Meta:
+        db_table = 'Producto'
         
     def __str__(self):
         return self.nombreProducto
