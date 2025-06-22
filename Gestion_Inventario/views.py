@@ -162,7 +162,7 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
                 detalles = []
                 for detalle in listadoDetalles:
                     detalles.append(detalle)
-                return render(request, 'ver_detalle_inventario.html', {'producto': producto, 'detalles': detalles, 'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
+                return render(request, 'ver_detalle_inventario.html', {'producto': producto, 'detalles': detalles, 'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario, 'inventario':inventario})
     else:
         return render(request, 'ver_detalle_inventario.html')   
 
