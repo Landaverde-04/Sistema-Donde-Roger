@@ -7,8 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
       var url = button.getAttribute('data-url');
       var nombreEmpleado = button.getAttribute('data-nombre');
       document.getElementById('modalNombreEmpleado').innerText = nombreEmpleado;
-      var btnEliminarEmpleado = document.getElementById('btnEliminarEmpleado');
-      btnEliminarEmpleado.href = url;
+      // Aquí cambia el action del form:
+      var formEliminar = document.getElementById('formEliminarEmpleado');
+      formEliminar.action = url;
     });
   }
 });
