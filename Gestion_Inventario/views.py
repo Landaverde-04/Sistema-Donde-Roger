@@ -173,7 +173,7 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
 @login_required
 def listar_inventario(request):
     
-    inventarios = models.Inventario.objects.all().order_by('idIventario')
+    inventarios = models.Inventario.objects.all().order_by('idInventario')
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
