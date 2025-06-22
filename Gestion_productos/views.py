@@ -4,6 +4,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from seguridad.decoradores import groups_required
+from django.contrib import messages
 
 
 # Create your views here.
@@ -34,6 +35,8 @@ def registrar_producto(request):
         producto.estaHabilitadoProveedor = True  # Asignamos el estado de habilitación por defecto
         # Guarda el producto en la base de datos
         producto.save()
+        # ...validaciones y guardado...
+        messages.success(request, "¡Producto registrado exitosamente!")
         return redirect('listar_productos')
 
     return render(request, 'registrar_producto.html')

@@ -43,40 +43,40 @@
                         <a href="{% url 'detalle_producto' producto.idProducto %}" class="btn btn-info">Ver</a></td>
                     </tr>
                     <!-- Modal de confirmación para eliminar producto -->
-<div class="modal fade" id="EliminarModal{{ producto.idProducto }}" tabindex="-1" aria-labelledby="EliminarModalLabel{{ producto.idProducto }}" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="EliminarModalLabel{{ producto.idProducto }}">Confirmar Eliminación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        ¿Estás seguro de que deseas eliminar el producto <strong>{{ producto.nombreProducto }}</strong>?
-      </div>
-      <div class="modal-footer p-1">
-        <div class="btn-group w-100 gap-0" role="group">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <form method="post" action="{% url 'eliminar_producto' producto.idProducto %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Eliminar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+                    <div class="modal fade" id="EliminarModal{{ producto.idProducto }}" tabindex="-1" aria-labelledby="EliminarModalLabel{{ producto.idProducto }}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="EliminarModalLabel{{ producto.idProducto }}">
+                              <i class="bi bi-exclamation-triangle-fill"></i> Advertencia
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                          </div>
+                          <div class="modal-body">
+                            ¿Estás seguro de que deseas eliminar el producto <strong>{{ producto.nombreProducto }}</strong>?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <form method="post" action="{% url 'eliminar_producto' producto.idProducto %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 {% endfor %}
                 {% else %}
-                    <div class="container mt-4">
-                        <h2>No hay productos registrados.</h2>
-                    </div>
+                    <tr>
+                        <td colspan="6" class="text-center">No hay productos registrados.</td>
+                    </tr>
                 {% endif %}
             </tbody>
         </table>
         </div>
     </div>
     <div class="paginacion-proveedores">
-    <nav aria-label="Paginación de proveedores">
+    <nav aria-label="Paginación de productos">
   <ul class="pagination justify-content-center">
     {% if productos.has_previous %}
       <li class="page-item">
@@ -87,11 +87,18 @@
       </li>
     {% endif %}
 
-    <li class="page-item active">
-      <span class="page-link">
-        Página {{ productos.number }} de {{ productos.paginator.num_pages }}
-      </span>
-    </li>
+    {# Números de página #}
+    {% for num in productos.paginator.page_range %}
+      {% if productos.number == num %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
 
     {% if productos.has_next %}
       <li class="page-item">
