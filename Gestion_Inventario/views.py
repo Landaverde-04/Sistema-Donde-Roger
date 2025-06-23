@@ -24,7 +24,7 @@ def api_productos(request):
     ).order_by('nombreProducto').values())
     
     return JsonResponse(productos, safe=False)
-
+@login_required
 def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
     if ultimo_inventario is None:
@@ -33,6 +33,51 @@ def ver_inventario(request): #Funcion que renderiza el invetario actual
         fechaInventario = ultimo_inventario.fechaInventario
         horaInventario = ultimo_inventario.horaInventario
         return render(request, 'ver-inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
+
+##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
+def resumir_inventario(QuerySet):
+    if QuerySet is not None:
+        resumen = {}
+        for detalle in QuerySet:
+            id = detalle.idProducto.idProducto
+            if id not in resumen:
+                resumen.update({id: [detalle.idProducto.nombreProducto, detalle.cantidadProducto]})
+            elif id in resumen:
+                resumen[id][1] += detalle.cantidadProducto
+        print(resumen)
+        return resumen
+    
+@login_required
+def ver_inventario(request, inventarioId=None): #Funcion que renderiza el invetario solicitado, de no tener parametro renderiza el actual
+    if inventarioId is not None:
+        try:
+            inventario = models.Inventario.objects.get(idInventario=inventarioId)
+            if inventario is not None:
+                fechaInventario = inventario.fechaInventario
+                horaInventario = inventario.horaInventario
+                detallesInventario = models.DetalleInventario.objects.filter(idInventario=inventario)
+                resumenDetalles = resumir_inventario(detallesInventario)
+                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles, 'inventarioId': inventarioId})
+        except:
+            return redirect('ver_inventario')
+    else:    
+        ultimo_inventario = models.Inventario.objects.all().last()
+        if ultimo_inventario is None:
+            return redirect('crear_inventario')
+        else:
+            detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
+            resumenDetalles = resumir_inventario(detallesInventario)
+            inventarioId = ultimo_inventario.idInventario
+            # for detalle in detallesInventario:
+            #     nombre = detalle.idProducto.nombreProducto
+            #     if nombre not in resumenDetalles:
+            #         resumenDetalles.update({nombre: detalle.cantidadProducto})
+            #     elif nombre in resumenDetalles:
+            #         resumenDetalles[nombre] += detalle.cantidadProducto
+            print(resumenDetalles)
+            fechaInventario = ultimo_inventario.fechaInventario
+            horaInventario = ultimo_inventario.horaInventario
+            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles,'inventarioId':inventarioId})
     
     
 @login_required
@@ -88,7 +133,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
 #Funcion que renderiza la pantalla de creacion de inventario: busca el inventario activo en proceso, de no encontrarlo
 #redirige a la pantalla de ver inventario, si lo encuentra, muestra la pantalla de creacion de inventario.
 @login_required
-def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
+def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de creacion de inventario
     inventario_activo = models.Inventario.objects.filter(sePuedeEditar=True).first() #obtener el inventario activo en proceso
     if inventario_activo is None:
         return redirect('ver_inventario')
@@ -113,13 +158,31 @@ def crar_detalle_inventario(request): #Funcion que renderiza la pantalla de crea
             hora_inventario = inventario_activo.horaInventario
             return render(request, 'crear_detalle_inventario.html', {'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
     # if inventario_activo:
+
+def ver_detalle_inventario(request, inventarioId=None, productoId=None):
+    if productoId is not None and inventarioId is not None:
+        inventario = models.Inventario.objects.get(idInventario=inventarioId)
+        producto = models_productos.Producto.objects.get(idProducto=productoId)
+        if inventario and producto:
+            fecha_inventario = inventario.fechaInventario
+            hora_inventario = inventario.horaInventario
+            listadoDetalles = models.DetalleInventario.objects.all().filter(idInventario=inventario).filter(idProducto=producto)
+            if listadoDetalles:
+                detalles = []
+                for detalle in listadoDetalles:
+                    detalles.append(detalle)
+                return render(request, 'ver_detalle_inventario.html', {'producto': producto, 'detalles': detalles, 'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
+    else:
+        return render(request, 'ver_detalle_inventario.html')   
+
+        
     
 #listar inventarios, muestra los inventarios creados, ordenados por fecha de creacion
 @groups_required('Jefe')
 @login_required
 def listar_inventario(request):
     
-    inventarios = models.Inventario.objects.all().order_by('idIventario')
+    inventarios = models.Inventario.objects.all().order_by('idInventario')
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
