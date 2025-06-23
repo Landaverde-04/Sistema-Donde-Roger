@@ -63,7 +63,6 @@ function addRow() {
     botonEliminar.innerText = "Eliminar";
     botonEliminar.onclick = function () {
         eliminarFila(row);
-        // row.remove();
     }
     eliminar.appendChild(botonEliminar);
 }

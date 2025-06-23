@@ -9,6 +9,9 @@ class Inventario(models.Model): #Tabla de la bd para los inventarios
     horaInventario = models.TimeField(auto_now_add=True)
     sePuedeEditar = models.BooleanField(default=True)
     
+    def fechaInventario_formated(self):
+        return self.fechaInventario.strftime('%Y/%m/%d')
+   
     class Meta:
         db_table = 'Inventario'
     
@@ -21,6 +24,12 @@ class DetalleInventario(models.Model):
     fechaCaducidad = models.DateField()
     cantidadProducto = models.DecimalField(max_digits=8, decimal_places=2)
     
+    def fechaIngreso_formated(self):
+        return self.fechaIngreso.strftime('%Y-%m-%d')
+    def horaIngreso_formated(self):
+        return self.horaIngreso.strftime('%H:%M:%S')
+    def fechaCaducidad_formated(self):
+        return self.fechaCaducidad.strftime('%Y-%m-%d')
     class Meta:
         db_table = 'DetalleInventario'
 

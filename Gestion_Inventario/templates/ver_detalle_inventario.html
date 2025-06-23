@@ -6,10 +6,10 @@
 </head>
 <div class="container justify-content-center card p-4 my-5 shadow">
     <div class="row text-center my-2">
-        <h1>Detalle de inventario</h1>
+        <h2>Detalle de inventario</h2>
     </div>
 
-    <div class="row my-2">
+    <div class="row my-2 border-bottom">
         <div class="col-6 text-center">
             <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
         </div>
@@ -19,33 +19,17 @@
 
     </div>
     <div class="row my-2 px-2 justify-content-center">
-        <div class="col-6 align-content-end">
-            <h3 class="text-center">Producto:</h3>
-        </div>
-        <div class="col-6 justify-content-start" id="productos-container">
-            <h3 class="text-start">{{producto.nombreProducto}}</h3>
-        </div>
-    </div>
-    <div class="row my-2 px-2 justify-content-center">
-        <div class="col-auto py-1 d-flex align-items-center">
-            <label for="unidad_de_medida" class="mb-0">Unidad de medida:</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" readonly class="form-control-plaintext w-100" id="unidad_de_medida"
-                value="{{producto.unidadMedida}}" />
-        </div>
-        <div class="col-auto py-1 d-flex align-items-center">
-            <label for="marca" class="mb-0">Marca:</label>
-        </div>
-        <div class="col-sm-4">
-            <input type="text" readonly class="form-control-plaintext w-100" id="marca"
-                value="{{producto.marcaProducto}}" />
-        </div>
-    </div>
 
-    <div class="row mt-2">
-        <div class="col">
-            <table class="table table-borderless text-center" id="tabla-cantidades">
+        <div class="col-5 align-content-center border-end">
+            <h5 class="text-start fw-bold">Datos de producto:</h5>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong> Nombre: </strong> {{producto.nombreProducto}}</li>
+                <li class="list-group-item"><strong> Unidad de medida: </strong> {{producto.unidadMedida}}</li>
+                <li class="list-group-item"><strong> Marca: </strong> {{producto.marcaProducto}}</li>
+            </ul>
+        </div>
+        <div class="col-7 align-content-start">
+            <table class="table  text-center" id="tabla-cantidades">
                 <thead>
                     <tr>
                         <th>Cantidad</th>
@@ -53,7 +37,7 @@
                         <th>Fecha de caducidad</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="table-group-divider">
                     {% for detalle in detalles %}
                     <tr>
                         <td>{{ detalle.cantidadProducto }}</td>
@@ -65,8 +49,9 @@
             </table>
         </div>
     </div>
-    <div class="row justify-content-end">
-        <a type="button" class="btn btn-primary" id="btnVolver" href="{% url 'ver_inventario_id' inventario.idInventario %}">Regresar a inventario</a>
+    <div class="row justify-content-center text-center mt-3">
+        <a type="button" class="text-center btn btn-primary w-25  " id="btnVolver"
+            href="{% url 'ver_inventario_id' inventario.idInventario %}">Regresar a inventario</a>
     </div>
 </div>
 

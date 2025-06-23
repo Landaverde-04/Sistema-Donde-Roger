@@ -25,7 +25,8 @@ def api_productos(request):
     
     return JsonResponse(productos, safe=False)
 
-##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
+##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO: guarda en un diccionario
+#con clave id y luego una lista para los atributos de nombre y cantidad sumadas
 def resumir_inventario(QuerySet):
     if QuerySet is not None:
         resumen = {}
@@ -84,14 +85,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
     ultimo_inventario = models.Inventario.objects.all().last()
     if ultimo_inventario is not None:
         detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
-        
-        for detalle in detallesInventario:
-            nombre = detalle.idProducto.nombreProducto
-            if nombre not in resumenDetalles:
-                resumenDetalles.update({nombre: detalle.cantidadProducto})
-            elif nombre in resumenDetalles:
-                resumenDetalles[nombre] += detalle.cantidadProducto
-                
+        resumenDetalles = resumir_inventario(detallesInventario)
         if ultimo_inventario.sePuedeEditar == False:
             current_date = datetime.datetime.now()
             fechaInventario = current_date.strftime('%Y-%m-%d')
@@ -108,8 +102,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
                 detalle_copia.save()
             inventario.save()
         elif ultimo_inventario.sePuedeEditar == True:
-            fechaInventario = ultimo_inventario.fechaInventario
-            horaInventario = ultimo_inventario.horaInventario
+            inventario = ultimo_inventario
     elif ultimo_inventario is None:
             current_date = datetime.datetime.now()
             fechaInventario = current_date.strftime('%Y-%m-%d')
@@ -118,7 +111,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
             inventario.save()
                 
 
-    return render(request, 'crear_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles})
+    return render(request, 'crear_inventario.html', {'inventario':inventario, 'detalles':resumenDetalles})
 
 
 #Funcion que renderiza la pantalla de creacion de inventario: busca el inventario activo en proceso, de no encontrarlo
@@ -130,7 +123,6 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
         return redirect('ver_inventario')
     else:
         if request.method == 'POST':
-            print(request.POST)
             indices_keys = [key for key in request.POST.keys() if key.startswith('cantidad-')]
             for i in range(len(indices_keys)):
                 detalle = models.DetalleInventario();
@@ -148,8 +140,9 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
             fecha_inventario = inventario_activo.fechaInventario
             hora_inventario = inventario_activo.horaInventario
             return render(request, 'crear_detalle_inventario.html', {'fecha_inventario': fecha_inventario, 'hora_inventario': hora_inventario})
-    # if inventario_activo:
 
+
+#Funcion para ver la informacion de un detalle de inventario, recibe el id de inventario y el id del producto
 def ver_detalle_inventario(request, inventarioId=None, productoId=None):
     if productoId is not None and inventarioId is not None:
         inventario = models.Inventario.objects.get(idInventario=inventarioId)
@@ -166,6 +159,79 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
     else:
         return render(request, 'ver_detalle_inventario.html')   
 
+#Funcion para editar un detalle de inventario, recibe el id de inventario y el id del producto
+#internamente tiene 3 funcionamientos, si el detalle fue recuperado del inventario anterior, si el detalle fue creado en este inventario y si se está creando actualmente el detalle
+#resumido en: Anterior, Actual y Nuevo
+def editar_detalle_inventario(request, inventarioId=None, productoId=None):
+    if request.method == 'POST':
+        print(request.POST)
+        anteriores = [key for key in request.POST.keys() if key.startswith('anterior-cantidad')]
+        actuales = [key for key in request.POST.keys() if key.startswith('actual-cantidad')]
+        nuevos = [key for key in request.POST.keys() if key.startswith('nuevo-cantidad-')]
+        #Este bloque es para actualizar los detalles o crear los nuevos:
+        if anteriores is not None:
+            for key in anteriores:
+                indice = key.split('-')[2]
+                detalle = models.DetalleInventario.objects.get(pk = request.POST['anterior-detalleId-' + str(indice)])
+                detalle.cantidadProducto = request.POST['anterior-cantidad-' + str(indice)]
+                detalle.save()
+        if actuales is not None:
+            for key in actuales:
+                indice = key.split('-')[2]
+                detalle = models.DetalleInventario.objects.get(pk = request.POST['actual-detalleId-' + str(indice)])
+                detalle.cantidadProducto = request.POST['actual-cantidad-' + str(indice)]
+                detalle.fechaIngreso = request.POST['actual-ingreso-' + str(indice)][0:10].format('YYYY-MM-DD')
+                detalle.horaIngreso = request.POST['actual-ingreso-'+ str(indice)][11:16].format('HH:MM:SS')
+                detalle.fechaCaducidad = request.POST['actual-caducidad-'+ str(indice)].format('YYYY-MM-DD')
+                detalle.save()
+        if nuevos is not None:
+            for key in nuevos:
+                indice = key.split('-')[2]
+                detalle = models.DetalleInventario();
+                detalle.idInventario_id = inventarioId
+                detalle.idProducto_id = productoId
+                detalle.cantidadProducto = request.POST['nuevo-cantidad-' + str(indice)]
+                detalle.fechaIngreso = request.POST['nuevo-ingreso-' +str(indice)][0:10].format('YYYY-MM-DD')
+                detalle.horaIngreso = request.POST['nuevo-ingreso-'+str(indice)][11:16].format('HH:MM:SS')
+                detalle.fechaCaducidad = request.POST['nuevo-caducidad-'+str(indice)].format('YYYY-MM-DD')
+                detalle.save()
+        #Este bloque es para gestionar la eliminacion de detalles "Actuales"
+        detallesProductoInventario = models.DetalleInventario.objects.all().filter(idInventario_id=inventarioId).filter(idProducto_id=productoId)
+        ids = []
+        if anteriores:
+            for key in anteriores:
+                indice = key.split('-')[2]
+                ids.append(request.POST['anterior-detalleId-' + str(indice)])
+        if actuales:
+            for key in actuales:
+                indice = key.split('-')[2]
+                ids.append(request.POST['actual-detalleId-' + str(indice)])
+        print(ids)
+        for detalle in detallesProductoInventario:
+            if str(detalle.idDetalleInventario) not in ids:
+                detalle.delete()
+            
+        return redirect('crear_inventario')
+    elif inventarioId is not None and productoId is not None:
+        inventario = models.Inventario.objects.get(idInventario=inventarioId)
+        if not inventario or inventario.sePuedeEditar == False: #No existe el inventario o no se puede editar
+            return redirect('ver_inventario')
+        else:
+            producto = models_productos.Producto.objects.get(idProducto=productoId)
+            if producto:
+                detallesAnteriores = []
+                detallesNuevos = []
+                detallesProducto = models.DetalleInventario.objects.all().filter(idInventario=inventario).filter(idProducto=producto)
+                if detallesProducto:
+                    for detalle in detallesProducto:
+                        #cantidadDetallesProducto es la cantidad de detalles del mismo producto con la misma fecha de ingreso, se usa este parametro para comparar si es anterior
+                        cantidadDetallesProducto = len(models.DetalleInventario.objects.all().filter(idProducto=producto).filter(fechaIngreso=detalle.fechaIngreso).filter(fechaCaducidad=detalle.fechaCaducidad))
+                        if cantidadDetallesProducto > 1:
+                            detallesAnteriores.append(detalle)
+                        elif cantidadDetallesProducto == 1:
+                            detallesNuevos.append(detalle)
+                return render(request, 'editar_detalle_inventario.html', {'producto': producto, 'detallesAnteriores': detallesAnteriores, 'detallesNuevos': detallesNuevos, 'inventario':inventario})
+        
         
     
 #listar inventarios, muestra los inventarios creados, ordenados por fecha de creacion

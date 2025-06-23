@@ -9,10 +9,10 @@
 
     <div class="row my-2">
         <div class="col-4 text-center">
-            <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
+            <h5>Fecha del inventario: {{ inventario.fechaInventario }}</h5>
         </div>
         <div class="col-4 text-center">
-            <h5>Hora de creacion: {{ hora_inventario }}</h5>
+            <h5>Hora de creacion: {{ inventario.horaInventario }}</h5>
         </div>
         <div class="col-2 text-end">
             <a type="button" class="btn btn-primary" style="border-radius:50px;"
@@ -35,13 +35,13 @@
                 </tr>
             </thead>
             <tbody>
-                {%for producto,stock in detalles.items%}
+                {%for producto,datos in detalles.items%}
                 <tr>
-                    <td>{{ producto }}</td>
-                    <td>{{ stock }}</td>
+                    <td>{{ datos.0 }}</td>
+                    <td>{{ datos.1 }}</td>
                     <td>
                         <a class="btn btn-primary">Ver producto</a>
-                        <a class="btn btn-warning">Editar detalle</a>
+                        <a class="btn btn-warning" href="{%url 'editar_detalle_inventario' inventario.idInventario producto%}">Editar detalle</a>
                     </td>
                 </tr>
                 {%endfor%}
