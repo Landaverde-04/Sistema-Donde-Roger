@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import Producto
+from Gestion_Inventario.models import DetalleInventario
 from django.shortcuts import render,redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -36,7 +37,7 @@ def registrar_producto(request):
         # Guarda el producto en la base de datos
         producto.save()
         # ...validaciones y guardado...
-        messages.success(request, "¡Producto registrado exitosamente!")
+        messages.success(request, "¡Producto registrado exitosamente!", extra_tags='producto')
         return redirect('listar_productos')
 
     return render(request, 'registrar_producto.html')
@@ -94,5 +95,23 @@ def eliminar_producto(request, producto_id):
 @login_required
 def detalle_producto(request, producto_id):
     producto = Producto.objects.get(idProducto=producto_id)
+    if producto is not None:
+        #optiene los detalles del inventario del producto
+        detalle_producto = DetalleInventario.objects.filter(idProducto=producto_id)
+        #el .get() devuelve un diccionario con el id del producto como clave y una lista con el nombre y la cantidad del producto como valor
+        stock= resumir_inventario(detalle_producto).get(producto_id, [producto.nombreProducto, 0])[1]  # Obtiene el stock del producto
+        return render(request, 'detalle_producto.html', {'producto': producto , 'stock': stock})
 
-    return render(request, 'detalle_producto.html', {'producto': producto})
+
+##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
+def resumir_inventario(QuerySet):
+    if QuerySet is not None:
+        resumen = {}
+        for detalle in QuerySet:
+            id = detalle.idProducto.idProducto
+            if id not in resumen:
+                resumen.update({id: [detalle.idProducto.nombreProducto, detalle.cantidadProducto]})
+            elif id in resumen:
+                resumen[id][1] += detalle.cantidadProducto
+        print(resumen)
+        return resumen

@@ -144,3 +144,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 
 AUTH_USER_MODEL = 'seguridad.Usuario'
+
+AUTHENTICATION_BACKENDS = [
+    'seguridad.autenticacion.UsuarioBackend',  
+    #'django.contrib.auth.backends.ModelBackend',
+]

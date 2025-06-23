@@ -3,133 +3,71 @@
 {% block content %}
 <head>
 <title>Empleados</title>
+<link rel="stylesheet" href="{% static 'CSS/empleado_lista.css' %}">
+<script src="{% static 'JS/empleado_lista.js' %}"></script>
 </head>
 <div class="container mt-3">
     <h2 class="mb-4">Lista de empleados</h2>
-    <div>
-        <a href="{% url 'registrar_empleado' %}" class="btn btn-success">Registrar nuevo empleado</a>
+    <div class="row my-4 align-items-center">
+        <div class="col-auto">
+            <a href="{% url 'registrar_empleado' %}" class="btn btn-success">Registrar nuevo empleado</a>
+        </div>
+        <div class="col">
+            <form method="get" class="d-flex justify-content-end search-bar-form">
+                <input type="text" name="busqueda" class="form-control shadow-sm rounded-start"
+                       placeholder="Buscar por nombre..." value="{{ busqueda }}" style="max-width: 260px;">
+                <button type="submit" class="btn btn-primary rounded-end ms-2 px-4">Buscar</button>
+            </form>
+        </div>
     </div>
+
     <div class="div-table mt-3">
-    <style>
-        .custom-table {
-            border-collapse: collapse;
-            width: 100%;
-            background: #fff;
-        }
-        .custom-table th, .custom-table td {
-            text-align: center;
-            vertical-align: middle;
-            padding: 10px 8px;
-            border: 1px solid #e9ecef;
-        }
-        .custom-table th {
-            background: #fff;
-            font-weight: bold;
-        }
-        .custom-table tbody tr:nth-child(even) {
-            background: #f8f9fa;
-        }
-        .custom-table tbody tr:nth-child(odd) {
-            background: #fff;
-        }
-        .btn-azul {
-            background: #1877f2;
-            color: #fff;
-            border: none;
-            border-radius: 7px;
-            padding: 7px 17px;
-            margin-right: 2px;
-            font-weight: 500;
-            transition: 0.15s;
-        }
-        .btn-azul:hover {
-            background: #0e52a3;
-        }
-        .btn-rojo {
-            background: #e63946;
-            color: #fff;
-            border: none;
-            border-radius: 7px;
-            padding: 7px 17px;
-            margin-right: 2px;
-            font-weight: 500;
-            transition: 0.15s;
-        }
-        .btn-rojo:hover {
-            background: #b81d2a;
-        }
-        .btn-celeste {
-            background: #18d4ee;
-            color: #fff;
-            border: none;
-            border-radius: 7px;
-            padding: 7px 17px;
-            font-weight: 500;
-            transition: 0.15s;
-        }
-        .btn-celeste:hover {
-            background: #17b1c2;
-        }
-        .acciones-btns {
-            display: flex;
-            gap: 3px;
-            justify-content: center;
-        }
-        .custom-table th, .custom-table td {
-            font-size: 1rem;
-        }
-        /* Anchos de columnas como en la plantilla proveedores */
-        .w-5 { width: 5%; }
-        .w-15 { width: 15%; }
-        .w-7 { width: 7%; }
-        .w-10 { width: 10%; }
-    </style>
-    <table class="custom-table table-striped w-85 mx-auto">
-        <thead>
-            <tr>
-                <th class="w-5">ID</th>
-                <th class="w-15">Nombres</th>
-                <th class="w-15">Apellidos</th>
-                <th class="w-7">DUI</th>
-                <th class="w-7">Teléfono</th>
-                <th class="w-10">Salario</th>
-                <th class="w-10">Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if empleados %}
-                {% for empleado in empleados %}
+        <table class="table table-striped w-85 mx-auto">
+            <thead>
                 <tr>
-                    <td>{{ empleado.idEmpleado }}</td>
-                    <td>{{ empleado.nombresEmpleado }}</td>
-                    <td>{{ empleado.apellidosEmpleado }}</td>
-                    <td>{{ empleado.duiEmpleado }}</td>
-                    <td>{{ empleado.telEmpleado }}</td>
-                    <td>{{ empleado.salarioEmpleado }}</td>
-                    <td>
-                        <div class="acciones-btns">
-                            <a href="{% url 'modificar_empleado' empleado.idEmpleado %}" class="btn-azul btn-sm">Editar</a>
-                            <button 
-                                type="button" 
-                                class="btn-rojo btn-sm" 
-                                data-bs-toggle="modal"
-                                data-bs-target="#modalEliminar"
-                                data-url="{% url 'eliminar_empleado' empleado.idEmpleado %}"
-                                data-nombre="{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}">
-                                Eliminar
-                            </button>
-                            <a href="{% url 'ver_empleado' empleado.idEmpleado %}" class="btn-celeste btn-sm">Ver</a>
-                        </div>
-                    </td>
+                    <th class="w-5">ID</th>
+                    <th class="w-15">Nombres</th>
+                    <th class="w-15">Apellidos</th>
+                    <th class="w-7">DUI</th>
+                    <th class="w-7">Teléfono</th>
+                    <th class="w-10">Salario</th>
+                    <th class="w-10">Acciones</th>
                 </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="7" class="text-center">No hay empleados registrados</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% if empleados_paginacion %}
+                    {% for empleado in empleados_paginacion %}
+                    <tr>
+                        <td>{{ empleado.idEmpleado }}</td>
+                        <td>{{ empleado.nombresEmpleado }}</td>
+                        <td>{{ empleado.apellidosEmpleado }}</td>
+                        <td>{{ empleado.duiEmpleado }}</td>
+                        <td>{{ empleado.telEmpleado }}</td>
+                        <td>{{ empleado.salarioEmpleado }}</td>
+                        <td>
+                            <div class="acciones-btns">
+                                <a href="{% url 'modificar_empleado' empleado.idEmpleado %}" class="btn-azul btn-sm">Editar</a>
+                                <button 
+                                    type="button" 
+                                    class="btn-rojo btn-sm" 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar"
+                                    data-url="{% url 'eliminar_empleado' empleado.idEmpleado %}"
+                                    data-nombre="{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}">
+                                    Eliminar
+                                </button>
+                                <a href="{% url 'ver_empleado' empleado.idEmpleado %}" class="btn-celeste btn-sm">Ver</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay empleados registrados</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -137,37 +75,60 @@
 <div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-danger text-white">
-        <h5 class="modal-title" id="modalEliminarLabel">
-            <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        ¿Estás seguro que deseas eliminar al empleado <strong id="modalNombreEmpleado"></strong>?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href="#" id="btnEliminarEmpleado" class="btn btn-danger">Sí, eliminar</a>
-      </div>
+      <form id="formEliminarEmpleado" method="post" action="">
+        {% csrf_token %}
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalEliminarLabel">
+              <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro que deseas eliminar al empleado <strong id="modalNombreEmpleado"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Modal eliminar
-  var modalEliminar = document.getElementById('modalEliminar');
-  if (modalEliminar) {
-    modalEliminar.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      var url = button.getAttribute('data-url');
-      var nombreEmpleado = button.getAttribute('data-nombre');
-      document.getElementById('modalNombreEmpleado').innerText = nombreEmpleado;
-      var btnEliminarEmpleado = document.getElementById('btnEliminarEmpleado');
-      btnEliminarEmpleado.href = url;
-    });
-  }
-});
-</script>
+<div class="paginacion-empleados">
+    <nav aria-label="Paginación de empleados">
+      <ul class="pagination justify-content-center">
+        {% if empleados_paginacion.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">&laquo; Primero</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.previous_page_number }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Anterior</a>
+          </li>
+        {% endif %}
+
+        {% for num in empleados_paginacion.paginator.page_range %}
+          {% if empleados_paginacion.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if empleados_paginacion.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.next_page_number }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Siguiente</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.paginator.num_pages }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Última &raquo;</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+</div>
+
 {% endblock %}

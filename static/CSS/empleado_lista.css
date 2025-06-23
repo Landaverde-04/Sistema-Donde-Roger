@@ -1,0 +1,82 @@
+  .custom-table {
+            border-collapse: collapse;
+            width: 100%;
+            background: #fff;
+        }
+        .custom-table th, .custom-table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 10px 8px;
+            border: 1px solid #e9ecef;
+        }
+        .custom-table th {
+            background: #fff;
+            font-weight: bold;
+        }
+        .custom-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .custom-table tbody tr:nth-child(odd) {
+            background: #fff;
+        }
+        .btn-azul {
+            background: #1877f2;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 7px 17px;
+            margin-right: 2px;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .btn-azul:hover {
+            background: #0e52a3;
+        }
+        .btn-rojo {
+            background: #d92121;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 7px 17px;
+            margin-right: 2px;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .btn-rojo:hover {
+            background: #b81d2a;
+        }
+        .btn-celeste {
+            background: #18d4ee;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 7px 17px;
+            font-weight: 500;
+            transition: 0.15s;
+        }
+        .btn-celeste:hover {
+            background: #17b1c2;
+        }
+        .acciones-btns {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+        }
+        .custom-table th, .custom-table td {
+            font-size: 1rem;
+        }
+        /* Anchos de columnas como en la plantilla proveedores */
+        .w-5 { width: 5%; }
+        .w-15 { width: 15%; }
+        .w-7 { width: 7%; }
+        .w-10 { width: 10%; }
+
+
+.search-bar-form {
+    background: #cfdff0;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+    margin-left: auto;
+    max-width: 430px;
+}

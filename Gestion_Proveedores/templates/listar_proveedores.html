@@ -2,7 +2,7 @@
 
 {% load static %}{% block content %}
 <head>
-<link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
+<link rel="stylesheet" href="{% static 'CSS/listar_proveedores.css' %}" />
 <script src="{% static 'JS/listar_proveedores.js' %}"></script>
 <title>Proveedores</title>
 </head>
@@ -114,8 +114,8 @@
 <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-limon">
-        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-check-circle"></i>  Registro satisfactorio</h5>
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-triangle"></i>  Aviso</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body">

@@ -15,7 +15,7 @@
         <div class="card-body">
             <h5 class="card-title">Información general</h5>
             <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><strong>ID:</strong> {{ producto.idProducto|default:"001" }}</li>
+                <li class="list-group-item">ID: {{ producto.idProducto|default:"001" }}</li>
                 <li class="list-group-item"><strong>Nombre:</strong> {{ producto.nombreProducto|default:"Ejemplo de Producto" }}</li>
                 <li class="list-group-item"><strong>Unidad de Medida:</strong> {{ producto.unidadMedida|default:"KG" }}</li>
                 <li class="list-group-item"><strong>Marca:</strong> {{ producto.marcaProducto|default:"Marca Ejemplo" }}</li>
@@ -52,7 +52,7 @@
             </table>
             <h5 class="card-title mt-4">Stock actual</h5>
             <div class="alert alert-success">
-                Stock disponible: <strong>35</strong> unidades
+                Stock disponible: <strong>{{ stock }}</strong> {% if stock > 0 %} unidades {% else %} Sin stock {% endif %}
             </div>
         </div>
         <div class="card-footer text-end">
