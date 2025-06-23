@@ -24,6 +24,7 @@ def api_productos(request):
     ).order_by('nombreProducto').values())
     
     return JsonResponse(productos, safe=False)
+
 @login_required
 def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
@@ -107,7 +108,7 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
             horaInventario = current_date.strftime('%H:%M:%S')
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
             for detalle in detallesInventario:
-                detalle_copia = models.DetalleInventario();
+                detalle_copia = models.DetalleInventario()
                 detalle_copia.idProducto = detalle.idProducto
                 detalle_copia.cantidadProducto = detalle.cantidadProducto
                 detalle_copia.fechaIngreso = detalle.fechaIngreso
@@ -142,7 +143,7 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
             print(request.POST)
             indices_keys = [key for key in request.POST.keys() if key.startswith('cantidad-')]
             for i in range(len(indices_keys)):
-                detalle = models.DetalleInventario();
+                detalle = models.DetalleInventario()
                 detalle.idInventario = inventario_activo
                 detalle.idProducto_id = request.POST['product']
                 detalle.cantidadProducto = request.POST['cantidad-' + str(i+1)]
