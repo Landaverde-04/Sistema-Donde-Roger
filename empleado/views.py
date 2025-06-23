@@ -48,9 +48,36 @@ def registrar_empleado(request):
 
     return render(request, 'registrar_empleado.html')
 
+#def empleado_lista(request):
+ #   busqueda = request.GET.get('busqueda', '')
+  #  if busqueda:
+   #     empleados = Empleado.objects.filter(
+    #        Q(nombresEmpleado__icontains=busqueda) |
+     #       Q(apellidosEmpleado__icontains=busqueda)
+      #  )
+    #else:
+     #   empleados = Empleado.objects.all()
+    #return render(request, 'empleado_lista.html', {'empleados': empleados})
+    
+
 def empleado_lista(request):
-    empleados = Empleado.objects.filter(estaHabilitadoEmpleado=True)
-    return render(request, 'empleado_lista.html', {'empleados': empleados})
+    busqueda = request.GET.get('busqueda', '')
+    empleados_query = Empleado.objects.filter(estaHabilitadoEmpleado=True).order_by('idEmpleado')
+
+    if busqueda:
+        empleados_query = empleados_query.filter(
+            Q(nombresEmpleado__icontains=busqueda) |
+            Q(apellidosEmpleado__icontains=busqueda)
+        )
+
+    paginator = Paginator(empleados_query, 10)  
+    page_number = request.GET.get('page')
+    empleados_paginacion = paginator.get_page(page_number)
+
+    return render(request, 'empleado_lista.html', {
+        'empleados_paginacion': empleados_paginacion,
+        'busqueda': busqueda,
+    })
 
 
 def modificar_empleado(request, idEmpleado):
