@@ -14,7 +14,9 @@
         </div>
         {% if messages %}
             {% for message in messages %}
+              {% if 'producto' in message.tags %}
                 <div class="alert alert-success">{{ message }}</div>
+              {% endif %}
             {% endfor %}
         {% endif %}
         <div class="div-table">

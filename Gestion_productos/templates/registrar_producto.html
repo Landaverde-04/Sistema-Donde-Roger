@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/registrar_producto.css' %}">
-    <script src="{% static 'JS/actualizar_producto.js' %}"></script>
+    <script src="{% static 'JS/registrar_producto.js' %}"></script>
+    
     <title>Registrar Producto</title>
 </head>
 <div class="container mt-4">
@@ -55,10 +56,4 @@
     </div>
   </div>
 </div>
-{% if messages %}
-<script>
-  var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
-  modalExito.show();
-</script>
-{% endif %}
 {% endblock %}
