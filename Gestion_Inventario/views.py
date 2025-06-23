@@ -24,7 +24,6 @@ def api_productos(request):
     ).order_by('nombreProducto').values())
     
     return JsonResponse(productos, safe=False)
-<<<<<<< HEAD
 @login_required
 def ver_inventario(request): #Funcion que renderiza el invetario actual
     ultimo_inventario = models.Inventario.objects.all().last()
@@ -34,7 +33,6 @@ def ver_inventario(request): #Funcion que renderiza el invetario actual
         fechaInventario = ultimo_inventario.fechaInventario
         horaInventario = ultimo_inventario.horaInventario
         return render(request, 'ver-inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
-=======
 
 ##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
 def resumir_inventario(QuerySet):
@@ -80,7 +78,6 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
             fechaInventario = ultimo_inventario.fechaInventario
             horaInventario = ultimo_inventario.horaInventario
             return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles,'inventarioId':inventarioId})
->>>>>>> 5550117d0e606c56b45218e3afc06c9d12713474
     
     
 @login_required
@@ -185,7 +182,7 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
 @login_required
 def listar_inventario(request):
     
-    inventarios = models.Inventario.objects.all().order_by('idIventario')
+    inventarios = models.Inventario.objects.all().order_by('idInventario')
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
