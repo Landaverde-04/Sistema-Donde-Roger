@@ -25,6 +25,16 @@ def api_productos(request):
     
     return JsonResponse(productos, safe=False)
 
+@login_required
+def ver_inventario(request): #Funcion que renderiza el invetario actual
+    ultimo_inventario = models.Inventario.objects.all().last()
+    if ultimo_inventario is None:
+        return redirect('crear_inventario')
+    else:
+        fechaInventario = ultimo_inventario.fechaInventario
+        horaInventario = ultimo_inventario.horaInventario
+        return render(request, 'ver-inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario})
+
 ##FUNCION PARA CREAR LA SUMATORIA DE STOCK PARA LOS DETALLES DE INVENTARIO
 def resumir_inventario(QuerySet):
     if QuerySet is not None:
@@ -173,7 +183,7 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
 @login_required
 def listar_inventario(request):
     
-    inventarios = models.Inventario.objects.all().order_by('idIventario')
+    inventarios = models.Inventario.objects.all().order_by('idInventario')
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
