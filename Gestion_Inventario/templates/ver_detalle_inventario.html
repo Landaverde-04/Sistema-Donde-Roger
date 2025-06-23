@@ -1,0 +1,74 @@
+{% extends 'navegacion.html' %} {%load static%}
+{% block content %}
+
+<head>
+
+</head>
+<div class="container justify-content-center card p-4 my-5 shadow">
+    <div class="row text-center my-2">
+        <h1>Detalle de inventario</h1>
+    </div>
+
+    <div class="row my-2">
+        <div class="col-6 text-center">
+            <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
+        </div>
+        <div class="col-6 text-center">
+            <h5>Hora de creacion del inventario: {{ hora_inventario }}</h5>
+        </div>
+
+    </div>
+    <div class="row my-2 px-2 justify-content-center">
+        <div class="col-6 align-content-end">
+            <h3 class="text-center">Producto:</h3>
+        </div>
+        <div class="col-6 justify-content-start" id="productos-container">
+            <h3 class="text-start">{{producto.nombreProducto}}</h3>
+        </div>
+    </div>
+    <div class="row my-2 px-2 justify-content-center">
+        <div class="col-auto py-1 d-flex align-items-center">
+            <label for="unidad_de_medida" class="mb-0">Unidad de medida:</label>
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control-plaintext w-100" id="unidad_de_medida"
+                value="{{producto.unidadMedida}}" />
+        </div>
+        <div class="col-auto py-1 d-flex align-items-center">
+            <label for="marca" class="mb-0">Marca:</label>
+        </div>
+        <div class="col-sm-4">
+            <input type="text" readonly class="form-control-plaintext w-100" id="marca"
+                value="{{producto.marcaProducto}}" />
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col">
+            <table class="table table-borderless text-center" id="tabla-cantidades">
+                <thead>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Fecha y hora de ingreso</th>
+                        <th>Fecha de caducidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalles %}
+                    <tr>
+                        <td>{{ detalle.cantidadProducto }}</td>
+                        <td>{{ detalle.fechaIngreso }} {{ detalle.horaIngreso }}</td>
+                        <td>{{ detalle.fechaCaducidad }}</td>
+                    </tr>
+                    {%endfor%}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-end">
+        <a type="button" class="btn btn-primary" id="btnVolver">Regresar a inventario</a>
+    </div>
+</div>
+
+<!-- <script src="{% static 'JS/crear_detalle_inventario.js' %}"></script> -->
+{% endblock %}
