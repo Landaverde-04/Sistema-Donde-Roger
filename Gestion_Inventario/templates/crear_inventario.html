@@ -20,7 +20,8 @@
         </div>
         <div class="col-2 text-start">
 
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-confirmacion" style="border-radius:50px;">Guadar inventario</button>
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-confirmacion"
+                style="border-radius:50px;">Guadar inventario</button>
 
         </div>
     </div>
@@ -41,15 +42,17 @@
                     <td>{{ datos.1 }}</td>
                     <td>
                         <a class="btn btn-primary">Ver producto</a>
-                        <a class="btn btn-warning" href="{%url 'editar_detalle_inventario' inventario.idInventario producto%}">Editar detalle</a>
+                        <a class="btn btn-warning"
+                            href="{%url 'editar_detalle_inventario' inventario.idInventario producto%}">Editar
+                            detalle</a>
                     </td>
                 </tr>
                 {%endfor%}
             </tbody>
         </table>
     </div>
-    <!-- modal de exito para detalle de inventario -->
-    <div class="modal fade" id="modal-exito" tabindex="-1" aria-labelledby="modal-exito" aria-hidden="true">
+    <!-- modal de exito para creacion de detalle de inventario -->
+    <div class="modal fade" id="modal-exito-1" tabindex="-1" aria-labelledby="modal-exito-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content ">
                 <div class="modal-header bg-success text-white fw-bold">
@@ -63,24 +66,43 @@
         </div>
     </div>
 
+    <!-- modal de exito para edicion dedetalle de inventario -->
+    <div class="modal fade" id="modal-exito-2" tabindex="-1" aria-labelledby="modal-exito-2" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-success text-white fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">Exito</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <label class="fs-5 fw-semibold">¡Se han guardado los cambios en el detalle de inventario
+                        correctamente!</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- modal de confirmacion para guardar inventario -->
     <div class="modal fade" id="modal-confirmacion" tabindex="-1" aria-labelledby="modal-confirmacion"
         aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content ">
-            <div class="modal-header bg-warning text-black fw-bold">
-                <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                ¿Está seguro de que desea guardar el inventario?, luego no se podran editar los detalles de inventario
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                <form method="post" action="{% url 'crear_inventario' %}">
-                    {%csrf_token%}
-                    <button type="submit" class="btn btn-success" style="border-radius:50px;">Guadar inventario</button>
-                </form>
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-warning text-black fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    ¿Está seguro de que desea guardar el inventario?, luego no se podran editar los detalles de
+                    inventario
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="post" action="{% url 'crear_inventario' %}">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-success" style="border-radius:50px;">Guadar
+                            inventario</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

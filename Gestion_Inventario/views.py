@@ -133,7 +133,6 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
                 detalle.horaIngreso = request.POST['ingreso-'+ str(i+1)][11:16].format('HH:MM:SS')
                 detalle.fechaCaducidad = request.POST['caducidad-'+ str(i+1)].format('YYYY-MM-DD')
                 detalle.save()
-                print(detalle)
                 urlCrearInventario = reverse('crear_inventario')
             return redirect(f'{urlCrearInventario}?exito=1')
         elif request.method == 'GET':
@@ -210,8 +209,8 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
         for detalle in detallesProductoInventario:
             if str(detalle.idDetalleInventario) not in ids:
                 detalle.delete()
-            
-        return redirect('crear_inventario')
+        url = reverse('crear_inventario')
+        return redirect(f'{url}?exito=2')
     elif inventarioId is not None and productoId is not None:
         inventario = models.Inventario.objects.get(idInventario=inventarioId)
         if not inventario or inventario.sePuedeEditar == False: #No existe el inventario o no se puede editar
