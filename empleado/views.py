@@ -49,7 +49,7 @@ def registrar_empleado(request):
     return render(request, 'registrar_empleado.html')
 
 def empleado_lista(request):
-    empleados = Empleado.objects.all()
+    empleados = Empleado.objects.filter(estaHabilitadoEmpleado=True)
     return render(request, 'empleado_lista.html', {'empleados': empleados})
 
 
@@ -82,14 +82,13 @@ def ver_empleado(request, idEmpleado):
 def eliminar_empleado(request, idEmpleado):
     empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
     if request.method == 'POST':
-        empleado.delete()
-        messages.success(request, "Empleado eliminado exitosamente.")
+        empleado.estaHabilitadoEmpleado = False  # Cambia a inhabilitado
+        empleado.save()  # Guarda el cambio en la BD
+        messages.success(request, "Empleado inhabilitado exitosamente.")
         return redirect('empleado_lista')
-
-    # Si por accidente alguien entra a GET, simplemente redirige:
+    # Si alguien entra a GET, simplemente redirige:
     return redirect('empleado_lista')
 
-    return render(request, 'eliminar_empleado.html', {'empleado': empleado})
 
 #Vista de asistencia
 @login_required
