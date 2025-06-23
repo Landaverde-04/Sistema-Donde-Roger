@@ -3,11 +3,10 @@
 {% block content %}
 <head>
 <link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
-<script src="{% static 'JS/listar_proveedores.js' %}"></script>
+<script src="{% static 'JS/usuario_lista.js' %}"></script>
 <title>Usuarios</title>
 </head>
 <div class="container mt-3">
-
     <h2 class="mb-4">Lista de usuarios</h2>
     <div>
         <a href="{% url 'crear_usuario' %}" class="btn btn-success">Crear Usuario</a>
@@ -43,8 +42,8 @@
                           type="button"
                           class="btn btn-danger"
                           data-bs-toggle="modal"
-                          data-bs-target="#modalConfirmarEliminar"
-                          data-id="{{ usuario.id }}"
+                          data-bs-target="#modalEliminarUsuario"
+                          data-url="{% url 'eliminar_usuario' usuario.id %}"
                           data-nombre="{{ usuario.username }}"
                           >
                         Eliminar
@@ -61,7 +60,6 @@
         </tbody>
     </table>
     </div>
-    {# Si quieres paginación, la puedes agregar aquí igual que en proveedores #}
 </div>
 
 <!-- Modal de Éxito -->
@@ -82,21 +80,26 @@
   </div>
 </div>
 
-<!-- Modal Confirmar Eliminar -->
-<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+<!-- Modal de Confirmación de Eliminación de Usuario -->
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-limon">
-        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-octagon-fill"></i> Confirmar eliminación</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body">
-        ¿Estás seguro de eliminar al usuario <strong id="modalNombreUsuario"></strong>?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <a href="#" id="btnEliminarUsuario" class="btn btn-danger">Sí, eliminar</a>
-      </div>
+     <form id="formEliminarUsuario" method="post" action="">
+  {% csrf_token %}
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title" id="modalEliminarUsuarioLabel">
+      <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar eliminación
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+  </div>
+  <div class="modal-body">
+    ¿Estás seguro que deseas eliminar al usuario <strong id="modalNombreUsuario"></strong>?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+  </div>
+</form>
     </div>
   </div>
 </div>
@@ -105,27 +108,4 @@
   <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
 {% endif %}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Modal eliminar usuario: configura el link con el id correcto
-  var modalEliminar = document.getElementById('modalConfirmarEliminar');
-  if (modalEliminar) {
-    modalEliminar.addEventListener('show.bs.modal', function (event) {
-      var button = event.relatedTarget;
-      var idUsuario = button.getAttribute('data-id');
-      var nombreUsuario = button.getAttribute('data-nombre');
-      document.getElementById('modalNombreUsuario').innerText = nombreUsuario;
-      var btnEliminar = document.getElementById('btnEliminarUsuario');
-      btnEliminar.href = "/usuarios/eliminar/" + idUsuario + "/"; // Modifica la ruta si es diferente
-    });
-  }
-  // Modal de éxito desde Django messages
-  var mensajeExito = document.getElementById('mensajeExito');
-  if (mensajeExito && mensajeExito.value) {
-    var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
-    document.getElementById('modalMensajeTexto').innerText = mensajeExito.value;
-    modal.show();
-  }
-});
-</script>
 {% endblock %}
