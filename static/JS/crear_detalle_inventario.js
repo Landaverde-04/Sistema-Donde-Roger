@@ -63,7 +63,6 @@ function addRow() {
     botonEliminar.innerText = "Eliminar";
     botonEliminar.onclick = function () {
         eliminarFila(row);
-        // row.remove();
     }
     eliminar.appendChild(botonEliminar);
 }
@@ -235,12 +234,10 @@ async function obtenerProductos() {
     // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
-            const modal = new bootstrap.Modal(document.getElementById('modal-exito'));
             if (!form.checkValidity()) {
                 event.preventDefault()
                 event.stopPropagation()
             }
-            modal.show();
             form.classList.add('was-validated')
         }, false)
     })
