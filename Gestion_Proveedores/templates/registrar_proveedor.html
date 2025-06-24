@@ -1,163 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-  {% extends 'navegacion.html' %} {% load static %} {% block content %}
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
-    <script src="{% static 'JS/registrar_proveedor.js' %}"></script>
-    <title>Registro de proveedor</title>     
-  </head>
-  <body>
-    <form class="form_proveedor" method="post" id="form-proveedor" enctype="multipart/form-data">
-      {% csrf_token %}
-      <div class="card">
-        <div class="div-errores">
-        </div>
-        <div class="div-contenido">          
-        <h3>Datos del proveedor</h3>
-        <input
-          class="input_normal"
-          type="text"
-          name="nombre_proveedor"
-          placeholder="Nombre"
-          value="{{ data.nombre_proveedor }}"
-          pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
-          title="Solo letras y espacios"
-          required
-        /><!--El value es para no perder los datos metidos en caso de error y recargar la pagina-->
-        <!--El pattern es para validar el tipo de dato introducido-->
-        <!--tittle es para decirle al usuario el tipo de validacion requerida-->
-        <input
-          class="input_normal"
-          type="text"
-          name="apellido_proveedor"
-          placeholder="Apellido"
-          value="{{ data.apellido_proveedor }}"
-          pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
-          title="Solo letras y espacios"
-          required
-        />
-        <input
-          class="input_normal"
-          type="text"
-          name="dui_proveedor"
-          placeholder="DUI"
-          value="{{ data.dui_proveedor }}"
-          pattern="\d{8}-\d"
-          title="Formato: 00000000-0"
-          maxlength="10"
-          required
-        /><br /><br />
-        <input
-          class="input_normal"
-          type="email"
-          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
-          title="Debe tener un formato válido como ejemplo@correo.com"
-          name="correo_proveedor"
-          placeholder="Correo electrónico"
-          value="{{ data.correo_proveedor }}"
-          required          
-        />
-        <input
-          class="input_normal"
-          type="text"
-          name="numero_proveedor"
-          placeholder="Numero de teléfono"
-          value="{{ data.numero_proveedor }}"
-          pattern="\d{4}-\d{4}"
-          title="Formato requerido 0000-0000"
-          maxlength="9"
-          required
-        />
-        <label>Tiene IVA</label>
-        <input type="checkbox" name="iva_proveedor" /><br /><br />   
-        <h3>Datos de la empresa</h3>
-        </div>        
-        <div class="div-archivo">            
-              <input
-                class="input_normal"
-                type="text"
-                name="nombre_empresa"
-                placeholder="Nombre empresa"
-                value="{{ data.nombre_empresa }}"
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+<!-- Bootstrap Icons y Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{% static 'css/registrar_empleado.css' %}">
+<div class="pre-div">
+<div class="container mt-4" id="div-datos">
+    <h2>Registrar Empleado</h2>
+    <form method="post" enctype="multipart/form-data" id="formEmpleado">
+        {% csrf_token %}
+        <!-- Nombres -->
+        <div class="mb-3">
+            <label for="nombresEmpleado" class="form-label">Nombres</label>
+            <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado"
+                maxlength="30"
                 pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
-                title="Solo letras y espacios"
+                title="Ingrese solo letras y espacios, máximo 30 caracteres."
                 required
-              />
-              <label class="label-archivo">Logo:</label>              
-              <input type="file" class="input-archivo" name="logo" accept="image/*" required/>          
+                autocomplete="off">
         </div>
-        <div class="div-textarea">
-        <textarea
-          name="direccion_empresa"
-          id="direccion_empresa"
-          placeholder="Dirección de la empresa"          
-          rows="2"
-          cols="80"
-        >{{ data.direccion_empresa }}</textarea
-        ><br /><br />
-        <label>Hora de apertura</label>
-        <input type="time" name="hora_apertura" required/>
-        <label>Hora de cierre</label>
-        <input type="time" name="hora_cierre" required/><br />
-        </div>     
-        <div class="div-dias">
-        <label>Dias de atención:</label><br />
-        <input type="checkbox" name="dias" value="1" />
-        <label>Lunes</label>
-        <input type="checkbox" name="dias" value="2" />
-        <label>Martes</label>
-        <input type="checkbox" name="dias" value="3" />
-        <label>Miercoles</label>
-        <input type="checkbox" name="dias" value="4" />
-        <label>Jueves</label>
-        <input type="checkbox" name="dias" value="5" />
-        <label>Viernes</label>
-        <input type="checkbox" name="dias" value="6" />
-        <label>Sabado</label>
-        <input type="checkbox" name="dias" value="7" />
-        <label>Domingo</label><br /><br />
+        <!-- Apellidos -->
+        <div class="mb-3">
+            <label for="apellidosEmpleado" class="form-label">Apellidos</label>
+            <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado"
+                maxlength="30"
+                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                title="Ingrese solo letras y espacios, máximo 30 caracteres."
+                required
+                autocomplete="off">
         </div>
-        <div class="div-producto">
-          <h3>Productos del proveedor</h3>
-          <table class="table table-bordered" id="tabla-productos">
-            <thead>
-              <tr>
-                <th class="w-15">Nombre del producto</th>
-                <th class="w-10">Precio</th>
-                <th class="w-9">Acción</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="fila-producto">
-                <td><input class="input-producto" type="text" name="producto_nombre[]" required></td>
-                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0" required></td>
-                <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
-              </tr>
-            </tbody>
-          </table>
-          <button type="button" class="btn btn-primary" onclick="agregarFila()" id="agregar-fila">Añadir producto</button>
+        <!-- DUI -->
+        <div class="mb-3">
+            <label for="duiEmpleado" class="form-label">DUI</label>
+            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado"
+                maxlength="10"
+                minlength="10"
+                pattern="^[0-9]{8}-[0-9]$"
+                placeholder="06718918-3"
+                title="Ingrese el DUI en formato 12345678-9. Solo números y un guion."
+                required
+                autocomplete="off">
         </div>
-        <div class="div-botones">
-          <button type="submit" class="btn btn-success">Guardar</button>
-          <a class="btn btn-danger" id="btnCancelar">Cancelar</a>
+        <!-- Teléfono -->
+        <div class="mb-3">
+            <label for="telEmpleado" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telEmpleado" name="telEmpleado"
+                maxlength="8"
+                minlength="8"
+                pattern="[0-9]{8}"
+                title="Ingrese exactamente 8 dígitos numéricos."
+                required
+                autocomplete="off">
         </div>
-        </div>            
+        <!-- Teléfono Emergencia -->
+        <div class="mb-3">
+            <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
+            <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado"
+                maxlength="8"
+                minlength="8"
+                pattern="[0-9]{8}"
+                title="Ingrese exactamente 8 dígitos numéricos."
+                required
+                autocomplete="off">
+        </div>
+        <!-- Fechas en una sola fila -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
+                <input type="text" class="form-control fecha" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado"
+                    required autocomplete="off" readonly
+                    title="Seleccione una fecha de nacimiento. Este campo es obligatorio.">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="fechaContratacionEmpleado" class="form-label">Fecha de Contratación</label>
+                <input type="text" class="form-control fecha" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado"
+                    required autocomplete="off" readonly
+                    title="Seleccione una fecha de contratación. Este campo es obligatorio.">
+            </div>
+        </div>
+        <!-- Dirección -->
+        <div class="mb-3">
+            <label for="direccionEmpleado" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="direccionEmpleado" name="direccionEmpleado" maxlength="100">
+        </div>
+        <!-- Salario debajo -->
+        <div class="mb-3">
+            <label for="salarioEmpleado" class="form-label">Salario</label>
+            <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" required>
+        </div>
+        <!-- Experiencia Laboral -->
+        <div class="mb-3">
+            <label for="experienciaLaboralEmpleado" class="form-label">Experiencia Laboral</label>
+            <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado" rows="3" required></textarea>
+        </div>
+        <!-- Contrato PDF bonito -->
+        <div class="mb-3">
+            <label for="contratoEmpleado" class="form-label d-flex align-items-center">
+                <i class="bi bi-file-earmark-arrow-up" style="color: #d32f2f; font-size: 1.5rem; margin-right: 8px;"></i>
+                Subir contrato (PDF)
+            </label>
+            <input class="form-control" type="file" id="contratoEmpleado" name="contratoEmpleado" accept=".pdf" required onchange="mostrarArchivo()">
+            <div id="nombreArchivo" class="text-success mt-1"></div>
+            <small class="form-text text-muted">Formato PDF, máximo 5MB.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar Empleado</button>
     </form>
-    </div>
-    </div>
-    </div>
-    <div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+</div>
+</div>
+
+<!-- MODAL ÉXITO -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header bg-danger">
+      <div class="modal-header bg-success">
         <h5 class="modal-title">
-          <i class="bi bi-x-circle"></i>  Error</h5>
+          <i class="bi bi-check-circle"></i>  Éxito
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
       <div class="modal-body" id="modalMensajeTexto">
-        Aquí va el mensaje
+        ¡Empleado registrado exitosamente!
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
@@ -165,25 +128,27 @@
     </div>
   </div>
 </div>
-    <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-warning">
-        <h5 class="modal-title">
-          <i class="bi bi-exclamation-triangle"></i>  Advertencia</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body" id="modalMensajeTexto">
-        ¿Seguro que quieres cancelar el registro? Se perderá todo el progreso.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-        <a href="/Proveedor/listar_proveedores" class="btn btn-danger">Sí, cancelar</a>
-      </div>
-    </div>
-  </div>
-</div>
-  </body>
-</html>
 
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<!-- Bootstrap Bundle JS (requerido para el modal) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Tu JS personalizado -->
+<script src="{% static 'js/registrar_empleado.js' %}"></script>
+<script>
+    flatpickr(".fecha", {
+        dateFormat: "Y-m-d",
+        locale: "es",
+        allowInput: false,
+    });
+    function mostrarArchivo() {
+        const input = document.getElementById('contratoEmpleado');
+        const divNombre = document.getElementById('nombreArchivo');
+        if (input.files && input.files[0]) {
+            divNombre.textContent = 'Archivo seleccionado: ' + input.files[0].name;
+        } else {
+            divNombre.textContent = '';
+        }
+    }
+</script>
 {% endblock %}

@@ -53,7 +53,7 @@ def crear_usuario_view(request):
         user = User.objects.create_user(username=username, password=password,email=email,estaHabilitadoUsuario= True)
         user.idEmpleado = empleado  # Ajusta según tu modelo
         user.save()
-        messages.success(request, "Usuario creado exitosamente.")
+        messages.success(request, "Usuario creado exitosamente.",extra_tags='usuario')
         user.groups.add(grupo)
         return redirect('usuario_lista')  
 
@@ -106,7 +106,7 @@ def modificar_usuario_view(request, usuario_id):
         usuario.groups.clear()
         usuario.groups.add(grupo)
         usuario.save()
-        messages.success(request, "Usuario modificado exitosamente.")
+        messages.success(request, "Usuario modificado exitosamente.",extra_tags='usuario')
         return redirect('usuario_lista')
     
     return render(request, 'modificar_usuario.html', {
@@ -120,8 +120,7 @@ def modificar_usuario_view(request, usuario_id):
 def eliminar_usuario_view(request, usuario_id):
     usuario = get_object_or_404(User, id=usuario_id)
     if request.method == 'POST':
-        usuario.estaHabilitadoUsuario = False
-        usuario.save()
-        messages.success(request, "Usuario inhabilitado exitosamente.")
+        usuario.delete()  
+        messages.success(request, "Usuario eliminado exitosamente.", extra_tags='usuario')
         return redirect('usuario_lista')
     return render(request, 'eliminar_usuario.html', {'usuario': usuario})
