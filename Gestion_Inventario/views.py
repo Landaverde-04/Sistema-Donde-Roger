@@ -64,11 +64,11 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
 @login_required
 def crear_inventario(request): # Funcion que renderiza la pantalla de creacion de inventario
     if request.method == 'POST':
-        print (request.POST)
         ultimo_inventario = models.Inventario.objects.all().last()
         ultimo_inventario.sePuedeEditar = False
         ultimo_inventario.save()
-        return redirect('ver_inventario')
+        url = reverse('ver_inventario')
+        return redirect(f'{url}?exito=1')
     
     resumenDetalles = {}
     ultimo_inventario = models.Inventario.objects.all().last()
