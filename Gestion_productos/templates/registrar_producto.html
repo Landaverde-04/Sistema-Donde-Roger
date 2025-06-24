@@ -31,7 +31,14 @@
                     <label for="descripcionProducto" class="form-label">Descripción producto</label>
                     <textarea class="form-control" id="descripcionProducto" name="descripcionProducto"  rows="3">{{ data.descripcionProducto|default:'' }}</textarea>
                 </div>
-                <button type="submit" class="btn btn-primary w-100" >Registrar</button>
+                <!-- Botones debajo del formulario -->
+                <div class="d-flex justify-content-between mt-3">
+                    <button type="submit" class="btn btn-primary w-50 me-2">Registrar</button>
+                    <!-- Botón para abrir el modal de cancelar -->
+                    <button type="button" class="btn btn-danger w-50" data-bs-toggle="modal" data-bs-target="#modalCancelar">
+                        Cancelar
+                    </button>
+                </div>
             </form>
           </div>
         </div>
@@ -52,6 +59,26 @@
       </div>
       <div class="modal-footer">
         <a href="{% url 'listar_productos' %}" class="btn btn-success">Aceptar</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal de confirmación para cancelar registro -->
+<div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="modalCancelarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="modalCancelarLabel">
+          <i class="bi bi-exclamation-triangle"></i> Advertencia
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Seguro que quieres cancelar el registro? Se perderá todo el progreso.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a href="{% url 'listar_productos' %}" class="btn btn-danger">Sí, cancelar</a>
       </div>
     </div>
   </div>
