@@ -45,11 +45,9 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
         try:
             inventario = models.Inventario.objects.get(idInventario=inventarioId)
             if inventario is not None:
-                fechaInventario = inventario.fechaInventario
-                horaInventario = inventario.horaInventario
                 detallesInventario = models.DetalleInventario.objects.filter(idInventario=inventario)
                 resumenDetalles = resumir_inventario(detallesInventario)
-                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles, 'inventarioId': inventarioId})
+                return render(request, 'ver_inventario.html', {'detalles':resumenDetalles, 'inventario': inventario})
         except:
             return redirect('ver_inventario')
     else:    
@@ -59,17 +57,8 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
         else:
             detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
             resumenDetalles = resumir_inventario(detallesInventario)
-            inventarioId = ultimo_inventario.idInventario
-            # for detalle in detallesInventario:
-            #     nombre = detalle.idProducto.nombreProducto
-            #     if nombre not in resumenDetalles:
-            #         resumenDetalles.update({nombre: detalle.cantidadProducto})
-            #     elif nombre in resumenDetalles:
-            #         resumenDetalles[nombre] += detalle.cantidadProducto
             print(resumenDetalles)
-            fechaInventario = ultimo_inventario.fechaInventario
-            horaInventario = ultimo_inventario.horaInventario
-            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles,'inventarioId':inventarioId})
+            return render(request, 'ver_inventario.html', {'detalles':resumenDetalles,'inventario':ultimo_inventario})
     
     
 @login_required

@@ -1,17 +1,17 @@
 {% extends 'navegacion.html' %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row text-center mt-4">
+<div class="container justify-content-center card p-4 my-5 shadow">
+    <div class="row text-center mt-2">
         <h1>Inventario</h1>
     </div>
 
     <div class="row my-2">
         <div class="col-5 text-end">
-            <h5>Fecha del inventario: {{ fecha_inventario }}</h5>
+            <h5>Fecha del inventario: {{ inventario.fechaInventario_formated }}</h5>
         </div>
         <div class="col-5 text-center">
-            <h5>Hora de creacion: {{ hora_inventario }}</h5>
+            <h5>Hora de creacion: {{ inventario.horaInventario }}</h5>
         </div>
         <div class="col-2 align-content-start text-start">
             <a type="button" class="btn btn-primary" style="border-radius:50px;" href="{% url 'crear_inventario' %}">Crear inventario</a>
@@ -34,7 +34,7 @@
                     <td>{{ datos.1 }}</td>
                     <td>
                         <a class="btn btn-primary" href="{% url 'detalle_producto' producto %}">Ver producto</a>
-                        <a class="btn btn-success" href="{% url 'ver_detalle_inventario' inventarioId producto %}">Ver detalle</a>
+                        <a class="btn btn-success" href="{% url 'ver_detalle_inventario' inventario.idInventario producto %}">Ver detalle</a>
                     </td>
                 </tr>
                 {%endfor%}

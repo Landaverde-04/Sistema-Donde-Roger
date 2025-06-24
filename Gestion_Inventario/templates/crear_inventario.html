@@ -2,7 +2,7 @@
 {%load static%}
 {% block content %}
 
-<div class="container-fluid">
+<div class="container justify-content-center card p-4 my-5 shadow">
     <div class="row text-center mt-4">
         <h1>Crear Inventario</h1>
     </div>
@@ -41,7 +41,7 @@
                     <td>{{ datos.0 }}</td>
                     <td>{{ datos.1 }}</td>
                     <td>
-                        <a class="btn btn-primary">Ver producto</a>
+                        <a class="btn btn-primary" href="{% url 'detalle_producto' producto %}">Ver producto</a>
                         <a class="btn btn-warning"
                             href="{%url 'editar_detalle_inventario' inventario.idInventario producto%}">Editar
                             detalle</a>
