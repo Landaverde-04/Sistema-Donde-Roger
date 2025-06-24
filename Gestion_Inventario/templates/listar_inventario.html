@@ -1,98 +1,121 @@
 {% extends 'navegacion.html' %}
 {% load static %}
 {% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'CSS/listar_inventario.css' %}">
-    <title>Lista de Inventarios</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'CSS/listar_inventario.css' %}">
+  <title>Lista de Inventarios</title>
 </head>
 <div class="container mt-3">
-    <h2 class="mb-4">Lista de Inventarios</h2>
-    <div class="mb-4 text-start">
-        <a href="{% url 'crear_inventario' %}" class="btn btn-success">Crear Nuevo Inventario</a>
-    </div>
+  <h2 class="mb-4">Lista de Inventarios</h2>
+  <div class="mb-4 text-start">
+    <button data-bs-toggle="modal" data-bs-target="#modal-confirmacion" class="btn btn-success">Crear Nuevo Inventario</a>
+  </div>
 
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Encargado</th>
-                <th>Fecha de Creación</th>
-                <th>Hora de Creación</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if inventarios.object_list %}
-            {% for inventario in inventarios %}
-                <tr>
-                    <td>{{ inventario.idIventario }}</td>   
-                    <td>{{ inventario.idUsuario }}</td>
-                    <td>{{ inventario.fechaInventario }}</td>
-                    <td>{{ inventario.horaInventario }}</td>
-                    <td>
-                        <a href="{% url 'ver_inventario' %}" class="btn btn-info">Ver Detalles</a>
-                        {% if inventario.sePuedeEditar == True %}
-                        <a href="{% url 'crear_inventario' %}" class="btn btn-primary">Editar</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay inventarios registrados.</td>
-                </tr>
-            {% endfor %}
-            {% else %}
-                <tr>
-                    <td colspan="5" class="text-center">No hay inventarios registrados.</td>
-                </tr>
-            {% endif %}
-        </tbody>
-    </table>
-     </div>
-    </div>
-    <div class="paginacion-inventarios">
-    <nav aria-label="Paginación de inventarios">
-        <ul class="pagination justify-content-center">
-    {% if inventarios.has_previous %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Encargado</th>
+        <th>Fecha de Creación</th>
+        <th>Hora de Creación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if inventarios.object_list %}
+      {% for inventario in inventarios %}
+      <tr>
+        <td>{{ inventario.idInventario }}</td>
+        <td>{{ inventario.idUsuario }}</td>
+        <td>{{ inventario.fechaInventario }}</td>
+        <td>{{ inventario.horaInventario }}</td>
+        <td>
+          <a href="{% url 'ver_inventario_id' inventario.idInventario %}" class="btn btn-info">Ver Detalles</a>
+          {% if inventario.sePuedeEditar == True %}
+          <a href="{% url 'crear_inventario' %}" class="btn btn-primary">Editar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No hay inventarios registrados.</td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center">No hay inventarios registrados.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<div class="paginacion-inventarios">
+  <nav aria-label="Paginación de inventarios">
+    <ul class="pagination justify-content-center">
+      {% if inventarios.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page=1">&laquo; Primero</a>
       </li>
       <li class="page-item">
         <a class="page-link" href="?page={{ inventarios.previous_page_number }}">Anterior</a>
       </li>
-    {% endif %}
-
-    {# Números de página #}
-    {% for num in inventarios.paginator.page_range %}
-      {% if inventarios.number == num %}
-        <li class="page-item active">
-          <span class="page-link">{{ num }}</span>
-        </li>
-      {% else %}
-        <li class="page-item">
-          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-        </li>
       {% endif %}
-    {% endfor %}
 
-    {% if inventarios.has_next %}
+      {# Números de página #}
+      {% for num in inventarios.paginator.page_range %}
+      {% if inventarios.number == num %}
+      <li class="page-item active">
+        <span class="page-link">{{ num }}</span>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+      </li>
+      {% endif %}
+      {% endfor %}
+
+      {% if inventarios.has_next %}
       <li class="page-item">
         <a class="page-link" href="?page={{ inventarios.next_page_number }}">Siguiente</a>
       </li>
       <li class="page-item">
         <a class="page-link" href="?page={{ inventarios.paginator.num_pages }}">Última &raquo;</a>
       </li>
-    {% endif %}
-  </ul>
-</nav>
+      {% endif %}
+    </ul>
+  </nav>
 </div>
-</div>
+
+<!-- Modal para confirmacion de creacion de un nuevo inventario -->
+    <div class="modal fade" id="modal-confirmacion" tabindex="-1" aria-labelledby="modal-confirmacion"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-warning text-black fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    ¿Está seguro de que desea crear un nuevo inventario?, el inventario creado se tomará como el
+                    inventario actual
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <a type="button" class="btn btn-success" style="border-radius:50px;" href="{% url 'crear_inventario' %}">Crear
+                        inventario</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {%endblock%}

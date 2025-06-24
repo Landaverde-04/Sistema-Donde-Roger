@@ -10,7 +10,7 @@ class Inventario(models.Model): #Tabla de la bd para los inventarios
     sePuedeEditar = models.BooleanField(default=True)
     
     def fechaInventario_formated(self):
-        return self.fechaInventario.strftime('%Y/%m/%d')
+        return self.fechaInventario.strftime('%d/%m/%Y')
    
     class Meta:
         db_table = 'Inventario'
