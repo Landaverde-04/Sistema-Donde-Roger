@@ -60,8 +60,9 @@
     </div>
     <div class="div-botones">
         <a href="{% url 'listar_proveedores' %}" class="btn btn-danger" id="btn-atras">Regresar</a>
+        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
         <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary" id="btn-editar">Editar proveedor</a>
-                  
+        {% endif %}
     </div>
     </div>
     </div>

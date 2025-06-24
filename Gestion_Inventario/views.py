@@ -231,7 +231,7 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
         
     
 #listar inventarios, muestra los inventarios creados, ordenados por fecha de creacion
-@groups_required('Jefe')
+
 @login_required
 def listar_inventario(request):
     
