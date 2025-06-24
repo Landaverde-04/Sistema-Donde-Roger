@@ -64,11 +64,11 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
 @login_required
 def crear_inventario(request): # Funcion que renderiza la pantalla de creacion de inventario
     if request.method == 'POST':
-        print (request.POST)
         ultimo_inventario = models.Inventario.objects.all().last()
         ultimo_inventario.sePuedeEditar = False
         ultimo_inventario.save()
-        return redirect('ver_inventario')
+        url = reverse('ver_inventario')
+        return redirect(f'{url}?exito=1')
     
     resumenDetalles = {}
     ultimo_inventario = models.Inventario.objects.all().last()
@@ -81,14 +81,15 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
             horaInventario = current_date
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
             for detalle in detallesInventario:
-                detalle_copia = models.DetalleInventario()
-                detalle_copia.idProducto = detalle.idProducto
-                detalle_copia.cantidadProducto = detalle.cantidadProducto
-                detalle_copia.fechaIngreso = detalle.fechaIngreso
-                detalle_copia.horaIngreso = detalle.horaIngreso
-                detalle_copia.fechaCaducidad = detalle.fechaCaducidad
-                detalle_copia.idInventario = inventario
-                detalle_copia.save()
+                if detalle.cantidadProducto > 0:
+                    detalle_copia = models.DetalleInventario()
+                    detalle_copia.idProducto = detalle.idProducto
+                    detalle_copia.cantidadProducto = detalle.cantidadProducto
+                    detalle_copia.fechaIngreso = detalle.fechaIngreso
+                    detalle_copia.horaIngreso = detalle.horaIngreso
+                    detalle_copia.fechaCaducidad = detalle.fechaCaducidad
+                    detalle_copia.idInventario = inventario
+                    detalle_copia.save()
             inventario.save()
         elif ultimo_inventario.sePuedeEditar == True:
             inventario = ultimo_inventario
@@ -131,6 +132,7 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
 
 
 #Funcion para ver la informacion de un detalle de inventario, recibe el id de inventario y el id del producto
+@login_required
 def ver_detalle_inventario(request, inventarioId=None, productoId=None):
     if productoId is not None and inventarioId is not None:
         inventario = models.Inventario.objects.get(idInventario=inventarioId)
@@ -150,6 +152,7 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
 #Funcion para editar un detalle de inventario, recibe el id de inventario y el id del producto
 #internamente tiene 3 funcionamientos, si el detalle fue recuperado del inventario anterior, si el detalle fue creado en este inventario y si se está creando actualmente el detalle
 #resumido en: Anterior, Actual y Nuevo
+@login_required
 def editar_detalle_inventario(request, inventarioId=None, productoId=None):
     if request.method == 'POST':
         print(request.POST)
