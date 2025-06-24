@@ -39,3 +39,26 @@ document.addEventListener('DOMContentLoaded', function () {
     btnEliminar.href = `/Proveedor/deshabilitar/${proveedorId}`;
   });
 });
+
+//funcion para hacer busqueda en proveedores
+document.addEventListener('DOMContentLoaded', () => {
+  const inputNombre = document.getElementById('busquedaProveedor');  
+  const filas = document.querySelectorAll('#tablaProveedores tbody tr');
+
+  function filtrarTabla() {
+    const nombre = inputNombre.value.toLowerCase();    
+
+    filas.forEach(fila => {
+      const nombreProveedor = fila.querySelector('.col-nombre').innerText.toLowerCase();
+      const apellidoProveedor = fila.querySelector('.col-apellido').innerText.toLowerCase();
+      const empresaProveedor = fila.querySelector('.col-empresa').innerText.toLowerCase();
+
+      const coincideNombre = nombreProveedor.includes(nombre);
+      
+
+      fila.style.display = (coincideNombre) || apellidoProveedor.includes(nombre) || empresaProveedor.includes(nombre) ? '' : 'none';
+    });
+  }
+
+  inputNombre.addEventListener('input', filtrarTabla);  
+});
