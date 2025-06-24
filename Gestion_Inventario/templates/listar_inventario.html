@@ -20,6 +20,17 @@
   {% endfor %}
   {% endif %}
 
+  <form method="get" class="mb-3 d-flex align-items-center">
+    <label for="ordenar" class="me-2">Ordenar por:</label>
+    <select name="ordenar" id="ordenar" class="form-select w-auto me-2" onchange="this.form.submit()">
+        <option value="descendente" {% if request.GET.ordenar == "descendente" or not request.GET.ordenar %}selected{% endif %}>Más reciente primero</option>
+        <option value="ascendente" {% if request.GET.ordenar == "ascendente" %}selected{% endif %}>Más antiguo primero</option>
+    </select>
+    <label for="fecha" class="me-2 ms-3">Filtrar por fecha:</label>
+    <input type="date" name="fecha" id="fecha" class="form-control w-auto me-2" value="{{ request.GET.fecha }}">
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+</form>
+
   <table class="table table-striped">
     <thead>
       <tr>
@@ -86,7 +97,7 @@
 
       {% if inventarios.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ inventarios.next_page_number }}">Siguiente</a>
+        <a class="page-link" href="?page={{ inventarios.next_page_number }}&ordenar={{ request.GET.ordenar }}">Siguiente</a>
       </li>
       <li class="page-item">
         <a class="page-link" href="?page={{ inventarios.paginator.num_pages }}">Última &raquo;</a>
@@ -102,7 +113,9 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content ">
                 <div class="modal-header bg-warning text-black fw-bold">
-                    <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
+                    <h5 class="modal-title fs-5" id="modal-exito">
+                      <i class="bi bi-exclamation-triangle"></i>CONFIRMACION
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">

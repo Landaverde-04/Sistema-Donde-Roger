@@ -234,8 +234,20 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
 
 @login_required
 def listar_inventario(request):
-    
-    inventarios = models.Inventario.objects.all().order_by('idInventario')
+    fecha = request.GET.get('fecha', None)
+    if fecha:
+        # Filtrar inventarios por fecha
+        inventarios = models.Inventario.objects.filter(fechaInventario=fecha).order_by('idInventario')
+    else:
+        # Obtener todos los inventarios si no se especifica una fecha
+        inventarios = models.Inventario.objects.all().order_by('idInventario')
+    #seleccionar el dato de inventario de forma desendento o ascendente
+    if request.GET.get('ordenar') == 'ascendente':
+        #obtener todos los inventarios y ordenarlos por idInventario de forma ascendente
+        inventarios = models.Inventario.objects.all().order_by('idInventario')
+    else:
+        #obtener todos los inventarios y ordenarlos por idInventario de forma descendente
+        inventarios = models.Inventario.objects.all().order_by('idInventario').reverse()
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
