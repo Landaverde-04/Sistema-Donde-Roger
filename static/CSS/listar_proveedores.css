@@ -27,3 +27,7 @@ h2{
 .bg-limon{
     background-color: #6bd35d;
 }
+#div-registrar{
+    display: flex;
+    justify-content: right;
+}

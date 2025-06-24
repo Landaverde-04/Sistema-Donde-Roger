@@ -119,6 +119,7 @@ def eliminar_empleado(request, idEmpleado):
 
 #Vista de asistencia
 @login_required
+@groups_required('Jefe', 'Gerente', 'Colaborador')
 def marcar_asistencia(request):
     usuario = request.user
     ahora = timezone.now()#aca guardamos la fecha y hora actual, en este 
@@ -181,7 +182,7 @@ def historial_asistencia(request):
         asistencias = asistencias.filter(fecha=fecha)
         
 
-    paginator = Paginator(asistencias, 10)  # 10 registros por página
+    paginator = Paginator(asistencias, 3)  # 10 registros por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

@@ -13,11 +13,6 @@
       {% csrf_token %}
       <div class="card">
         <div class="div-errores">
-          {% if messages %} <!--Este if es para mostrar los mensajes de error-->
-            {% for message in messages %}
-            <div class="alert alert-warning">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
         </div>
         <div class="div-contenido">          
         <h3>Datos del proveedor</h3>
