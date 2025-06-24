@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
+    <link rel="stylesheet" href="{% static 'CSS/registrar_proveedor.css' %}" />
     <script src="{% static 'JS/registrar_proveedor.js' %}"></script>
     <title>Editar proveedor</title>
   </head>
@@ -11,11 +11,6 @@
       {% csrf_token %}
       <div class="card">
         <div class="div-errores">
-          {% if messages %} <!--Este if es para mostrar los mensajes de error-->
-            {% for message in messages %}
-            <div class="alert alert-warning">{{ message }}</div>
-            {% endfor %}
-          {% endif %}
         </div>
         <div class="div-contenido">          
         <h3>Datos del proveedor</h3>

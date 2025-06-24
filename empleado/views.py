@@ -10,6 +10,9 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 
+
+@login_required
+@groups_required('Jefe')
 def registrar_empleado(request):
     if request.method == 'POST':
         # Recoger los datos enviados a través del POST (sin incluir idEmpleado)
@@ -60,6 +63,8 @@ def registrar_empleado(request):
     #return render(request, 'empleado_lista.html', {'empleados': empleados})
     
 
+@login_required
+@groups_required('Jefe')
 def empleado_lista(request):
     busqueda = request.GET.get('busqueda', '')
     empleados_query = Empleado.objects.filter(estaHabilitadoEmpleado=True).order_by('idEmpleado')
@@ -80,6 +85,8 @@ def empleado_lista(request):
     })
 
 
+@login_required
+@groups_required('Jefe')
 def modificar_empleado(request, idEmpleado):
     empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
     if request.method == 'POST':
@@ -101,11 +108,16 @@ def modificar_empleado(request, idEmpleado):
         return redirect('empleado_lista')
     return render(request, 'modificar_empleado.html', {'empleado': empleado})
 
+
+@login_required
+@groups_required('Jefe')
 def ver_empleado(request, idEmpleado):
     empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
     return render(request, 'ver_empleado.html', {'empleado': empleado})
 
 
+@login_required
+@groups_required('Jefe')
 def eliminar_empleado(request, idEmpleado):
     empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
     if request.method == 'POST':
@@ -119,6 +131,7 @@ def eliminar_empleado(request, idEmpleado):
 
 #Vista de asistencia
 @login_required
+@groups_required('Jefe', 'Gerente', 'Colaborador')
 def marcar_asistencia(request):
     usuario = request.user
     ahora = timezone.now()#aca guardamos la fecha y hora actual, en este 
@@ -181,7 +194,7 @@ def historial_asistencia(request):
         asistencias = asistencias.filter(fecha=fecha)
         
 
-    paginator = Paginator(asistencias, 10)  # 10 registros por página
+    paginator = Paginator(asistencias, 3)  # 10 registros por página
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 

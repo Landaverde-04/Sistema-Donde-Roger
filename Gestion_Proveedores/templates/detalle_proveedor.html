@@ -1,7 +1,7 @@
 {% extends 'navegacion.html' %} {% load static %} {% block content %}
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/detalle_proveedor.css' %}" />
+    <link rel="stylesheet" href="{% static 'CSS/detalle_proveedor.css' %}" />
     <title>Detalle del Proveedor</title>
 
 </head>
@@ -54,6 +54,9 @@
     {% else %}
         <p>No hay productos registrados.</p>
     {% endif %}
+    </div>
+    <div class="div-boton-historial">
+        <a href="#" class="btn btn-success" id="btn-historial-compra">Historial de compras</a>
     </div>
     <div class="div-botones">
         <a href="{% url 'listar_proveedores' %}" class="btn btn-danger" id="btn-atras">Regresar</a>
