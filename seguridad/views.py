@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from empleado.models import Empleado  # Ajusta el import a tu app
 from .models import Usuario # Ajusta a tu modelo extendido
 from .decoradores import groups_required
+from django.core.paginator import Paginator
 
 User = get_user_model()
 
@@ -64,8 +65,15 @@ def crear_usuario_view(request):
 @login_required
 @groups_required('Jefe')
 def usuario_lista_view(request):
-    usuarios = User.objects.filter(estaHabilitadoUsuario=True)
-    return render(request, 'usuario_lista.html', {'usuarios': usuarios})
+    usuarios_list = User.objects.filter(estaHabilitadoUsuario=True)
+    paginator = Paginator(usuarios_list, 10)  
+    page_number = request.GET.get('page')
+    usuarios_paginacion = paginator.get_page(page_number)
+
+    return render(request, 'usuario_lista.html', {
+        'usuarios_paginacion': usuarios_paginacion
+    })
+
 
 @login_required
 @groups_required('Jefe')
