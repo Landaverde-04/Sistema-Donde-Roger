@@ -38,7 +38,7 @@
                     <td>{{ inventario.fechaInventario }}</td>
                     <td>{{ inventario.horaInventario }}</td>
                     <td>
-                        <a href="{% url 'ver_inventario' %}" class="btn btn-info">Ver Detalles</a>
+                        <a href="{% url 'ver_inventario_id' inventario.idInventario %}" class="btn btn-info">Ver Detalles</a>
                         {% if inventario.sePuedeEditar == True %}
                         <a href="{% url 'crear_inventario' %}" class="btn btn-primary">Editar</a>
                         {% endif %}
