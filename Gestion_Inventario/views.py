@@ -81,14 +81,15 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
             horaInventario = current_date
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
             for detalle in detallesInventario:
-                detalle_copia = models.DetalleInventario()
-                detalle_copia.idProducto = detalle.idProducto
-                detalle_copia.cantidadProducto = detalle.cantidadProducto
-                detalle_copia.fechaIngreso = detalle.fechaIngreso
-                detalle_copia.horaIngreso = detalle.horaIngreso
-                detalle_copia.fechaCaducidad = detalle.fechaCaducidad
-                detalle_copia.idInventario = inventario
-                detalle_copia.save()
+                if detalle.cantidadProducto > 0:
+                    detalle_copia = models.DetalleInventario()
+                    detalle_copia.idProducto = detalle.idProducto
+                    detalle_copia.cantidadProducto = detalle.cantidadProducto
+                    detalle_copia.fechaIngreso = detalle.fechaIngreso
+                    detalle_copia.horaIngreso = detalle.horaIngreso
+                    detalle_copia.fechaCaducidad = detalle.fechaCaducidad
+                    detalle_copia.idInventario = inventario
+                    detalle_copia.save()
             inventario.save()
         elif ultimo_inventario.sePuedeEditar == True:
             inventario = ultimo_inventario
