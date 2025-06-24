@@ -1,7 +1,7 @@
 {% extends 'navegacion.html' %} {% load static %} {% block content %}
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/detalle_proveedor.css' %}" />
+    <link rel="stylesheet" href="{% static 'CSS/detalle_proveedor.css' %}" />
     <title>Detalle del Proveedor</title>
 
 </head>
@@ -60,8 +60,9 @@
     </div>
     <div class="div-botones">
         <a href="{% url 'listar_proveedores' %}" class="btn btn-danger" id="btn-atras">Regresar</a>
+        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
         <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary" id="btn-editar">Editar proveedor</a>
-                  
+        {% endif %}
     </div>
     </div>
     </div>

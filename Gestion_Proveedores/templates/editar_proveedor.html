@@ -2,7 +2,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="{% static 'css/registrar_proveedor.css' %}" />
+    <link rel="stylesheet" href="{% static 'CSS/registrar_proveedor.css' %}" />
     <script src="{% static 'JS/registrar_proveedor.js' %}"></script>
     <title>Editar proveedor</title>
   </head>
@@ -133,7 +133,7 @@
                 {% for producto in productos %}
               <tr class="fila-producto">
                 <td><input class="input-producto" type="text" name="producto_nombre[]" value="{{ producto.nombreProductoProveedor }}" required></td>
-                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0" value="{{ producto.precioProductoProveedor }}" required></td>
+                <td><input class="input-precio" type="number" step="0.01" name="producto_precio[]" placeholder="00.01" min="0.01" value="{{ producto.precioProductoProveedor }}" required></td>
                 <td><button type="button" class="btn btn-danger eliminar-fila" onclick="eliminarFila(this)">Eliminar</button></td>
               </tr>
               {% endfor %}

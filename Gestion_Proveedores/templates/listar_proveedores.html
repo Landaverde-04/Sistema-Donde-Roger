@@ -62,7 +62,7 @@
                       {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                       <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
                         {% endif %}
-                        {% if user.groups.first.name == 'Jefe' %}
+                        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                       <button 
                       type="button" 
                       class="btn btn-danger" 

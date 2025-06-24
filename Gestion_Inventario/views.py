@@ -45,11 +45,9 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
         try:
             inventario = models.Inventario.objects.get(idInventario=inventarioId)
             if inventario is not None:
-                fechaInventario = inventario.fechaInventario
-                horaInventario = inventario.horaInventario
                 detallesInventario = models.DetalleInventario.objects.filter(idInventario=inventario)
                 resumenDetalles = resumir_inventario(detallesInventario)
-                return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles, 'inventarioId': inventarioId})
+                return render(request, 'ver_inventario.html', {'detalles':resumenDetalles, 'inventario': inventario})
         except:
             return redirect('ver_inventario')
     else:    
@@ -59,27 +57,18 @@ def ver_inventario(request, inventarioId=None): #Funcion que renderiza el inveta
         else:
             detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
             resumenDetalles = resumir_inventario(detallesInventario)
-            inventarioId = ultimo_inventario.idInventario
-            # for detalle in detallesInventario:
-            #     nombre = detalle.idProducto.nombreProducto
-            #     if nombre not in resumenDetalles:
-            #         resumenDetalles.update({nombre: detalle.cantidadProducto})
-            #     elif nombre in resumenDetalles:
-            #         resumenDetalles[nombre] += detalle.cantidadProducto
             print(resumenDetalles)
-            fechaInventario = ultimo_inventario.fechaInventario
-            horaInventario = ultimo_inventario.horaInventario
-            return render(request, 'ver_inventario.html', {'fecha_inventario': fechaInventario, 'hora_inventario': horaInventario, 'detalles':resumenDetalles,'inventarioId':inventarioId})
+            return render(request, 'ver_inventario.html', {'detalles':resumenDetalles,'inventario':ultimo_inventario})
     
     
 @login_required
 def crear_inventario(request): # Funcion que renderiza la pantalla de creacion de inventario
     if request.method == 'POST':
-        print (request.POST)
         ultimo_inventario = models.Inventario.objects.all().last()
         ultimo_inventario.sePuedeEditar = False
         ultimo_inventario.save()
-        return redirect('ver_inventario')
+        url = reverse('ver_inventario')
+        return redirect(f'{url}?exito=1')
     
     resumenDetalles = {}
     ultimo_inventario = models.Inventario.objects.all().last()
@@ -88,18 +77,19 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
         resumenDetalles = resumir_inventario(detallesInventario)
         if ultimo_inventario.sePuedeEditar == False:
             current_date = datetime.datetime.now()
-            fechaInventario = current_date.strftime('%Y-%m-%d')
-            horaInventario = current_date.strftime('%H:%M:%S')
+            fechaInventario = current_date
+            horaInventario = current_date
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
             for detalle in detallesInventario:
-                detalle_copia = models.DetalleInventario()
-                detalle_copia.idProducto = detalle.idProducto
-                detalle_copia.cantidadProducto = detalle.cantidadProducto
-                detalle_copia.fechaIngreso = detalle.fechaIngreso
-                detalle_copia.horaIngreso = detalle.horaIngreso
-                detalle_copia.fechaCaducidad = detalle.fechaCaducidad
-                detalle_copia.idInventario = inventario
-                detalle_copia.save()
+                if detalle.cantidadProducto > 0:
+                    detalle_copia = models.DetalleInventario()
+                    detalle_copia.idProducto = detalle.idProducto
+                    detalle_copia.cantidadProducto = detalle.cantidadProducto
+                    detalle_copia.fechaIngreso = detalle.fechaIngreso
+                    detalle_copia.horaIngreso = detalle.horaIngreso
+                    detalle_copia.fechaCaducidad = detalle.fechaCaducidad
+                    detalle_copia.idInventario = inventario
+                    detalle_copia.save()
             inventario.save()
         elif ultimo_inventario.sePuedeEditar == True:
             inventario = ultimo_inventario
@@ -142,6 +132,7 @@ def crear_detalle_inventario(request): #Funcion que renderiza la pantalla de cre
 
 
 #Funcion para ver la informacion de un detalle de inventario, recibe el id de inventario y el id del producto
+@login_required
 def ver_detalle_inventario(request, inventarioId=None, productoId=None):
     if productoId is not None and inventarioId is not None:
         inventario = models.Inventario.objects.get(idInventario=inventarioId)
@@ -161,12 +152,16 @@ def ver_detalle_inventario(request, inventarioId=None, productoId=None):
 #Funcion para editar un detalle de inventario, recibe el id de inventario y el id del producto
 #internamente tiene 3 funcionamientos, si el detalle fue recuperado del inventario anterior, si el detalle fue creado en este inventario y si se está creando actualmente el detalle
 #resumido en: Anterior, Actual y Nuevo
+@login_required
 def editar_detalle_inventario(request, inventarioId=None, productoId=None):
     if request.method == 'POST':
         print(request.POST)
         anteriores = [key for key in request.POST.keys() if key.startswith('anterior-cantidad')]
         actuales = [key for key in request.POST.keys() if key.startswith('actual-cantidad')]
         nuevos = [key for key in request.POST.keys() if key.startswith('nuevo-cantidad-')]
+        
+        ids = []##para guardar los id que no se borraran
+        print(nuevos)
         #Este bloque es para actualizar los detalles o crear los nuevos:
         if anteriores is not None:
             for key in anteriores:
@@ -183,10 +178,11 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
                 detalle.horaIngreso = request.POST['actual-ingreso-'+ str(indice)][11:16].format('HH:MM:SS')
                 detalle.fechaCaducidad = request.POST['actual-caducidad-'+ str(indice)].format('YYYY-MM-DD')
                 detalle.save()
-        if nuevos is not None:
+        if nuevos:
             for key in nuevos:
+                print(key)
                 indice = key.split('-')[2]
-                detalle = models.DetalleInventario();
+                detalle = models.DetalleInventario()
                 detalle.idInventario_id = inventarioId
                 detalle.idProducto_id = productoId
                 detalle.cantidadProducto = request.POST['nuevo-cantidad-' + str(indice)]
@@ -194,9 +190,10 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
                 detalle.horaIngreso = request.POST['nuevo-ingreso-'+str(indice)][11:16].format('HH:MM:SS')
                 detalle.fechaCaducidad = request.POST['nuevo-caducidad-'+str(indice)].format('YYYY-MM-DD')
                 detalle.save()
+                ids.append(str(detalle.idDetalleInventario))
+                
         #Este bloque es para gestionar la eliminacion de detalles "Actuales"
         detallesProductoInventario = models.DetalleInventario.objects.all().filter(idInventario_id=inventarioId).filter(idProducto_id=productoId)
-        ids = []
         if anteriores:
             for key in anteriores:
                 indice = key.split('-')[2]
@@ -234,11 +231,23 @@ def editar_detalle_inventario(request, inventarioId=None, productoId=None):
         
     
 #listar inventarios, muestra los inventarios creados, ordenados por fecha de creacion
-@groups_required('Jefe')
+
 @login_required
 def listar_inventario(request):
-    
-    inventarios = models.Inventario.objects.all().order_by('idInventario')
+    fecha = request.GET.get('fecha', None)
+    if fecha:
+        # Filtrar inventarios por fecha
+        inventarios = models.Inventario.objects.filter(fechaInventario=fecha).order_by('idInventario')
+    else:
+        # Obtener todos los inventarios si no se especifica una fecha
+        inventarios = models.Inventario.objects.all().order_by('idInventario')
+    #seleccionar el dato de inventario de forma desendento o ascendente
+    if request.GET.get('ordenar') == 'ascendente':
+        #obtener todos los inventarios y ordenarlos por idInventario de forma ascendente
+        inventarios = models.Inventario.objects.all().order_by('idInventario')
+    else:
+        #obtener todos los inventarios y ordenarlos por idInventario de forma descendente
+        inventarios = models.Inventario.objects.all().order_by('idInventario').reverse()
     paginator = Paginator(inventarios, 10)  # Cambia 10 por la cantidad que desees por página
     # Obtener el número de página desde la solicitud GET
     page_number = request.GET.get('page')
