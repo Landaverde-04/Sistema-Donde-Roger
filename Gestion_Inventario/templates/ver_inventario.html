@@ -1,5 +1,10 @@
 {% extends 'navegacion.html' %}
+{%load static%}
 {% block content %}
+
+<head>
+    <title>Inventario</title>
+</head>
 
 <div class="container justify-content-center card p-4 my-5 shadow">
     <div class="row text-center mt-2">
@@ -7,14 +12,25 @@
     </div>
 
     <div class="row my-2">
-        <div class="col-5 text-end">
+        <div class="col-4 text-center">
             <h5>Fecha del inventario: {{ inventario.fechaInventario_formated }}</h5>
         </div>
-        <div class="col-5 text-center">
+        <div class="col-3 text-center">
             <h5>Hora de creacion: {{ inventario.horaInventario }}</h5>
         </div>
-        <div class="col-2 align-content-start text-start">
-            <a type="button" class="btn btn-primary" style="border-radius:50px;" href="{% url 'crear_inventario' %}">Crear inventario</a>
+        <div class="col-5 text-center">
+            <a type="button" class="btn btn-primary" style="border-radius:50px;"
+                href="{% url 'listar_inventario' %}">Ver listado de inventarios</a>
+            {%if inventario.sePuedeEditar == True %}
+            <a type="button" class="btn btn-warning fs-6" style="border-radius:50px;"
+                href="{% url 'crear_inventario' %}">
+                Continuar editando inventario
+            </a>
+            {% else %}
+            <button type="button" class="btn btn-success" style="border-radius:50px;" data-bs-toggle="modal" data-bs-target="#modal-confirmacion">
+                Crear nuevo inventario
+            </button>
+            {% endif %}
         </div>
     </div>
 
@@ -28,13 +44,14 @@
                 </tr>
             </thead>
             <tbody>
-                 {%for producto,datos in detalles.items%}
+                {%for producto,datos in detalles.items%}
                 <tr>
                     <td>{{ datos.0 }}</td>
                     <td>{{ datos.1 }}</td>
                     <td>
                         <a class="btn btn-primary" href="{% url 'detalle_producto' producto %}">Ver producto</a>
-                        <a class="btn btn-success" href="{% url 'ver_detalle_inventario' inventario.idInventario producto %}">Ver detalle</a>
+                        <a class="btn btn-success"
+                            href="{% url 'ver_detalle_inventario' inventario.idInventario producto %}">Ver detalle</a>
                     </td>
                 </tr>
                 {%endfor%}
@@ -42,9 +59,42 @@
         </table>
     </div>
 
+    <!-- Modal para exito de guardo de inventario -->
+    <div class="modal fade" id="modal-exito-1" tabindex="-1" aria-labelledby="modal-exito-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-success text-white fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">Exito</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    ¡Se guardo el inventario exitosamente!
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal para confirmacion de creacion de un nuevo inventario -->
+    <div class="modal fade" id="modal-confirmacion" tabindex="-1" aria-labelledby="modal-confirmacion"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content ">
+                <div class="modal-header bg-warning text-black fw-bold">
+                    <h1 class="modal-title fs-5" id="modal-exito">CONFIRMACION</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                    ¿Está seguro de que desea crear un nuevo inventario?, el inventario creado se tomará como el
+                    inventario actual
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <a type="button" class="btn btn-success" style="border-radius:50px;" href="{% url 'crear_inventario' %}">Crear
+                        inventario</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-
-
+<script src="{% static 'JS/ver_inventario.js' %}"></script>
 {% endblock %}
