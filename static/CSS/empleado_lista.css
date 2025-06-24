@@ -70,3 +70,13 @@
         .w-15 { width: 15%; }
         .w-7 { width: 7%; }
         .w-10 { width: 10%; }
+
+
+.search-bar-form {
+    background: #cfdff0;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+    margin-left: auto;
+    max-width: 430px;
+}

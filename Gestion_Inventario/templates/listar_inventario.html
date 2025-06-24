@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     
+=======
+    <link rel="stylesheet" href="{% static 'CSS/listar_inventario.css' %}">
+>>>>>>> 0b796011234cf9ea679b4b10f0905f60085141d0
     <title>Lista de Inventarios</title>
 </head>
 <div class="container mt-3">
@@ -38,7 +42,7 @@
                     <td>{{ inventario.fechaInventario }}</td>
                     <td>{{ inventario.horaInventario }}</td>
                     <td>
-                        <a href="{% url 'ver_inventario' %}" class="btn btn-info">Ver Detalles</a>
+                        <a href="{% url 'ver_inventario_id' inventario.idInventario %}" class="btn btn-info">Ver Detalles</a>
                         {% if inventario.sePuedeEditar == True %}
                         <a href="{% url 'crear_inventario' %}" class="btn btn-primary">Editar</a>
                         {% endif %}

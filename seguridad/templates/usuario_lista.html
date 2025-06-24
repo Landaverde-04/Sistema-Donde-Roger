@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <head>
-<link rel="stylesheet" href="{% static 'css/listar_proveedores.css' %}" />
+<link rel="stylesheet" href="{% static 'CSS/listar_proveedores.css' %}" />
 <script src="{% static 'JS/usuario_lista.js' %}"></script>
 <title>Usuarios</title>
 </head>
@@ -24,8 +24,8 @@
             </tr>
         </thead>
         <tbody>
-        {% if usuarios %}
-            {% for usuario in usuarios %}
+        {% if usuarios_paginacion %}
+            {% for usuario in usuarios_paginacion %}
                 <tr>
                     <td>{{ usuario.id }}</td>
                     <td>{{ usuario.username }}</td>
@@ -107,5 +107,39 @@
 {% if messages %}
   <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
 {% endif %}
+
+<nav aria-label="Paginación de usuarios">
+  <ul class="pagination justify-content-center">
+    {% if usuarios_paginacion.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">Primera</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.previous_page_number }}">Anterior</a>
+      </li>
+    {% endif %}
+
+    {% for num in usuarios_paginacion.paginator.page_range %}
+      {% if usuarios_paginacion.number == num %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% elif num > usuarios_paginacion.number|add:'-3' and num < usuarios_paginacion.number|add:'3' %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if usuarios_paginacion.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.next_page_number }}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.paginator.num_pages }}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
 
 {% endblock %}

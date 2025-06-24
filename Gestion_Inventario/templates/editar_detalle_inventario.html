@@ -1,0 +1,101 @@
+{% extends 'navegacion.html' %} {%load static%}
+{% block content %}
+
+<head>
+
+</head>
+<div class="container justify-content-center card p-5 my-5 shadow">
+    <form id="form" class="needs-validation" method="post" action="{% url 'editar_detalle_inventario' inventario.idInventario producto.idProducto %}"
+        autocomplete="off" novalidate>
+        {%csrf_token%}
+        <div class="row text-center mt-2">
+            <h3>Editar detalle de inventario</h3>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-6 text-center">
+                <h5>Fecha del inventario: {{ inventario.fechaInventario_formated }}</h5>
+            </div>
+            <div class="col-6 text-center">
+                <h5>Hora de creacion del inventario: {{ inventario.horaInventario }}</h5>
+            </div>
+
+        </div>
+        <div class="row my-2 px-2 align-content-center">
+            <div class="col-3 align-content-center text-center">
+                <label class="fs-6"><strong>Producto: </strong>{{producto.nombreProducto}}</label>
+            </div>
+            <div class="col-3 align-content-center">
+                <label><strong>Unidad de medida: </strong>{{producto.unidadMedida}}</label>
+            </div>
+            <div class="col-3 align-content-center">
+                <label><strong>Marca: </strong>{{producto.marcaProducto}}</label>
+            </div>
+            <div class="col-3 align-content-center text-center">
+                <button type="button" class="btn btn-primary" style="border-radius: 50px;" id="btnNuevafila">Agregar
+                    nueva cantidad </button>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+
+            <table class="table table-borderless text-center" id="tabla-cantidades">
+                <thead>
+                    <tr>
+                        <th style="width: auto;">Cantidad</th>
+                        <th>Fecha y hora de ingreso</th>
+                        <th>Fecha de caducidad</th>
+                        <th style="width: auto;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {%for detalle in detallesAnteriores%}
+                    <tr id="anterior-fila-{{detalle.idDetalleInventario}}">
+                        <td>
+                            <input class="form-control" type="number" min="0"
+                                value="{{ detalle.cantidadProducto }}" id="anterior-cantidad-{{detalle.idDetalleInventario}}" name="anterior-cantidad-{{detalle.idDetalleInventario}}" required>
+                            </input>
+                            <input type="hidden" class="form-control w-100 col-5" id="detalleId-{{detalle.idDetalleInventario}}" name="anterior-detalleId-{{detalle.idDetalleInventario}}" value="{{detalle.idDetalleInventario}}"/>
+                        </td>
+                        <td>{{ detalle.fechaIngreso|date:"d/m/Y" }} {{ detalle.horaIngreso }}</td>
+                        <td>{{ detalle.fechaCaducidad }}</td>
+                        <td>
+                            <label class="fst-italic text-muded">No disponibles</label>
+                        </td>
+                    </tr>
+                    {%endfor%}
+                    {%for detalle in detallesNuevos%}
+                    <tr id="actual-fila-{{detalle.idDetalleInventario}}">
+                        <td>
+                            <input class="form-control" type="number" min="0"
+                                value="{{ detalle.cantidadProducto }}" id="actual-cantidad-{{detalle.idDetalleInventario}}" name="actual-cantidad-{{detalle.idDetalleInventario}}" required>
+                            </input>
+                            <input type="hidden" class="form-control w-100 col-5" id="detalleId{{detalle.idDetalleInventario}}" name="actual-detalleId-{{detalle.idDetalleInventario}}" value="{{detalle.idDetalleInventario}}"/>
+                        </td>
+                        <td>
+                            <input class="form-control" type="datetime-local"
+                                value="{{ detalle.fechaIngreso_formated }}T{{ detalle.horaIngreso_formated }}" id="actual-ingreso-{{detalle.idDetalleInventario}}" name="actual-ingreso-{{detalle.idDetalleInventario}}" required>
+                        </td>
+                        <td>
+                            <input class="form-control" type="date" value="{{ detalle.fechaCaducidad_formated }}" id="actual-caducidad-{{detalle.idDetalleInventario}}" name="actual-caducidad-{{detalle.idDetalleInventario}}" required>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" id="eliminar-actual-{{detalle.idDetalleInventario}}">Eliminar</button>
+                        </td>
+                        {%endfor%}
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row justify-content-end">
+            <button type="submit" class="btn btn-success" id="btnGuardar">Guardar detalle</button>
+        </div>
+    </form>
+
+
+
+</div>
+
+<script src="{% static 'JS/editar_detalle_inventario.js' %}"></script>
+{% endblock %}
