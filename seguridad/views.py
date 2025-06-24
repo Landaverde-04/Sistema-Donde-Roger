@@ -19,7 +19,7 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('/inventario/ver_inventario')
+            return redirect('/empleado/marcar_asistencia')
         else:
             messages.error(request, 'Credenciales inválidas')
     return render(request, 'login.html')
