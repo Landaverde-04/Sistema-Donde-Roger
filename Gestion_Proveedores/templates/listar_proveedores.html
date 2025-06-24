@@ -9,11 +9,30 @@
 <div class="container mt-3">
 
     <h2 class="mb-4">Lista de proveedores</h2>
-    <div>
+
+  <form method="get" class="row g-3 mt-3 mb-3">
+    <div class="col-md-6">
+      <input
+        type="text"
+        name="nombre"
+        id="busquedaProveedor"
+        class="form-control"
+        placeholder="Buscar por empresa, nombre o apellido de proveedor..."
+        value="{{ nombre }}"
+      >
+    </div>
+            <div class="col-md-6" id="div-registrar">
         <a href="{% url 'registrar_proveedor' %}" class="btn btn-success">Registrar nuevo proveedor</a>
     </div>
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-primary">Buscar</button>
+      <a href="{% url 'listar_proveedores' %}" class="btn btn-secondary">Limpiar</a>
+    </div>
+  </form>
+
+
     <div class="div-table">
-    <table class="table table-striped w-85 mx-auto">
+    <table class="table table-striped w-85 mx-auto" id="tablaProveedores">
         <thead>
             <tr>
                 <th class="w-5">ID</th>
@@ -30,9 +49,9 @@
             {% for proveedor in proveedores_paginados %}
                 <tr>
                     <td>{{ proveedor.idProveedor }}</td>
-                    <td>{{ proveedor.nombreEncargado }}</td>
-                    <td>{{ proveedor.apellidoEncargado }}</td>
-                    <td>{{ proveedor.nombreEmpresa }}</td>
+                    <td class="col-nombre">{{ proveedor.nombreEncargado }}</td>
+                    <td class="col-apellido">{{ proveedor.apellidoEncargado }}</td>
+                    <td class="col-empresa">{{ proveedor.nombreEmpresa }}</td>
                     <td>{{ proveedor.telProveedor }}</td>
                     {% if proveedor.tieneIva %}
                     <td>Si</td>
@@ -42,7 +61,8 @@
                     <td>
                       {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                       <a href="{% url 'editar_proveedor' proveedor.idProveedor %}" class="btn btn-primary">Editar</a>
-                        
+                        {% endif %}
+                        {% if user.groups.first.name == 'Jefe' %}
                       <button 
                       type="button" 
                       class="btn btn-danger" 
@@ -70,10 +90,10 @@
   <ul class="pagination justify-content-center">
     {% if proveedores_paginados.has_previous %}
       <li class="page-item">
-        <a class="page-link" href="?page=1">&laquo; Primero</a>
+        <a class="page-link" href="?page=1&nombre={{ nombre }}">&laquo; Primero</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="?page={{ proveedores_paginados.previous_page_number }}">Anterior</a>
+        <a class="page-link" href="?page={{ proveedores_paginados.previous_page_number }}&nombre={{ nombre }}">Anterior</a>
       </li>
     {% endif %}
 
@@ -85,10 +105,10 @@
 
     {% if proveedores_paginados.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ proveedores_paginados.next_page_number }}">Siguiente</a>
+        <a class="page-link" href="?page={{ proveedores_paginados.next_page_number }}&nombre={{ nombre }}">Siguiente</a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="?page={{ proveedores_paginados.paginator.num_pages }}">Última &raquo;</a>
+        <a class="page-link" href="?page={{ proveedores_paginados.paginator.num_pages }}&nombre={{ nombre }}">Última &raquo;</a>
       </li>
     {% endif %}
   </ul>

@@ -81,14 +81,18 @@ def registrar_proveedor(request):
 @login_required
 @groups_required('Jefe', 'Gerente', 'Colaborador')
 def listar_proveedor(request):
+    nombre = request.GET.get('nombre', '').strip()
+    proveedores = Proveedor.objects.filter(estaHabilitadoProveedor=True,nombreEncargado__icontains=nombre).order_by('idProveedor')#objeto de proveedor ordenado por id
+    if nombre:
+        proveedores = proveedores.filter(nombreEncargado__icontains=nombre)
 
-    proveedores = Proveedor.objects.filter(estaHabilitadoProveedor=True).order_by('idProveedor')#objeto de proveedor ordenado por id
-    paginator = Paginator(proveedores, 10) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
+    proveedores = proveedores.order_by('idProveedor')
+    paginator = Paginator(proveedores, 3) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
 
     page_number = request.GET.get('page') #guardamos el # de pagina actual en la url
     page = paginator.get_page(page_number) #asignamos el numero de pagina
 
-    return render(request, 'listar_proveedores.html', {'proveedores_paginados': page})#aca en vez de mandar un objeto de proveedores mandamos el de la paginacion que contiene tambien el listado de proveedores
+    return render(request, 'listar_proveedores.html', {'proveedores_paginados': page, 'nombre': nombre})#aca en vez de mandar un objeto de proveedores mandamos el de la paginacion que contiene tambien el listado de proveedores
 
 #Este metodo funciona para que se deshabilite el proveedor y ya no aparezca en el cuadro de listado de proveedores, se define su respectiva url y en el html se pasa el argumento de la vista en el boton elimiar, incluyendo un mensaje de confirmación con "oneclick"
 @login_required
@@ -131,7 +135,7 @@ def detalle_proveedor(request, id_proveedor):
 
     return render(request, 'detalle_proveedor.html', context)
 
-
+@groups_required('Jefe', 'Gerente')
 @login_required
 def editar_proveedor(request, id):
     proveedor = get_object_or_404(Proveedor, pk=id)
