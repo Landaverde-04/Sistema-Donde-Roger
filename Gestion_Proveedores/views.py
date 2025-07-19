@@ -87,7 +87,7 @@ def listar_proveedor(request):
         proveedores = proveedores.filter(nombreEncargado__icontains=nombre)
 
     proveedores = proveedores.order_by('idProveedor')
-    paginator = Paginator(proveedores, 3) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
+    paginator = Paginator(proveedores, 10) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
 
     page_number = request.GET.get('page') #guardamos el # de pagina actual en la url
     page = paginator.get_page(page_number) #asignamos el numero de pagina
