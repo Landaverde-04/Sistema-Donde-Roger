@@ -44,7 +44,8 @@ def registrar_empleado(request):
                 contratoEmpleado=contratoEmpleado,
                 estaHabilitadoEmpleado= True
             )
-            messages.success(request, "Empleado registrado con éxito")
+            empleado.save()
+            messages.success(request, "Empleado registrado con éxito", extra_tags='empleado')
             return redirect('empleado_lista')  # Redirige a la lista de empleados o donde prefieras
         except Exception as e:
             return HttpResponse(f"Error al registrar empleado: {e}", status=400)
@@ -104,7 +105,7 @@ def modificar_empleado(request, idEmpleado):
         if request.FILES.get('contratoEmpleado'):
             empleado.contratoEmpleado = request.FILES.get('contratoEmpleado')
         empleado.save()
-        messages.success(request, "Actualización realizada con éxito")
+        messages.success(request, "Actualización realizada con éxito", extra_tags='empleado')
         return redirect('empleado_lista')
     return render(request, 'modificar_empleado.html', {'empleado': empleado})
 
@@ -123,7 +124,7 @@ def eliminar_empleado(request, idEmpleado):
     if request.method == 'POST':
         empleado.estaHabilitadoEmpleado = False  # Cambia a inhabilitado
         empleado.save()  # Guarda el cambio en la BD
-        messages.success(request, "Empleado inhabilitado exitosamente.")
+        messages.success(request, "Empleado eliminado exitosamente.", extra_tags='empleado')
         return redirect('empleado_lista')
     # Si alguien entra a GET, simplemente redirige:
     return redirect('empleado_lista')

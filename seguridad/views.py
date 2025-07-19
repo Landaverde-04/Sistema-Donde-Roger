@@ -44,18 +44,25 @@ def crear_usuario_view(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         grupo_id = request.POST.get('grupo')
-        email = request.POST.get('email') 
-
+        email = request.POST.get('email')
 
         empleado = Empleado.objects.get(idEmpleado=empleado_id)
         grupo = Group.objects.get(id=grupo_id)
-        
-        user = User.objects.create_user(username=username, password=password,email=email,estaHabilitadoUsuario= True)
+
+        # Verificar si ya existe un usuario con ese empleado
+        if User.objects.filter(idEmpleado=empleado).exists():
+            messages.error(request, "Ya existe un usuario asignado a este empleado.", extra_tags='usuario')
+            return render(request, 'crear_usuario.html', {
+                'empleados': empleados,
+                'grupos': grupos,
+            })
+
+        user = User.objects.create_user(username=username, password=password, email=email, estaHabilitadoUsuario=True)
         user.idEmpleado = empleado  # Ajusta según tu modelo
         user.save()
-        messages.success(request, "Usuario creado exitosamente.")
+        messages.success(request, "Creacion de usuario con éxito", extra_tags='usuario')
         user.groups.add(grupo)
-        return redirect('usuario_lista')  
+        return redirect('usuario_lista')
 
     return render(request, 'crear_usuario.html', {
         'empleados': empleados,
@@ -106,7 +113,7 @@ def modificar_usuario_view(request, usuario_id):
         usuario.groups.clear()
         usuario.groups.add(grupo)
         usuario.save()
-        messages.success(request, "Usuario modificado exitosamente.")
+        messages.success(request, "Actualización realizada con éxito", extra_tags='usuario')
         return redirect('usuario_lista')
     
     return render(request, 'modificar_usuario.html', {
@@ -120,8 +127,7 @@ def modificar_usuario_view(request, usuario_id):
 def eliminar_usuario_view(request, usuario_id):
     usuario = get_object_or_404(User, id=usuario_id)
     if request.method == 'POST':
-        usuario.estaHabilitadoUsuario = False
-        usuario.save()
-        messages.success(request, "Usuario inhabilitado exitosamente.")
+        usuario.delete()
+        messages.success(request, "Usuario eliminado con éxito", extra_tags='usuario')
         return redirect('usuario_lista')
     return render(request, 'eliminar_usuario.html', {'usuario': usuario})

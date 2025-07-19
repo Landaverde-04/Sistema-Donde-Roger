@@ -6,14 +6,15 @@
         <form method="POST" class="shadow-sm p-4 bg-white rounded">
             {% csrf_token %}
             <div class="mb-3">
-                <label for="empleado" class="form-label">Empleado:</label>
-                <select name="empleado" class="form-select" required>
-                    <option value="">Seleccione un empleado</option>
-                    {% for empleado in empleados %}
-                    <option value="{{ empleado.idEmpleado }}" {% if usuario.idEmpleado and usuario.idEmpleado.idEmpleado == empleado.idEmpleado %}selected{% endif %}>{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+    <label for="empleado" class="form-label">Empleado:</label>
+    <select name="empleado" class="form-select" disabled required>
+        <option value="">Seleccione un empleado</option>
+        {% for empleado in empleados %}
+        <option value="{{ empleado.idEmpleado }}" {% if usuario.idEmpleado and usuario.idEmpleado.idEmpleado == empleado.idEmpleado %}selected{% endif %}>{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="empleado" value="{{ usuario.idEmpleado.idEmpleado }}">
+</div>
             <div class="mb-3">
                 <label for="username" class="form-label">Nombre de Usuario:</label>
                 <input type="text" name="username" class="form-control" value="{{ usuario.username }}" required>
@@ -41,4 +42,5 @@
         </form>
     </div>
 </div>
+
 {% endblock %}

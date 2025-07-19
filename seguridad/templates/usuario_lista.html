@@ -142,4 +142,28 @@
   </ul>
 </nav>
 
+{% if messages %}
+  {% for mensaje in messages %}
+    {% if 'usuario' in mensaje.tags %}
+      <div id="modal-mensaje-django" data-message="{{ mensaje }}">{{ mensaje }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var divMensaje = document.getElementById('modal-mensaje-django');
+  if (divMensaje) {
+    var mensaje = divMensaje.getAttribute('data-message');
+    var modalMensajeTexto = document.getElementById('modalMensajeTexto');
+    if (modalMensajeTexto && mensaje) {
+      modalMensajeTexto.textContent = mensaje;
+      var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+      modal.show();
+    }
+    divMensaje.remove();
+  }
+});
+</script>
+
 {% endblock %}

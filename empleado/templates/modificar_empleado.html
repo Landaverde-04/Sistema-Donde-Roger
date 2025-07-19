@@ -10,11 +10,13 @@
         <div class="row mb-3">
             <div class="col-md-6">
                 <label for="nombresEmpleado" class="form-label">Nombres</label>
-                <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30" required value="{{ empleado.nombresEmpleado }}">
+                <input type="text" class="form-control" id="nombresEmpleado" name="nombresEmpleado" maxlength="30"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios"  required  value="{{ empleado.nombresEmpleado }}">
             </div>
             <div class="col-md-6">
                 <label for="apellidosEmpleado" class="form-label">Apellidos</label>
-                <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" required value="{{ empleado.apellidosEmpleado }}">
+                <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios" required value="{{ empleado.apellidosEmpleado }}">
             </div>
         </div>
 
@@ -22,29 +24,32 @@
         <div class="row mb-3">
             <div class="col-md-4">
                 <label for="duiEmpleado" class="form-label">DUI</label>
-                <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" required value="{{ empleado.duiEmpleado }}">
+                <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10"  pattern="\d{8}-\d"
+          title="Formato: 00000000-0"  required value="{{ empleado.duiEmpleado }}">
             </div>
             <div class="col-md-4">
                 <label for="telEmpleado" class="form-label">Teléfono</label>
-                <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="9" required value="{{ empleado.telEmpleado }}">
+                <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="9" pattern="^\d{8}$"
+          title="Formato requerido 00000000" required value="{{ empleado.telEmpleado }}">
             </div>
             <div class="col-md-4">
                 <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
-                <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="9" required value="{{ empleado.telEmergenciaEmpleado }}">
+                <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="9" pattern="^\d{8}$"
+          title="Formato requerido 00000000" required value="{{ empleado.telEmergenciaEmpleado }}">
             </div>
         </div>
 
         <!-- Fecha de Nacimiento y Fecha de Contratación en una fila -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
-                <input type="date" class="form-control" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required value="{{ empleado.fechaNacimientoEmpleado|date:'Y-m-d' }}">
-            </div>
-            <div class="col-md-6">
-                <label for="fechaContratacionEmpleado" class="form-label">Fecha de Contratación</label>
-                <input type="date" class="form-control" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required value="{{ empleado.fechaContratacionEmpleado|date:'Y-m-d' }}">
-            </div>
-        </div>
+       <div class="row mb-3">
+    <div class="col-md-6">
+        <label for="fechaNacimientoEmpleado" class="form-label">Fecha de Nacimiento</label>
+        <input type="text" class="form-control fecha" id="fechaNacimientoEmpleado" name="fechaNacimientoEmpleado" required autocomplete="off" value="{{ empleado.fechaNacimientoEmpleado|date:'Y-m-d' }}">
+    </div>
+    <div class="col-md-6">
+        <label for="fechaContratacionEmpleado" class="form-label">Fecha de Contratación</label>
+        <input type="text" class="form-control fecha" id="fechaContratacionEmpleado" name="fechaContratacionEmpleado" required autocomplete="off" value="{{ empleado.fechaContratacionEmpleado|date:'Y-m-d' }}">
+    </div>
+</div>
         <div class="mb-3">
     <label for="direccionEmpleado" class="form-label">Dirección</label>
     <input type="text" class="form-control" id="direccionEmpleado" name="direccionEmpleado" maxlength="100" value="{{ empleado.direccionEmpleado }}">
@@ -53,7 +58,7 @@
         <!-- Salario -->
         <div class="mb-3">
             <label for="salarioEmpleado" class="form-label">Salario</label>
-            <input type="number" step="0.01" class="form-control" id="salarioEmpleado" name="salarioEmpleado" required value="{{ empleado.salarioEmpleado }}">
+            <input type="number" step="0.01" class="form-control" id="salarioEmpleado" name="salarioEmpleado"  pattern="^\d{1,8}(\.\d{2})$"  title="Ingrese un salario con exactamente dos decimales, por ejemplo: 2000.00" required value="{{ empleado.salarioEmpleado }}">
         </div>
 
         <!-- Experiencia Laboral -->
@@ -85,4 +90,13 @@
         </div>
     </form>
 </div>
+<!-- Flatpickr JS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr(".fecha", {
+        dateFormat: "Y-m-d",
+        locale: "es"
+    });
+</script>
 {% endblock %}

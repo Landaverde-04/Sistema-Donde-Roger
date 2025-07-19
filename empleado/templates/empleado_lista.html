@@ -15,11 +15,20 @@
         <div class="col">
             <form method="get" class="d-flex justify-content-end search-bar-form">
                 <input type="text" name="busqueda" class="form-control shadow-sm rounded-start"
-                       placeholder="Buscar por nombre..." value="{{ busqueda }}" style="max-width: 260px;">
+                       placeholder="Buscar por nombre o apellido" value="{{ busqueda }}" style="max-width: 260px;">
                 <button type="submit" class="btn btn-primary rounded-end ms-2 px-4">Buscar</button>
             </form>
         </div>
     </div>
+<!-- DIV invisible solo si hay mensaje -->
+ 
+{% if messages %}
+  {% for mensaje in messages %}
+    {% if 'empleado' in mensaje.tags %}
+      <div id="modal-mensaje-django" data-message="{{ mensaje }}">{{ mensaje }}</div>
+    {% endif %}
+  {% endfor %}
+{% endif %}
 
     <div class="div-table mt-3">
         <table class="table table-striped w-85 mx-auto">
@@ -130,5 +139,44 @@
       </ul>
     </nav>
 </div>
+<!-- Modal de éxito -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h5 class="modal-title">
+          <i class="bi bi-check-circle"></i>  Éxito
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var divMensaje = document.getElementById('modal-mensaje-django');
+  if (divMensaje) {
+    var mensaje = divMensaje.getAttribute('data-message');
+    var modalMensajeTexto = document.getElementById('modalMensajeTexto');
+    if (modalMensajeTexto && mensaje) {
+      modalMensajeTexto.textContent = mensaje;
+      var modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+      modal.show();
+    }
+    divMensaje.remove();
+  }
+});
+</script>
+
 
 {% endblock %}
+
+
+

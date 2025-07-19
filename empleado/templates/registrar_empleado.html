@@ -22,25 +22,29 @@
         <!-- Apellidos -->
         <div class="mb-3">
             <label for="apellidosEmpleado" class="form-label">Apellidos</label>
-            <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30" required>
+            <input type="text" class="form-control" id="apellidosEmpleado" name="apellidosEmpleado" maxlength="30"  pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+          title="Solo letras y espacios" required>
         </div>
 
         <!-- DUI -->
         <div class="mb-3">
             <label for="duiEmpleado" class="form-label">DUI</label>
-            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" placeholder="06718918-3" required>
+            <input type="text" class="form-control" id="duiEmpleado" name="duiEmpleado" maxlength="10" placeholder="06718918-3"  pattern="\d{8}-\d"
+          title="Formato: 00000000-0" required>
         </div>
 
         <!-- Teléfono -->
         <div class="mb-3">
             <label for="telEmpleado" class="form-label">Teléfono</label>
-            <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="8" required>
+            <input type="text" class="form-control" id="telEmpleado" name="telEmpleado" maxlength="8" pattern="^\d{8}$"
+          title="Formato requerido 00000000" required>
         </div>
 
         <!-- Teléfono Emergencia -->
         <div class="mb-3">
             <label for="telEmergenciaEmpleado" class="form-label">Tel. Emergencia</label>
-            <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="8" required>
+            <input type="text" class="form-control" id="telEmergenciaEmpleado" name="telEmergenciaEmpleado" maxlength="8"  pattern="^\d{8}$"
+          title="Formato requerido 00000000" required>
         </div>
 
         <!-- Fechas en una sola fila -->
@@ -60,10 +64,10 @@
     <input type="text" class="form-control" id="direccionEmpleado" name="direccionEmpleado" maxlength="100">
 </div>
 
-        <!-- Salario debajo -->
+        <!-- Salario  -->
         <div class="mb-3">
             <label for="salarioEmpleado" class="form-label">Salario</label>
-            <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" required>
+            <input type="number" class="form-control" id="salarioEmpleado" name="salarioEmpleado" step="0.01" max="9999.99" pattern="^\d{1,8}(\.\d{2})$"  title="Ingrese un salario con exactamente dos decimales, por ejemplo: 2000.00"required>
         </div>
 
         <!-- Experiencia Laboral -->
@@ -72,7 +76,7 @@
             <textarea class="form-control" id="experienciaLaboralEmpleado" name="experienciaLaboralEmpleado" rows="3" required></textarea>
         </div>
 
-        <!-- Contrato PDF bonito -->
+        <!-- Contrato PDF -->
         <div class="mb-3">
             <label for="contratoEmpleado" class="form-label d-flex align-items-center">
                 <i class="bi bi-file-earmark-arrow-up" style="color: #d32f2f; font-size: 1.5rem; margin-right: 8px;"></i>
