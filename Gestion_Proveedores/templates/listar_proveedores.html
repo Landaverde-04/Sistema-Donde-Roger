@@ -34,8 +34,7 @@
     <div class="div-table">
     <table class="table table-striped w-85 mx-auto" id="tablaProveedores">
         <thead>
-            <tr>
-                <th class="w-5">ID</th>
+            <tr>                
                 <th class="w-15">Nombre</th>
                 <th class="w-15">Apellido</th>
                 <th class="w-15">Empresa</th>
@@ -47,8 +46,7 @@
         <tbody>
             {% if proveedores_paginados.object_list %}
             {% for proveedor in proveedores_paginados %}
-                <tr>
-                    <td>{{ proveedor.idProveedor }}</td>
+                <tr>                    
                     <td class="col-nombre">{{ proveedor.nombreEncargado }}</td>
                     <td class="col-apellido">{{ proveedor.apellidoEncargado }}</td>
                     <td class="col-empresa">{{ proveedor.nombreEmpresa }}</td>
