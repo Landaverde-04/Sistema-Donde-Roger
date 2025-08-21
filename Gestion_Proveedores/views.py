@@ -201,3 +201,30 @@ def editar_proveedor(request, id):
     }
 
     return render(request, 'editar_proveedor.html', contexto)
+
+# Vista para listar proveedores deshabilitados
+@groups_required('Jefe')
+@login_required
+def listar_proveedores_deshabilitados(request):
+    nombre = request.GET.get('nombre', '').strip()
+    proveedores = Proveedor.objects.filter(estaHabilitadoProveedor=False,nombreEncargado__icontains=nombre).order_by('idProveedor')#objeto de proveedor ordenado por id
+    if nombre:
+        proveedores = proveedores.filter(nombreEncargado__icontains=nombre)
+
+    proveedores = proveedores.order_by('idProveedor')
+    paginator = Paginator(proveedores, 10) #usamos la plantilla de django para paginar los proveedores con un maximo de 10 elementos, le pasamos el elemento o listado de proveedores
+
+    page_number = request.GET.get('page') #guardamos el # de pagina actual en la url
+    page = paginator.get_page(page_number) #asignamos el numero de pagina
+
+    return render(request, 'listar_proveedores_deshabilitados.html', {'proveedores_paginados': page, 'nombre': nombre})#aca en vez de mandar un objeto de proveedores mandamos el de la paginacion que contiene tambien el listado de proveedores
+
+
+@login_required
+@groups_required('Jefe')
+def habilitar_proveedor(request, id):
+    proveedor = get_object_or_404(Proveedor, pk=id)
+    proveedor.estaHabilitadoProveedor = True
+    proveedor.save()
+    messages.success(request, "¡Proveedor habilitado exitosamente!", extra_tags='proveedor')
+    return redirect('listar_proveedores_deshabilitados')
