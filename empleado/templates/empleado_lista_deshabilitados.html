@@ -17,8 +17,17 @@
             </form>
         </div>
     </div>
+<!-- DIV invisible solo si hay mensaje -->
+
 
     <div class="div-table mt-3">
+       {% if messages %}
+            {% for message in messages %}
+              {% if 'empleado-deshabilitados' in message.tags %}
+                <div class="alert alert-success">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
         <table class="table table-striped w-85 mx-auto">
             <thead>
                 <tr>

@@ -226,5 +226,5 @@ def habilitar_proveedor(request, id):
     proveedor = get_object_or_404(Proveedor, pk=id)
     proveedor.estaHabilitadoProveedor = True
     proveedor.save()
-    messages.success(request, "¡Proveedor habilitado exitosamente!", extra_tags='proveedor')
+    messages.success(request, "¡Proveedor habilitado exitosamente!", extra_tags='proveedor-deshabilitados')
     return redirect('listar_proveedores_deshabilitados')

@@ -7,7 +7,6 @@
 <title>Proveedores deshabilitados</title>
 </head>
 <div class="container mt-3">
-
     <h2 class="mb-4">Lista de proveedores deshabilitados</h2>
 
   <form method="get" class="row g-3 mt-3 mb-3">
@@ -26,7 +25,13 @@
       <a href="{% url 'listar_proveedores_deshabilitados' %}" class="btn btn-secondary">Limpiar</a>
     </div>
   </form>
-
+{% if messages %}
+            {% for message in messages %}
+              {% if 'proveedor-deshabilitados' in message.tags %}
+                <div class="alert alert-success">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
 
     <div class="div-table">
     <table class="table table-striped w-85 mx-auto" id="tablaProveedores">

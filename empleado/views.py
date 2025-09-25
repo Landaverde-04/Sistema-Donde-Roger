@@ -257,9 +257,9 @@ def habilitar_empleado(request, idEmpleado):
     if empleado:
         empleado.estaHabilitadoEmpleado = True
         empleado.save()
-        messages.success(request, "¡Empleado habilitado exitosamente!")
+        messages.success(request, "¡Empleado habilitado exitosamente!", extra_tags='empleado-deshabilitados')
         return redirect('empleado_lista_deshabilitados')
     else:
-        messages.error(request, "El empleado no existe.")
+        messages.error(request, "El empleado no existe.", extra_tags='empleado-deshabilitados')
         return redirect('empleado_lista_deshabilitados')
 
