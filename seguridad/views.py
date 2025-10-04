@@ -120,8 +120,9 @@ def modificar_usuario_view(request, usuario_id):
 def eliminar_usuario_view(request, usuario_id):
     usuario = get_object_or_404(User, id=usuario_id)
     if request.method == 'POST':
-        usuario.delete()  
-        messages.success(request, "Usuario eliminado exitosamente.", extra_tags='usuario')
+        usuario.estaHabilitadoUsuario = False
+        usuario.save()  
+        messages.success(request, "Usuario deshabilitado exitosamente.", extra_tags='usuario')
         return redirect('usuario_lista')
     return render(request, 'eliminar_usuario.html', {'usuario': usuario})
 
