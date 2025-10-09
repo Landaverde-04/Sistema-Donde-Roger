@@ -9,7 +9,8 @@
 </head>
 <body>
     <div id="div-contenedor">
-        <form id="div-registro">
+        <form id="div-registro" method="post">
+            {% csrf_token %}
             <h1>Registrar Cliente</h1>
             <div id="div-fila-1">   
             <div class="campo">
@@ -38,12 +39,15 @@
             </div>
             <div class="campo full">
                 <label>Dirección:</label>
-                <textarea name="direccion" id="direccion" rows="3" cols="80"></textarea>
+                <textarea name="direccion" id="direccion" rows="2" cols="80"></textarea>                
             </div>
+            <div id="campo">
+                <button class="btn btn-info">Agregar otra dirección</button>
+                </div> 
             </div>
             <div class="div-botones">
                 <button class="btn btn-success btn-registro" type="submit">Registrar</button>
-                <a class="btn btn-danger btn-registro" href="/Cliente/listar_clientes">Cancelar</a>
+                <a class="btn btn-danger btn-registro" href="/cliente/listar_clientes">Cancelar</a>
             </div>
         </form>
     </div>
