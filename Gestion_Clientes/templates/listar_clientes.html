@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Clientes</title>
+</head>
+<body>
+
+    <div>
+        <table>
+            <thead>
+                <tr> 
+                    <th>Nombre cliente</th>
+                    <th>Correo electrónico</th>
+                    <th>Teléfono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if clientes_paginados.object_list %}
+                {% for cliente in clientes_paginados %}
+                    <tr>
+                        <td>{{ cliente.nombreCliente }} {{ cliente.apellidoCliente }}</td>
+                        <td>{{ cliente.emailCliente }}</td>
+                        <td>{{ cliente.telefonoCliente }}</td>
+                        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+                        <td> <a href="#">Editar</a></td>
+                        {% endif %}
+                        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+                        <td> <a href="#">Eliminar</a></td>
+                        {% endif %}
+                        <td> <a href="#">Ver</a></td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <div class="container mt-4">
+                        <h2>No hay clientes registrados.</h2>
+                    </div>
+                    {% endif %}
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+</html>
+{% endblock %}
