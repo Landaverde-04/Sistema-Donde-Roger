@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/registrar_cliente.css' %}">
+    <script src="{% static 'JS/registrar_cliente.js' %}"></script>
     <title>Registrar Cliente</title>
 </head>
 <body>
@@ -37,12 +38,18 @@
                 <label>Fecha de nacimiento:</label>
                 <input type="date" name="fecha_nacimiento">
             </div>
-            <div class="campo full">
-                <label>Dirección:</label>
-                <textarea name="direccion" id="direccion" rows="2" cols="80"></textarea>                
+            <div id="direcciones" class="campo full">
+            <div id="div-direccion1" class="campo full">
+                <label>Dirección 1:</label>
+                <textarea name="direccion_cliente" id="direccion" rows="1" cols="80"></textarea>
+            </div>
+            <div id="div-direccion2" class="campo full">
+                <label>Dirección 2:</label>
+                <textarea name="direccion_cliente" id="direccion2" rows="1" cols="80"></textarea>                
+            </div>
             </div>
             <div id="campo">
-                <button class="btn btn-info">Agregar otra dirección</button>
+                <button type="button" id="btnAgregar" class="btn btn-info" onclick="agregarDireccion()" >Agregar otra dirección</button>
                 </div> 
             </div>
             <div class="div-botones">
