@@ -4,18 +4,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/listar_clientes.css' %}">
     <title>Listar Clientes</title>
 </head>
 <body>
+    <div class="container mt-3">
+    <h2 class="mb-4">Lista de clientes</h2>
+    <form method="get" class="form-busqueda">
+        <div class="campo-busqueda">
+            <input type="text" name="nombre" id="busquedaCliente" class="form-control" placeholder="Buscar por nombre, apellido o correo..." value="{{ nombre }}">
+        </div>
+        <div class="campo-registrar">
+            <a href="/clientes/registrar_cliente" class="btn btn-success" id="btn-registrar">Registrar cliente</a>
+            </div>
+    </form>
 
-    <div>
+    <div class="div-table">
         <table>
             <thead>
                 <tr> 
-                    <th>Nombre cliente</th>
-                    <th>Correo electrónico</th>
-                    <th>Teléfono</th>
-                    <th>Acciones</th>
+                    <th class="w-15">Nombre cliente</th>
+                    <th class="w-15">Correo electrónico</th>
+                    <th class="w-7">Teléfono</th>
+                    <th class="w-10">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,12 +37,12 @@
                         <td>{{ cliente.emailCliente }}</td>
                         <td>{{ cliente.telefonoCliente }}</td>
                         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-                        <td> <a href="#">Editar</a></td>
+                        <td> <a href="#">Editar</a>
                         {% endif %}
                         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-                        <td> <a href="#">Eliminar</a></td>
+                         <a href="#">Eliminar</a>
                         {% endif %}
-                        <td> <a href="#">Ver</a></td>
+                         <a href="#">Ver</a></td>
                     </tr>
                     {% endfor %}
                     {% else %}
@@ -42,7 +53,34 @@
             </tbody>
         </table>
     </div>
-    
+    <div class="div-paginacion">
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if clientes_paginados.has_previous %}
+                li class="page-item">
+                    <a class="page-link" href="?page=1&nombre={{ nombre }}">&laquo; Primero</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ clientes_paginados.previous_page_number }}&nombre={{ nombre }}">Anterior</a>
+                </li>
+                {% endif %}
+                <li class="page-item ative">
+                    <span class="page-link">
+                        Página {{ clientes_paginados.number }} de {{ clientes_paginados.paginator.num_pages }}
+                    </span>
+                </li>
+                {% if clientes_paginados.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ clientes_paginados.next_page_number }}&nombre={{ nombre }}">Siguiente</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ clientes_paginados.paginator.num_pages }}&nombre={{ nombre }}">Último &raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+    </div>
 </body>
 </html>
 {% endblock %}
