@@ -76,3 +76,26 @@ document.addEventListener('DOMContentLoaded', function () {
     btnEliminar.href = `/clientes/deshabilitar/${clienteId}`;
   });
 });
+
+//metodo para mostrar mensaje de exito al registrar cliente
+function mostrarModal(mensaje) {
+  document.getElementById('modalMensajeTexto').textContent = mensaje;
+  const modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+  modal.show();
+}
+//metodo para modificar el modal a la hora de editar cliente mensaje de exito
+function mostrarModalEditar(mensaje, titulo="") {
+  document.getElementById('modalMensajeTexto').textContent = mensaje;
+  document.getElementById('mensajeModalLabel').textContent = titulo;
+  const modal = new bootstrap.Modal(document.getElementById('mensajeModal'));
+  modal.show();
+}
+//metodo que manda a llamar el modal en caso el cliente haya sido registrado exitosamente
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("exito") === "1") {
+    mostrarModal("¡Cliente registrado exitosamente!");    
+  }else if (params.get("exito") === "2") {
+    mostrarModalEditar("¡Cliente editado exitosamente!", "Edicion exitosa");
+    };
+})
