@@ -40,7 +40,9 @@ def registrar_cliente(request):
 
         url = reverse('listar_clientes')
         return redirect(f'{url}?exito=1')
-    return render(request, 'registrar_cliente.html')
+    return render(request, 'registrar_cliente.html', {
+        'data' : request.POST
+    })
 
 def listar_clientes(request):
     clientes = Cliente.objects.filter(estaHabilitadoCliente=True)

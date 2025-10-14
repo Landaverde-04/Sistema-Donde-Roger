@@ -16,32 +16,33 @@
             <div id="div-fila-1">   
             <div class="campo">
                 <label>Nombre:</label>
-                <input type="text" name="nombre">
+                <input type="text" name="nombre" value="{{ data.nombre }}" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required>
             </div>
             <div class="campo">
                 <label>Apellidos:</label>
-                <input type="text" name="apellidos">
+                <input type="text" name="apellidos" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" value="{{ data.apellidos }}">
             </div>
             <div class="campo">
                 <label>DUI:</label>
-                <input type="text" name="dui">
+                <input type="text" name="dui" pattern="\d{8}-\d"
+          title="Formato: 00000000-0" required maxlength="10" value="{{ data.dui }}">
             </div>
             <div class="campo">
                 <label>Teléfono:</label>
-                <input type="text" name="telefono">
+                <input type="text" name="telefono" pattern="\d{4}-\d{4}"           title="Formato requerido 0000-0000" maxlength="9" required value="{{ data.telefono }}">
             </div>
             <div class="campo">
                 <label>Correo:</label>
-                <input pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" type="text" name="correo" required placeholder="ejemplo@correo.com">
+                <input pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" type="text" name="correo" placeholder="ejemplo@correo.com" value="{{ data.correo }}">
             </div>
             <div class="campo">
                 <label>Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento">
+                <input type="date" name="fecha_nacimiento" required value="{{ data.fecha_nacimiento }}">
             </div>
             <div id="direcciones" class="campo full">
             <div id="div-direccion1" class="campo full">
                 <label>Dirección 1:</label>
-                <textarea name="direccion_cliente" id="direccion" rows="1" cols="80"></textarea>
+                <textarea name="direccion_cliente" id="direccion" rows="1" cols="80" required></textarea>
             </div>
             <div id="div-direccion2" class="campo full">
                 <label>Dirección 2:</label>
