@@ -7,7 +7,7 @@ from django.core.paginator import Paginator #para paginar
 from django.db.models import Q
 # Create your views here.
 
-@groups_required('Jefe', 'Gerente')
+
 @login_required
 def registrar_cliente(request):
 
@@ -44,6 +44,7 @@ def registrar_cliente(request):
         'data' : request.POST
     })
 
+@login_required
 def listar_clientes(request):
     clientes = Cliente.objects.filter(estaHabilitadoCliente=True)
     query = request.GET.get('q', '')
@@ -70,3 +71,34 @@ def deshabilitar_cliente(request, id):
     cliente.save()
     
     return redirect('listar_clientes')
+
+@groups_required('Jefe', 'Gerente')
+@login_required
+def listar_clientes_deshabilitados(request):
+    clientes = Cliente.objects.filter(estaHabilitadoCliente=False)
+    query = request.GET.get('q', '')
+
+    if query:
+        clientes = clientes.filter(
+            Q(nombreCliente__icontains=query) | 
+            Q(apellidoCliente__icontains=query) | 
+            Q(emailCliente__icontains=query))
+        paginator = Paginator(clientes, 10)
+
+    clientes = clientes.order_by('idCliente')
+    paginator = Paginator(clientes, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    return render(request, 'listar_clientes_deshabilitados.html',
+                  {'clientes_paginados': page,
+                  'query': query
+                  })
+
+@groups_required('Jefe', 'Gerente')
+@login_required
+def habilitar_cliente(request, id):
+    cliente = Cliente.objects.get(idCliente=id)
+    cliente.estaHabilitadoCliente = True
+    cliente.save()
+    
+    return redirect('listar_clientes_deshabilitados')
