@@ -1,11 +1,8 @@
 table{
-    width: 100%;
-    
-    border-collapse: collapse;
+    width: 100%;    
     table-layout: fixed;
 }
-tr, th, td{
-    border: 1px solid rgba(126, 125, 125, 0.267);
+tr, th, td{    
     padding: 8px;
     word-wrap: break-word;
 }
