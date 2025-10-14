@@ -4,7 +4,7 @@ from seguridad.decoradores import groups_required
 from Gestion_Clientes.models import Cliente, DireccionCliente
 from django.urls import reverse
 from django.core.paginator import Paginator #para paginar
-
+from django.db.models import Q
 # Create your views here.
 
 @groups_required('Jefe', 'Gerente')
@@ -44,10 +44,27 @@ def registrar_cliente(request):
 
 def listar_clientes(request):
     clientes = Cliente.objects.filter(estaHabilitadoCliente=True)
+    query = request.GET.get('q', '')
+
+    if query:
+        clientes = clientes.filter(
+            Q(nombreCliente__icontains=query) | 
+            Q(apellidoCliente__icontains=query) | 
+            Q(emailCliente__icontains=query))
+        paginator = Paginator(clientes, 10)
+
     clientes = clientes.order_by('idCliente')
     paginator = Paginator(clientes, 10)
-
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'listar_clientes.html',
-                  {'clientes_paginados': page})
+                  {'clientes_paginados': page,
+                  'query': query
+                  })
+
+def deshabilitar_cliente(request, id):
+    cliente = Cliente.objects.get(idCliente=id)
+    cliente.estaHabilitadoCliente = False
+    cliente.save()
+    
+    return redirect('listar_clientes')
