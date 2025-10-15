@@ -102,3 +102,15 @@ def habilitar_cliente(request, id):
     cliente.save()
     
     return redirect('listar_clientes_deshabilitados')
+
+@login_required
+def detalle_cliente(request, id):
+    cliente = Cliente.objects.get(idCliente=id)
+    direcciones = DireccionCliente.objects.filter(idCliente=cliente)
+
+    context = {
+        'cliente': cliente,
+        'direcciones': direcciones,
+    }
+
+    return render(request, 'detalle_cliente.html', context)

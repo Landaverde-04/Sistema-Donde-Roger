@@ -41,15 +41,14 @@
                         <td>{{ cliente.nombreCliente }} {{ cliente.apellidoCliente }}</td>
                         <td>{{ cliente.emailCliente }}</td>
                         <td>{{ cliente.telefonoCliente }}</td>
-                        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+                        
                         <td> <a class="btn btn-primary" href="#">Editar</a>
-                        {% endif %}
-
+                        
                         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                          <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-danger btn-eliminar" href="#" data-id="{{ cliente.idCliente }}" data-nombre="{{ cliente.nombreCliente }}">Eliminar</button>
                         {% endif %}
 
-                         <a class="btn btn-info" href="#">Ver</a></td>
+                         <a class="btn btn-info" href="{%  url 'detalle_cliente' cliente.idCliente %}">Ver</a></td>
                     </tr>
                     {% endfor %}
                     {% else %}
