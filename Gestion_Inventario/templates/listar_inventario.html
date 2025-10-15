@@ -34,7 +34,6 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Encargado</th>
         <th>Fecha de Creación</th>
         <th>Hora de Creación</th>
@@ -45,7 +44,6 @@
       {% if inventarios.object_list %}
       {% for inventario in inventarios %}
       <tr>
-        <td>{{ inventario.idInventario }}</td>
         <td>{{ inventario.idUsuario }}</td>
         <td>{{ inventario.fechaInventario }}</td>
         <td>{{ inventario.horaInventario }}</td>

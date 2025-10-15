@@ -7,4 +7,6 @@ urlpatterns = [
     path('actualizar_producto/<int:producto_id>/', views.actualizar_producto, name='actualizar_producto'),
     path('eliminar_producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
     path("detalle_producto/<int:producto_id>/", views.detalle_producto, name="detalle_producto"),
+    path('listar_productos_deshabilitados', views.listar_productos_deshabilitados, name='listar_productos_deshabilitados'),
+    path('habilitar_producto/<int:producto_id>/', views.habilitar_producto, name='habilitar_producto'),
 ]

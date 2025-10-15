@@ -90,7 +90,7 @@ def eliminar_producto(request, producto_id):
         producto = Producto.objects.get(idProducto=producto_id)
         producto.estaHabilitadoProducto = False  # Deshabilitamos el producto en lugar de eliminarlo
         producto.save()
-        
+        messages.success(request, "¡Producto eliminado exitosamente!", extra_tags='producto')
         return redirect('listar_productos')
     else:
         # Si no es una solicitud GET, redirigimos a la lista de productos
@@ -113,3 +113,28 @@ def obtener_stock_actual(queryset):
     #Devuelve el stock actual del producto, es decir, la cantidad del último movimiento registrado.
     ultimo = queryset.order_by('-idDetalleInventario').first()
     return ultimo.cantidadProducto if ultimo else 0
+
+#lista de productos deshabilitados
+@groups_required('Jefe')
+@login_required
+def listar_productos_deshabilitados(request):
+    nombre = request.GET.get('nombre', '').strip()
+    productos = Producto.objects.filter(estaHabilitadoProducto=False)
+    if nombre:
+        productos = productos.filter(nombreProducto__icontains=nombre)
+    productos = productos.order_by('idProducto')
+    paginator = Paginator(productos, 10)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    # Renderizamos la plantilla con los productos deshabilitados
+    return render(request, 'listar_productos_deshabilitados.html', {'productos': page, 'nombre': nombre})
+
+@login_required
+@groups_required('Jefe')
+def habilitar_producto(request, producto_id):
+    producto = Producto.objects.get(idProducto=producto_id)
+    if producto:
+        producto.estaHabilitadoProducto = True
+        producto.save()
+        messages.success(request, "¡Producto habilitado exitosamente!", extra_tags='producto')
+    return redirect('listar_productos_deshabilitados')
