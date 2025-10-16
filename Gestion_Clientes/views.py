@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from seguridad.decoradores import groups_required
 from Gestion_Clientes.models import Cliente, DireccionCliente
 from django.urls import reverse
 from django.core.paginator import Paginator #para paginar
 from django.db.models import Q
+
 # Create your views here.
 
 
@@ -114,3 +115,48 @@ def detalle_cliente(request, id):
     }
 
     return render(request, 'detalle_cliente.html', context)
+
+def editar_cliente(request, id):
+    cliente = get_object_or_404(Cliente, idCliente=id)
+    direcciones = DireccionCliente.objects.filter(idCliente=cliente)
+
+    if request.method == "POST":
+        # Actualizar cliente
+        cliente.nombreCliente = request.POST.get("nombreCliente")
+        cliente.apellidoCliente = request.POST.get("apellidoCliente")
+        cliente.duiCliente = request.POST.get("duiCliente")
+        cliente.telefonoCliente = request.POST.get("telefonoCliente")
+        cliente.emailCliente = request.POST.get("emailCliente")
+        nacimiento = request.POST.get("nacimientoCliente")
+        if nacimiento:
+            cliente.nacimientoCliente = nacimiento
+        cliente.save()
+
+        # Manejo de direcciones
+        ids = request.POST.getlist("direccion_id")
+        textos = request.POST.getlist("direccion_texto")
+        eliminadas = request.POST.getlist("direccion_eliminar")
+
+        for i, texto in enumerate(textos):
+            texto = texto.strip()
+            if ids[i]:  # Dirección existente
+                try:
+                    direccion = DireccionCliente.objects.get(pk=ids[i], idCliente=cliente)
+                    if eliminadas[i] == "1":  # Marcada para eliminar
+                        direccion.delete()
+                    else:
+                        direccion.direccion = texto
+                        direccion.save()
+                except DireccionCliente.DoesNotExist:
+                    pass
+            else:  # Nueva dirección
+                if texto:
+                    DireccionCliente.objects.create(idCliente=cliente, direccion=texto)
+
+        # <-- Aquí estaba el error: return dentro del for, ahora afuera
+        return redirect("detalle_cliente", id=cliente.idCliente)
+
+    return render(request, "editar_cliente.html", {
+        "cliente": cliente,
+        "direcciones": direcciones,
+    })
