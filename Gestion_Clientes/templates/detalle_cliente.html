@@ -15,7 +15,7 @@
         <h1 class="mb-4">Detalle del cliente</h1>
         
         <div class="botones">
-                <td> <a class="btn btn-primary" href="#">Editar</a>
+                <td> <a class="btn btn-primary" href="{% url 'editar_cliente' cliente.idCliente %}">Editar</a>
                 {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                 <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-danger btn-eliminar" href="#" data-id="{{ cliente.idCliente }}" data-nombre="{{ cliente.nombreCliente }}">Eliminar</button>
                 <a class="btn btn-info" href="/clientes/listar_clientes">Regresar</a>

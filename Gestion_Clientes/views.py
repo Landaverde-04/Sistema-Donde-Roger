@@ -5,6 +5,7 @@ from Gestion_Clientes.models import Cliente, DireccionCliente
 from django.urls import reverse
 from django.core.paginator import Paginator #para paginar
 from django.db.models import Q
+from itertools import zip_longest
 
 # Create your views here.
 
@@ -121,41 +122,47 @@ def editar_cliente(request, id):
     direcciones = DireccionCliente.objects.filter(idCliente=cliente)
 
     if request.method == "POST":
-        # Actualizar cliente
-        cliente.nombreCliente = request.POST.get("nombreCliente")
-        cliente.apellidoCliente = request.POST.get("apellidoCliente")
-        cliente.duiCliente = request.POST.get("duiCliente")
-        cliente.telefonoCliente = request.POST.get("telefonoCliente")
-        cliente.emailCliente = request.POST.get("emailCliente")
+        # --- Actualizar cliente ---
+        cliente.nombreCliente = request.POST.get("nombreCliente", "").strip()
+        cliente.apellidoCliente = request.POST.get("apellidoCliente", "").strip()
+        cliente.duiCliente = request.POST.get("duiCliente", "").strip()
+        cliente.telefonoCliente = request.POST.get("telefonoCliente", "").strip()
+        cliente.emailCliente = request.POST.get("emailCliente", "").strip()
+
         nacimiento = request.POST.get("nacimientoCliente")
         if nacimiento:
             cliente.nacimientoCliente = nacimiento
+
         cliente.save()
 
-        # Manejo de direcciones
+        # --- Manejo de direcciones ---
         ids = request.POST.getlist("direccion_id")
         textos = request.POST.getlist("direccion_texto")
         eliminadas = request.POST.getlist("direccion_eliminar")
 
-        for i, texto in enumerate(textos):
-            texto = texto.strip()
-            if ids[i]:  # Dirección existente
+        for id_val, texto, elim in zip_longest(ids, textos, eliminadas, fillvalue=""):
+            texto = (texto or "").strip()
+            elim = elim or "0"
+
+            if id_val:  # dirección existente
                 try:
-                    direccion = DireccionCliente.objects.get(pk=ids[i], idCliente=cliente)
-                    if eliminadas[i] == "1":  # Marcada para eliminar
+                    direccion = DireccionCliente.objects.get(pk=id_val, idCliente=cliente)
+                    if elim == "1":  # marcada para eliminar
                         direccion.delete()
                     else:
                         direccion.direccion = texto
                         direccion.save()
                 except DireccionCliente.DoesNotExist:
                     pass
-            else:  # Nueva dirección
-                if texto:
+            else:  # nueva dirección
+                # ⬇️ solo crear si tiene texto y NO está marcada para eliminar
+                if texto and elim != "1":
                     DireccionCliente.objects.create(idCliente=cliente, direccion=texto)
 
-        # <-- Aquí estaba el error: return dentro del for, ahora afuera
+        # Redirigir al detalle del cliente
         return redirect("detalle_cliente", id=cliente.idCliente)
 
+    # --- Render inicial ---
     return render(request, "editar_cliente.html", {
         "cliente": cliente,
         "direcciones": direcciones,

@@ -75,6 +75,9 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="/clientes/listar_clientes/">Lista de Clientes</a></li>            
             <li><a class="dropdown-item" href="/clientes/registrar_cliente/">Registrar Cliente</a></li>  
+                        {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/clientes/listar_clientes_deshabilitados/">Clientes Deshabilitados</a></li>
+            {% endif %}
           </ul>
         </li>
                <li class="nav-item dropdown">

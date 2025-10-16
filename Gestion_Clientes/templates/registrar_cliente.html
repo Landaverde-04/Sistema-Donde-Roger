@@ -39,6 +39,7 @@
                 <label>Fecha de nacimiento:</label>
                 <input type="date" name="fecha_nacimiento" required value="{{ data.fecha_nacimiento }}">
             </div>
+            <!--Direcciones-->
             <div id="direcciones" class="campo full">
             <div id="div-direccion1" class="campo full">
                 <label>Dirección 1:</label>
@@ -55,10 +56,29 @@
             </div>
             <div class="div-botones">
                 <button class="btn btn-success btn-registro" type="submit">Registrar</button>
-                <a class="btn btn-danger btn-registro" href="/clientes/listar_clientes">Cancelar</a>
+                <a class="btn btn-danger btn-registro" id="btnCancelar">Cancelar</a>
             </div>
         </form>
     </div>
+    <!-- Modal para confirmar cancelación -->
+        <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle"></i>  Advertencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        ¿Seguro que quieres cancelar el registro? Se perderá todo el progreso.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a href="/clientes/listar_clientes" class="btn btn-danger">Sí, cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
 

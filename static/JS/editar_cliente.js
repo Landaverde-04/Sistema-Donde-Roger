@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Modal
   const modal = document.getElementById("modalConfirmarEliminarDireccion");
-  const modalTexto = document.getElementById("modalTextoDireccion");
   const btnConfirmarEliminar = document.getElementById("btnConfirmarEliminarDireccion");
   const modalInstance = new bootstrap.Modal(modal);
 
@@ -13,23 +12,27 @@ document.addEventListener("DOMContentLoaded", function() {
   // Delegación de eventos para botones "Eliminar"
   contenedor.addEventListener("click", function(event) {
     if (event.target.classList.contains("eliminar-direccion")) {
-      const button = event.target;
-      const texto = button.getAttribute("data-texto");
-      direccionAEliminar = button.closest(".direccion");
-      modalTexto.textContent = texto;
-      modalInstance.show();
+      direccionAEliminar = event.target.closest(".direccion");
+      modalInstance.show(); // ya no seteamos texto
     }
   });
 
   // Confirmar eliminación en el modal
   btnConfirmarEliminar.addEventListener("click", function() {
     if (direccionAEliminar) {
-      // Si quieres marcar para eliminar en la BD:
       const inputEliminar = direccionAEliminar.querySelector(".direccion-eliminar");
       if (inputEliminar) inputEliminar.value = "1";
 
-      // Eliminar del HTML
-      direccionAEliminar.remove();
+      const txt = direccionAEliminar.querySelector('input[name="direccion_texto"]');
+      if (txt) {
+        txt.required = false;
+        txt.disabled = true;
+        txt.value = "";
+      }
+
+      const visible = direccionAEliminar.querySelector(".direccion-visible");
+      if (visible) visible.classList.add("d-none");
+
       direccionAEliminar = null;
     }
     modalInstance.hide();
@@ -42,11 +45,24 @@ document.addEventListener("DOMContentLoaded", function() {
     div.innerHTML = `
       <input type="hidden" name="direccion_id" value="">
       <input type="hidden" name="direccion_eliminar" value="0" class="direccion-eliminar">
-      <input type="text" name="direccion_texto" class="form-control me-2" value="">
-      <button type="button" class="btn btn-danger btn-sm eliminar-direccion" data-id="" data-texto="(Nueva dirección)">
-        Eliminar
-      </button>
+
+      <div class="direccion-visible d-flex align-items-center w-100">
+        <input type="text" name="direccion_texto" class="form-control me-2 flex-grow-1" value="" required>
+        <button type="button" class="btn btn-danger btn-sm eliminar-direccion">
+          Eliminar
+        </button>
+      </div>
     `;
     contenedor.appendChild(div);
   });
+
 });
+  document.addEventListener('DOMContentLoaded', function () {
+    var btnCancelar = document.getElementById('btnCancelar');
+    var myModal = new bootstrap.Modal(document.getElementById('modalCancelar'));
+
+    btnCancelar.addEventListener('click', function (event) {
+      event.preventDefault();  // Evita navegación
+      myModal.show();          // Muestra el modal
+    });
+  });
