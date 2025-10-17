@@ -42,7 +42,7 @@
                         <td>{{ cliente.emailCliente }}</td>
                         <td>{{ cliente.telefonoCliente }}</td>
                         
-                        <td> <a class="btn btn-primary" href="#">Editar</a>
+                        <td> <a class="btn btn-primary" href="{% url 'editar_cliente' cliente.idCliente %}">Editar</a>
                         
                         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
                          <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-danger btn-eliminar" href="#" data-id="{{ cliente.idCliente }}" data-nombre="{{ cliente.nombreCliente }}">Eliminar</button>
@@ -120,6 +120,22 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         <a href="#" id="btnEliminarCliente" class="btn btn-danger">Sí, eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="mensajeModalLabel"><i class="bi bi-check-circle"></i>  Registro satisfactorio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        Aquí va el mensaje
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
       </div>
     </div>
   </div>
