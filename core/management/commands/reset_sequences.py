@@ -24,7 +24,7 @@ class Command(BaseCommand):
                 self.stdout.write(f"Reseteando secuencias de {table}")
                 
                 try:
-                    cursor.execute(f"""SELECT setval(pg_get_serial_sequence('"{table}"','{pk_field}'), COALESCE((SELECT MAX("{pk_field}") FROM "{table}"), 1), true);""")
+                    cursor.execute(f"""SELECT setval(pg_get_serial_sequence('"{table}"','{pk_field}'), COALESCE((SELECT MAX("{pk_field}") FROM "{table}"), 1), (SELECT COUNT (*) > 0 FROM "{table}"));""")
                 except Exception as e:
                     self.stdout.write(f"Error al resetear la secuencia de {table}: {e}")
                     continue
