@@ -82,3 +82,21 @@ window.addEventListener('DOMContentLoaded', () => {
     mostrarModalEditar("¡Receta editado exitosamente!", "Edicion exitosa");
     };
 })
+
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('modalConfirmarEliminar');
+  const nombreSpan = document.getElementById('modalNombreReceta');
+  const btnEliminar = document.getElementById('btnEliminarReceta');
+
+  modal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const recetaId = button.getAttribute('data-id');
+    const recetaNombre = button.getAttribute('data-nombre');
+
+    // Actualiza el nombre en el texto del modal
+    nombreSpan.textContent = recetaNombre;
+
+    // Establece el enlace de eliminación
+    btnEliminar.href = `/recetas/deshabilitar_receta/${recetaId}`;
+  });
+});

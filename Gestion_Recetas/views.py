@@ -83,3 +83,9 @@ def detalle_receta(request, idReceta):
         return render(request, 'detalle_receta.html', {
             'receta': receta
         })
+
+def deshabilitar_receta(request, idReceta):
+    receta = Receta.objects.get(idReceta=idReceta)
+    receta.estaHabilitadoReceta = False
+    receta.save()
+    return redirect('listar_recetas')

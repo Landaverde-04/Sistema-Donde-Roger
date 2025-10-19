@@ -42,7 +42,7 @@
                 <td>{{ receta.tamanio }}</td>
                 <td>
                     <a class="btn btn-primary" href="{% url 'editar_receta' receta.idReceta %}">Editar</a>
-                    <a class="btn btn-danger" href="#">Eliminar</a>
+                    <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-danger btn-eliminar" href="#" data-id="{{ receta.idReceta }}" data-nombre="{{ receta.nombreReceta }}">Eliminar</button>
                     <a class="btn btn-info" href="{% url 'detalle_receta' receta.idReceta %}">Detalles</a>
                 </td>                
             </tr>
@@ -99,6 +99,24 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal de eliminar-->
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-triangle"></i>  Aviso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de eliminar la receta <strong id="modalNombreReceta"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnEliminarReceta" class="btn btn-danger">Sí, eliminar</a>
       </div>
     </div>
   </div>
