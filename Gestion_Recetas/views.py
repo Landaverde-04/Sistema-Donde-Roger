@@ -3,8 +3,12 @@ from Gestion_Recetas.models import Categoria, Receta
 from django.db.models import Q
 from django.core.paginator import Paginator #para paginar
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+from seguridad.decoradores import groups_required
 
 # Create your views here.
+@login_required
+@groups_required('Jefe')
 def registrar_receta(request):
     categorias = Categoria.objects.all()
     if request.method == 'POST':
@@ -30,6 +34,8 @@ def registrar_receta(request):
         'categorias': categorias
     })
 
+@login_required
+@groups_required('Jefe')
 def listar_recetas(request):
         recetas = Receta.objects.filter(estaHabilitadoReceta=True)
         query = request.GET.get('q', '')
@@ -47,3 +53,25 @@ def listar_recetas(request):
             'recetas_paginadas': page,
             'query': query
         })
+
+@login_required
+@groups_required('Jefe')
+def editar_receta(request, idReceta):
+    receta = Receta.objects.get(idReceta=idReceta)
+    categorias = Categoria.objects.all()
+    if request.method == 'POST':
+        receta.nombreReceta = request.POST.get('nombre')
+        categoria_id = request.POST.get('categoria')
+        receta.tamanio = request.POST.get('porcion')
+        receta.ingredientes = request.POST.get('ingredientes')
+        receta.pasos = request.POST.get('preparacion')
+
+        receta.Categoria = Categoria.objects.get(idCategoria=categoria_id)
+
+        receta.save()
+        url = reverse('listar_recetas')
+        return redirect(f'{url}?exito=2')
+    return render(request, 'editar_receta.html', {
+        'receta': receta,
+        'categorias': categorias
+    })
