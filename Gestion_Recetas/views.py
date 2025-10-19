@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from Gestion_Recetas.models import Categoria, Receta
+from django.db.models import Q
+from django.core.paginator import Paginator #para paginar
+from django.urls import reverse
 
 # Create your views here.
 def registrar_receta(request):
@@ -21,7 +24,26 @@ def registrar_receta(request):
             pasos=pasos
         )
         nueva_receta.save()
-        return redirect('listar_recetas')
+        url = reverse('listar_recetas')
+        return redirect(f'{url}?exito=1')
     return render(request, 'registrar_receta.html', {
         'categorias': categorias
     })
+
+def listar_recetas(request):
+        recetas = Receta.objects.filter(estaHabilitadoReceta=True)
+        query = request.GET.get('q', '')
+        if query:
+            recetas = recetas.filter(
+                Q(nombreReceta__icontains=query) | 
+                Q(Categoria__nombreCategoria__icontains=query))
+            paginaror = Paginator(recetas, 10)
+
+        recetas = recetas.order_by('idReceta')
+        paginator = Paginator(recetas, 10)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request, 'listar_recetas.html', {
+            'recetas_paginadas': page,
+            'query': query
+        })
