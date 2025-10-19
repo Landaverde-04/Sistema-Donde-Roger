@@ -18,6 +18,7 @@ class Receta(models.Model):
     tamanio = models.CharField(max_length=20)
     ingredientes = models.TextField()
     pasos = models.TextField()
+    estaHabilitadoReceta = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'Receta'
