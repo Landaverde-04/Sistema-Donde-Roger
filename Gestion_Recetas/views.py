@@ -75,3 +75,11 @@ def editar_receta(request, idReceta):
         'receta': receta,
         'categorias': categorias
     })
+
+
+def detalle_receta(request, idReceta):
+        receta = Receta.objects.get(idReceta=idReceta)
+        categoria = Categoria.objects.get(idCategoria=receta.Categoria.idCategoria)
+        return render(request, 'detalle_receta.html', {
+            'receta': receta
+        })
