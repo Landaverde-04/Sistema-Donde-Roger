@@ -76,7 +76,8 @@ def editar_receta(request, idReceta):
         'categorias': categorias
     })
 
-
+@login_required
+@groups_required('Jefe')
 def detalle_receta(request, idReceta):
         receta = Receta.objects.get(idReceta=idReceta)
         categoria = Categoria.objects.get(idCategoria=receta.Categoria.idCategoria)
@@ -84,8 +85,38 @@ def detalle_receta(request, idReceta):
             'receta': receta
         })
 
+@login_required
+@groups_required('Jefe')
 def deshabilitar_receta(request, idReceta):
     receta = Receta.objects.get(idReceta=idReceta)
     receta.estaHabilitadoReceta = False
     receta.save()
     return redirect('listar_recetas')
+
+@login_required
+@groups_required('Jefe')
+def listar_recetas_deshabilitadas(request):
+        recetas = Receta.objects.filter(estaHabilitadoReceta=False)
+        query = request.GET.get('q', '')
+        if query:
+            recetas = recetas.filter(
+                Q(nombreReceta__icontains=query) | 
+                Q(Categoria__nombreCategoria__icontains=query))
+            paginaror = Paginator(recetas, 10)
+
+        recetas = recetas.order_by('idReceta')
+        paginator = Paginator(recetas, 10)
+        page_number = request.GET.get('page')
+        page = paginator.get_page(page_number)
+        return render(request, 'listar_recetas_deshabilitadas.html', {
+            'recetas_paginadas': page,
+            'query': query
+        })
+
+@login_required
+@groups_required('Jefe')
+def habilitar_receta(request, idReceta):
+    receta = Receta.objects.get(idReceta=idReceta)
+    receta.estaHabilitadoReceta = True
+    receta.save()
+    return redirect('listar_recetas_deshabilitadas')
