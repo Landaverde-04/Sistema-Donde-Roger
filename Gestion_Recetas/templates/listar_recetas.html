@@ -43,7 +43,7 @@
                 <td>
                     <a class="btn btn-primary" href="{% url 'editar_receta' receta.idReceta %}">Editar</a>
                     <a class="btn btn-danger" href="#">Eliminar</a>
-                    <a class="btn btn-info" href="#"">Detalles</a>
+                    <a class="btn btn-info" href="{% url 'detalle_receta' receta.idReceta %}">Detalles</a>
                 </td>                
             </tr>
             {% endfor %}
