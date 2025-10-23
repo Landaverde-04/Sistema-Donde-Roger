@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+    {% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/registrar_receta.css' %}">
+    <script src="{% static 'JS/registrar_cliente.js' %}"></script>
+    <title>Editar Receta</title>
+</head>
+<body>
+    <div class="contenedor">
+        <h1>Editar Receta</h1>
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="nombre">Nombre de la receta:</label>
+            <input type="text" id="nombre" name="nombre" value="{{ receta.nombreReceta }}" pattern="^[A-Za-z0-9\s]+$" title="Solo letras, números y espacios" required>
+            <div class="div-tamaño"> 
+                <div>
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria" required>
+                <option value="">-- Seleccionar --</option>
+                {% for categoria in categorias %}
+                <option value="{{ categoria.idCategoria }}" {% if categoria.idCategoria == receta.Categoria.idCategoria %}selected{% endif %}> {{ categoria.nombreCategoria }} </option>
+                {% endfor %}
+            </select>
+                </div>
+            <div>
+            <label for="porcion">Porción o tamaño:</label>
+            <input type="text" id="porcion" name="porcion" value="{{ receta.tamanio }}" placeholder="Ej: Grande, Mediana, Personal">
+                </div>
+            </div>
+            <label for="ingredientes">Ingredientes:</label>
+            <textarea id="ingredientes" name="ingredientes" rows="4" placeholder="Ej: 100g de queso, 50g de pepperoni..." >{{ receta.ingredientes }}</textarea>
+            
+            <label for="preparacion">Pasos de preparación:</label>
+            <textarea id="preparacion" name="preparacion" rows="6" placeholder="Describe aquí los pasos..." >{{ receta.pasos }}</textarea>
+
+            <div class="div-tamaño">
+                <button class="btn btn-success" type="submit">Guardar Cambios</button>
+                <a type="button" class="btn btn-danger" id="btnCancelar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    <!-- Modal para confirmar cancelación -->
+        <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle"></i>  Advertencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        ¿Seguro que quieres cancelar el registro? Se perderá todo el progreso.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a href="/recetas/listar_recetas" class="btn btn-danger">Sí, cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+{% endblock %}
