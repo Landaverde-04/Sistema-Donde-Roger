@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'Gestion_Clientes',
     'Gestion_Menu',
     'Gestion_Pedidos_Clientes',
-    'core'
+    'core',
+    'Gestion_Recetas',
+    
 ]
 
 MIDDLEWARE = [

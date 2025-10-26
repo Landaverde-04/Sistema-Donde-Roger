@@ -42,6 +42,7 @@
           </ul>
         </li>
         {% endif %}
+        <!--Lista para menu-->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Menu
@@ -50,6 +51,21 @@
             <li><a class="dropdown-item" href="{%url 'registrar_producto_menu' %}">Registrar Producto para Menu</a></li>
             <li><a class="dropdown-item" href="">Lista de Productos</a></li>
             <li><a class="dropdown-item" href="">Productos Deshabilitados</a></li>
+          </ul>
+        </li>
+        <!--Lista para recetas-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Recetas
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
+            {% endif %}
+            {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/recetas/listar_recetas_deshabilitadas/">Recetas deshabilitadas</a></li>
+            {% endif %}
           </ul>
         </li>
         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
