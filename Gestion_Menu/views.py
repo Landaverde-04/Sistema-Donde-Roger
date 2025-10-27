@@ -53,5 +53,11 @@ def ver_producto_menu(request, productoMenuId=None):
             return redirect(reverse('listar_productos'))
         if request.method == "GET":
             return render(request, 'ver_producto_menu.html' ,{'producto':producto})
+
+#Controlador para listar productos del menu
+def listar_productos_menu(request):
+    productos = models.ProductoMenu.objects.all()
+    categorias = models.CategoriaProductoMenu.objects.all()
+    return render(request, 'listar_menu.html' ,{'productos':productos,'categorias':categorias})
         
             
