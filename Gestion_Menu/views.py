@@ -42,3 +42,16 @@ def editar_producto_menu(request, productoMenuId=None, invalid=None):
         elif request.method == "GET":
             categorias = models.CategoriaProductoMenu.objects.all()
             return render(request, 'editar_producto_menu.html' ,{'producto':producto, 'categorias':categorias})
+
+#Controlador para ver productos del menu
+def ver_producto_menu(request, productoMenuId=None):
+    if not productoMenuId or not productoMenuId.isdigit() or int(productoMenuId) < 1:
+        return redirect(reverse('listar_productos'))
+    else:
+        producto = models.ProductoMenu.objects.filter(idProductoMenu=productoMenuId).first()
+        if producto is None:
+            return redirect(reverse('listar_productos'))
+        if request.method == "GET":
+            return render(request, 'ver_producto_menu.html' ,{'producto':producto})
+        
+            

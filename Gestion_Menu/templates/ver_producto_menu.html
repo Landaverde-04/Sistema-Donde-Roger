@@ -1,0 +1,56 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Producto para Menu</title>
+</head>
+<div class="container mt-4 card shadow w-50">
+    <div class="card-body">
+        <div class="d-flex justify-content-center align-items-center text-center">
+            <div class=" w-25">
+                <a type="button w-25" class="btn btn-primary" style="border-radius:50px;"
+                    href="{% url 'listar_productos' %}">Regresar</a>
+            </div>
+            <div class=" w-50">
+                <h5 class="card-title m-3 text-center">Producto: {{producto.nombreProductoMenu}}</h5>
+            </div>
+            <div class=" w-25 ">
+                <a type="button" class="btn btn-warning " style="border-radius:50px;"
+                    href="{% url 'editar_producto_menu' producto.idProductoMenu %}">Editar</a>
+            </div>
+        </div>
+        <div class="mt-4">
+            <p> Unidad (Porcion/Tamaño): <strong>{{producto.tamanioProductoMenu}}</strong></p>
+            <p> Descripción: <strong>{{producto.descripcionProductoMenu}}</strong></p>
+            <p> Precio unitario: $<strong>{{producto.precioProductoMenu}}</strong></p>
+            <p> Categoria: <strong>{{producto.idCategoriaProductoMenu.nombreCategoriaProductoMenu}}</strong></p>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Modal para cancelar -->
+<div class="modal fade" id="modal-cancelar" tabindex="-1" aria-labelledby="¿Está seguro?" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modal-cancelar-titulo">CANCELAR</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro de que desea cancelar?, no se guardará el nuevo producto</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">No, quiero continuar</button>
+                <a type="button" class="btn btn-danger" href="{%url 'listar_productos'%}">Si, quiero cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'JS/registrar_producto_menu.js' %}"></script>
+{% endblock %}
