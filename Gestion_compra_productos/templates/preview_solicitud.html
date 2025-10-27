@@ -1,0 +1,38 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Previsualización de la Solicitud</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in detalle_preview %}
+        <tr>
+            <td>{{ item.producto.nombreProductoProveedor }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<p><strong>Total:</strong> {{ total_preview|floatformat:2 }}</p>
+
+<form method="POST" action="{% url 'guardar_y_generar_pdf' %}">
+    {% csrf_token %}
+    {% for key, value_list in form_data.lists %}
+        {% for value in value_list %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Guardar y generar PDF</button>
+    <a href="{% url 'crear_solicitud_compra' %}" class="btn btn-danger">Cancelar</a>
+</form>
+{% endblock %}

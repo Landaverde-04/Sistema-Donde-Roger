@@ -28,6 +28,9 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'ver_inventario'%}">Ver inventario actual</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}">Lista de inventarios</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            {% endif %}
           </ul>
         </li>
           {% if user.groups.first.name == 'Jefe'%}
@@ -97,6 +100,11 @@
     <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuario</a></li>
     <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
   </ul>
+  {% endif %}
+  {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+  <li class="nav-item">
+  <a class="nav-link" href={%url 'crear_solicitud_compra' %}>Crear solicitud de compra</a>
+</li>
   {% endif %}
 </li>
         </ul>
