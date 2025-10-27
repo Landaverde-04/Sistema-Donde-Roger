@@ -111,6 +111,7 @@ def guardar_y_generar_pdf(request):
         
         # Generar PDF en memoria
         template = get_template('pedido_pdf.html')
+        
         context = {'pedido': pedido, 'detalles': pedido.detalles.all(),}
         html = template.render(context)
         pdf_file = BytesIO()
