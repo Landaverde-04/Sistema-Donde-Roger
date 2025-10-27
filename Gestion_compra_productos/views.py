@@ -41,6 +41,8 @@ def crear_solicitud_compra(request):
 
     return render(request, 'crear_solicitud_compra.html', {'proveedores': proveedores})
 
+
+@groups_required('Jefe', 'Gerente')
 @login_required
 def obtener_productos(request, id_proveedor):
     productos = ProductoProveedor.objects.filter(idProveedor__idProveedor=id_proveedor)
@@ -73,7 +75,7 @@ def preview_solicitud_compra(request):
                 'cantidad': cantidad,
                 'subtotal': subtotal
             })
-
+        
         context = {
             'proveedor': proveedor,
             'detalle_preview': detalle_preview,
