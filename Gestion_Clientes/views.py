@@ -1,10 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from seguridad.decoradores import groups_required
 from Gestion_Clientes.models import Cliente, DireccionCliente
 from django.urls import reverse
 from django.core.paginator import Paginator #para paginar
 from django.db.models import Q
+from itertools import zip_longest
+
 # Create your views here.
 
 
@@ -102,3 +104,66 @@ def habilitar_cliente(request, id):
     cliente.save()
     
     return redirect('listar_clientes_deshabilitados')
+
+@login_required
+def detalle_cliente(request, id):
+    cliente = Cliente.objects.get(idCliente=id)
+    direcciones = DireccionCliente.objects.filter(idCliente=cliente)
+
+    context = {
+        'cliente': cliente,
+        'direcciones': direcciones,
+    }
+
+    return render(request, 'detalle_cliente.html', context)
+
+def editar_cliente(request, id):
+    cliente = get_object_or_404(Cliente, idCliente=id)
+    direcciones = DireccionCliente.objects.filter(idCliente=cliente)
+
+    if request.method == "POST":
+        # --- Actualizar cliente ---
+        cliente.nombreCliente = request.POST.get("nombreCliente", "").strip()
+        cliente.apellidoCliente = request.POST.get("apellidoCliente", "").strip()
+        cliente.duiCliente = request.POST.get("duiCliente", "").strip()
+        cliente.telefonoCliente = request.POST.get("telefonoCliente", "").strip()
+        cliente.emailCliente = request.POST.get("emailCliente", "").strip()
+
+        nacimiento = request.POST.get("nacimientoCliente")
+        if nacimiento:
+            cliente.nacimientoCliente = nacimiento
+
+        cliente.save()
+
+        # --- Manejo de direcciones ---
+        ids = request.POST.getlist("direccion_id")
+        textos = request.POST.getlist("direccion_texto")
+        eliminadas = request.POST.getlist("direccion_eliminar")
+
+        for id_val, texto, elim in zip_longest(ids, textos, eliminadas, fillvalue=""):
+            texto = (texto or "").strip()
+            elim = elim or "0"
+
+            if id_val:  # dirección existente
+                try:
+                    direccion = DireccionCliente.objects.get(pk=id_val, idCliente=cliente)
+                    if elim == "1":  # marcada para eliminar
+                        direccion.delete()
+                    else:
+                        direccion.direccion = texto
+                        direccion.save()
+                except DireccionCliente.DoesNotExist:
+                    pass
+            else:  # nueva dirección
+                # ⬇️ solo crear si tiene texto y NO está marcada para eliminar
+                if texto and elim != "1":
+                    DireccionCliente.objects.create(idCliente=cliente, direccion=texto)
+
+        # Redirigir al detalle del cliente
+        return redirect("detalle_cliente", id=cliente.idCliente)
+
+    # --- Render inicial ---
+    return render(request, "editar_cliente.html", {
+        "cliente": cliente,
+        "direcciones": direcciones,
+    })

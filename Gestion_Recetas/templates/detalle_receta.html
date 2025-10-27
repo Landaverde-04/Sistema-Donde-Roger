@@ -1,0 +1,35 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'CSS/detalle_receta.css' %}">
+
+<div class="page">
+  <header class="header">
+    <div class="div-grid">
+        <h1 class="title">{{ receta.nombreReceta }}</h1>
+        <a href="/recetas/listar_recetas" class="btn btn-danger">Volver</a>
+    </div>
+    <div class="meta">
+      <span class="chip">Categoria: {{ receta.Categoria.nombreCategoria }}</span>
+      <span class="chip alt">Tamaño: {{ receta.tamanio }}</span>
+    </div>
+  </header>
+
+  <main class="column">
+    <section class="card">
+      <h2>Ingredientes</h2>
+      <div class="content text">
+        {{ receta.ingredientes|linebreaksbr }}
+      </div>
+    </section>
+
+    <section class="card highlight">
+      <h2>Pasos de preparación</h2>
+      <div class="content steps">
+        {{ receta.pasos|linebreaksbr }}
+      </div>
+    </section>
+  </main>
+</div>
+{% endblock %}
