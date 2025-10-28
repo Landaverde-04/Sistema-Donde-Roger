@@ -8,5 +8,6 @@ urlpatterns = [
     path('editar_producto_menu/<int:productoMenuId>', views.editar_producto_menu, name='editar_producto_menu'),#La vista para editar un producto en especifico
     path('editar_producto_menu/<path:invalid>',views.editar_producto_menu , name='editar_producto_menu_default'),#Url para manejar rutas invalidas
     re_path(r"^ver_producto_menu(?:/(?P<productoMenuId>.+))?$", views.ver_producto_menu, name='ver_producto_menu'),#Para ver un producto al menu
-    path('productos', views.listar_productos_menu, name='listar_productos_menu'),
+    path('menu', views.listar_productos_menu, name='listar_productos_menu'),
+    path('api/productos/', views.api_producto_menu, name='api_producto_menu'),
 ]

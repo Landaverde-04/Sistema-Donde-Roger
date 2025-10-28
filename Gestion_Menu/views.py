@@ -1,8 +1,20 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.http import JsonResponse
 from . import models
 
-# Create your views here.
+#API REST PARA PRODUCTOS DEL MENU
+def api_producto_menu(request):
+    if request.method == "GET":
+        nombre = request.GET.get('nombre')
+        categoria = request.GET.get('categoria')
+        productos = list(models.ProductoMenu.objects.all().values())
+        if nombre:
+            productos = list(models.ProductoMenu.objects.filter(nombreProductoMenu__icontains=nombre).values())
+        if categoria:
+            productos = list(productos.filter(idCategoriaProductoMenu=categoria).values())
+    return JsonResponse(productos, safe=False)
+
 #CONTROLADOR PARA REGISTRO DE PRODUCTOS PARA MENU
 def registrar_producto_menu(request):
     if request.method == "POST":
@@ -16,7 +28,7 @@ def registrar_producto_menu(request):
         print(categoriaId)
         producto.idCategoriaProductoMenu = models.CategoriaProductoMenu.objects.get(idCategoriaProductoMenu=categoriaId) 
         producto.save()
-        return redirect(reverse('registrar_producto_menu'))
+        return redirect(reverse('listar_productos_menu'))
     elif request.method == "GET":
         categorias = models.CategoriaProductoMenu.objects.all()
         return render(request, 'registrar_producto_menu.html' ,{'categorias':categorias})

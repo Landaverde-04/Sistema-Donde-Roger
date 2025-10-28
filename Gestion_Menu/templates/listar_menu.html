@@ -9,15 +9,15 @@
 </head>
 
 <div class="container my-4">
-    <h2 class="text-center my-2">Menu del restaurante</h2>
-    <div class="d-flex justify-content-center align-items-center">
-        <a type="button" class="btn btn-success" style="border-radius:15px;"
+    <div class="d-flex justify-content-start align-items-center my-4">
+        <a type="button" class="btn btn-success mx-2" style="border-radius:15px;"
             href="{% url 'registrar_producto_menu' %}">Registrar Producto</a>
-
-        <input type="text" class="form-control mx-5" placeholder="Buscar producto...">
-        <button type="button" class="btn btn-primary">Buscar</button>
-
-        <select class="form-select mx-5">
+        <h2 class="text-center my-2 w-75">Menu del restaurante</h2>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <input id="inputBuscar" type="text" class="form-control mx-2 w-50" placeholder="Buscar producto...">
+        <button id="btnBuscar" type="button" class="btn btn-primary">Buscar</button>
+        <select class="form-select mx-2 w-25">
             <option selected>Ordenar por:</option>
             {%for categoria in categorias%}
             <option value="{{categoria.idCategoriaProductoMenu}}">{{categoria.nombreCategoriaProductoMenu}}</option>
@@ -25,7 +25,7 @@
         </select>
     </div>
     <div>
-        <table class="table">
+        <table id="tablaProductos" class="table">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -40,16 +40,22 @@
                 <tr>
                     <td>{{ producto.nombreProductoMenu }}</td>
                     <td>{{ producto.precioProductoMenu }}</td>
-                    <td>{{ producto.unidadMedida }}</td>
+                    <td>{{ producto.tamanioProductoMenu }}</td>
                     <td>{{ producto.descripcionProductoMenu }}</td>
-                    <td><a href="{% url 'editar_producto_menu' producto.idProductoMenu %}" class="btn btn-primary">Editar</a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#EliminarModal{{ producto.idProductoMenu }}">Eliminar</button>
-                    <a href="{% url 'ver_producto_menu' producto.idProductoMenu %}" class="btn btn-info">Ver</a></td>
+                    <td><a href="{% url 'editar_producto_menu' producto.idProductoMenu %}"
+                            class="btn btn-primary">Editar</a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#EliminarModal{{ producto.idProductoMenu }}">Eliminar</button>
+                        <a href="{% url 'ver_producto_menu' producto.idProductoMenu %}" class="btn btn-info">Ver</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'JS/listar_menu.js' %}"></script>
 
 {% endblock %}
