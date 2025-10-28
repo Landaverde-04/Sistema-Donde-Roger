@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'Gestion_Pedidos_Clientes',
     'core',
     'Gestion_Recetas',
-    
+    'Gestion_reservacion_mesa',
 ]
 
 MIDDLEWARE = [

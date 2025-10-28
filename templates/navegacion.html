@@ -70,7 +70,8 @@
             <li><a class="dropdown-item" href="/recetas/listar_recetas_deshabilitadas/">Recetas deshabilitadas</a></li>
             {% endif %}
           </ul>
-        </li>
+        
+        <!--Lista para empleados-->
         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
         <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -130,10 +131,21 @@
     <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
   </ul>
   {% endif %}
+        <!--Lista para reservacion de mesa-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Reservacion de mesa
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'crear_reserva' %}">Crear Reserva</a></li>
+            <li><a class="dropdown-item" href="{% url 'ver_reservas' %}">Ver Reservas</a></li>
+            <li><a class="dropdown-item" href="{% url 'cancelar_reserva' %}">Cancelar Reserva</a></li>
+          </ul>
+        </li>
   {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
   <li class="nav-item">
   <a class="nav-link" href={%url 'crear_solicitud_compra' %}>Crear solicitud de compra</a>
-</li>
+  </li>
   {% endif %}
 </li>
         </ul>
