@@ -8,11 +8,12 @@ def api_producto_menu(request):
     if request.method == "GET":
         nombre = request.GET.get('nombre')
         categoria = request.GET.get('categoria')
-        productos = list(models.ProductoMenu.objects.all().values())
+        productos = models.ProductoMenu.objects.all()
         if nombre:
-            productos = list(models.ProductoMenu.objects.filter(nombreProductoMenu__icontains=nombre).values())
+            productos = models.ProductoMenu.objects.filter(nombreProductoMenu__icontains=nombre)
         if categoria:
-            productos = list(productos.filter(idCategoriaProductoMenu=categoria).values())
+            productos = productos.filter(idCategoriaProductoMenu=categoria)
+        productos = list(productos.values())
     return JsonResponse(productos, safe=False)
 
 #CONTROLADOR PARA REGISTRO DE PRODUCTOS PARA MENU

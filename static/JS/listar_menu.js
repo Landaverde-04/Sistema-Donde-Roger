@@ -1,16 +1,30 @@
 
     $(document).ready(function () {
         const inputBuscar = document.getElementById("inputBuscar"); //Obtener el input de busqueda
-        inputBuscar.addEventListener("input", buscarProducto);
-        function buscarProducto() {
-            var busqueda = inputBuscar.value.toLowerCase();
-            if (busqueda.length > 0) {
-                obtenerProductos(busqueda);
-            } else {
-                obtenerProductos();
-            }
-        }
+        const selectCategoria = document.getElementById("selectCategoria"); //Obtener el select de categoria
+        const btnLimpiar = document.getElementById("btnLimpiar"); //Obtener el boton de limpieza
+        btnLimpiar.addEventListener("click", limpiarBusqueda);
+        inputBuscar.addEventListener("change", buscarProducto);
+        selectCategoria.addEventListener("change", buscarProducto);
     });
+    function buscarProducto() {
+        var busqueda = inputBuscar.value.toLowerCase();
+        var categoria = selectCategoria.value;
+        var criterios = [];
+        if (selectCategoria.selectedIndex !== 0){
+                criterios[1] = categoria;
+            }
+        if (busqueda.length > 0) {
+            criterios[0] = busqueda;
+        }
+        obtenerProductos(criterios[0], criterios[1]);
+    }
+
+    function limpiarBusqueda() {
+        inputBuscar.value = "";
+        selectCategoria.selectedIndex = 0;
+        buscarProducto();
+    }
 
     function obtenerProductos(nombre = '', categoria = '') {
         $.ajax({
