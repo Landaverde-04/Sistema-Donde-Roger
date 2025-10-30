@@ -6,6 +6,7 @@ from Gestion_productos.views import registrar_producto
 from empleado.views import registrar_empleado
 from django.conf import settings
 from django.conf.urls.static import static
+from Gestion_compra_productos.views import crear_solicitud_compra
 
 urlpatterns = [
     path('admin/', admin.site.urls),    
@@ -18,6 +19,9 @@ urlpatterns = [
     path('clientes/', include('Gestion_Clientes.urls')),
     path('Menu/', include('Gestion_Menu.urls')),    
     path('recetas/', include('Gestion_Recetas.urls')),    
+    path('crear_solicitud_compra/', include('Gestion_compra_productos.urls')),
+    path('reservacion_mesa/', include('Gestion_reservacion_mesa.urls')),
+        
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
