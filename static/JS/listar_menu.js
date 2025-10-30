@@ -14,9 +14,10 @@
         if (selectCategoria.selectedIndex !== 0){
                 criterios[1] = categoria;
             }
-        if (busqueda.length > 0) {
+        if (busqueda.length >= 3) {
             criterios[0] = busqueda;
-        }
+        }  
+
         obtenerProductos(criterios[0], criterios[1]);
     }
 
@@ -32,7 +33,8 @@
             type: 'GET',
             data: {
                 nombre: nombre,
-                categoria: categoria
+                categoria: categoria,
+                habilitado: "True"
             },
             success: function (response) {
                 var tBody = document.querySelector("#tablaProductos tbody");
@@ -45,13 +47,39 @@
                     const unidad = row.insertCell(2);
                     const descripcion = row.insertCell(3);
                     const acciones = row.insertCell(4);
+                    const modal = row.appendChild(document.createElement("div"));
+                    modal.innerHTML = `<!-- Modal para deshabilitar -->
+                    <div class="modal fade" id="modal-deshabilitar-${producto.idProductoMenu}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered ">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="modal-cancelar-titulo">ADVERTENCIA</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Está seguro de que desea deshabilitar del menu el producto <strong>${producto.nombreProductoMenu}</strong> ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                                    <form method="POST" action="{% url 'deshabilitar_producto_menu' ${producto.idProductoMenu} %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Si</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
 
                     nombre.innerText = producto.nombreProductoMenu;
                     precio.innerText = producto.precioProductoMenu;
                     unidad.innerText = producto.tamanioProductoMenu;
                     descripcion.innerText = producto.descripcionProductoMenu;
-                    acciones.innerHTML = `<a href="/menu/ver/${producto.idProductoMenu}" class="btn btn-info">Ver</a>
-                    <a href="/menu/editar/${producto.idProductoMenu}" class="btn btn-primary">Editar</a>`;
+                    acciones.innerHTML = `<a href="/Menu/ver_producto_menu/${producto.idProductoMenu}" class="btn btn-primary">Ver</a>
+                    <a href="/Menu/editar_producto_menu/${producto.idProductoMenu}" class="btn btn-warning">Editar</a>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#modal-deshabilitar-${producto.idProductoMenu}">Deshabilitar</button>`;
                  
                 }
                 )

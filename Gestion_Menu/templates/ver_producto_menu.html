@@ -13,7 +13,7 @@
         <div class="d-flex justify-content-center align-items-center text-center">
             <div class=" w-25">
                 <a type="button w-25" class="btn btn-primary" style="border-radius:50px;"
-                    href="{% url 'listar_productos' %}">Regresar</a>
+                    href="{% url 'listar_productos_menu' %}">Regresar</a>
             </div>
             <div class=" w-50">
                 <h5 class="card-title m-3 text-center">Producto: {{producto.nombreProductoMenu}}</h5>
@@ -31,24 +31,5 @@
         </div>
     </div>
 </div>
-</div>
 
-<!-- Modal para cancelar -->
-<div class="modal fade" id="modal-cancelar" tabindex="-1" aria-labelledby="¿Está seguro?" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modal-cancelar-titulo">CANCELAR</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Está seguro de que desea cancelar?, no se guardará el nuevo producto</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">No, quiero continuar</button>
-                <a type="button" class="btn btn-danger" href="{%url 'listar_productos'%}">Si, quiero cancelar</a>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

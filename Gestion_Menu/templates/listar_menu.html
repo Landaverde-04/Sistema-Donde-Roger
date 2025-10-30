@@ -44,33 +44,40 @@
                     <td>{{ producto.descripcionProductoMenu }}</td>
                     <td>
                         <a href="{% url 'ver_producto_menu' producto.idProductoMenu %}" class="btn btn-primary">Ver</a>
-                        <a href="{% url 'editar_producto_menu' producto.idProductoMenu %}"class="btn btn-warning">Editar</a>
+                        <a href="{% url 'editar_producto_menu' producto.idProductoMenu %}"
+                            class="btn btn-warning">Editar</a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#modal-deshabilitar">Deshabilitar</button>
+                            data-bs-target="#modal-deshabilitar-{{producto.idProductoMenu}}">Deshabilitar</button>
                     </td>
+
+                    <!-- Modal para deshabilitar -->
+                    <div class="modal fade" id="modal-deshabilitar-{{producto.idProductoMenu}}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered ">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="modal-cancelar-titulo">ADVERTENCIA</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Está seguro de que desea deshabilitar del menu el producto <strong>{{producto.nombreProductoMenu}}</strong> ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                                    <form method="POST" action="{% url 'deshabilitar_producto_menu' producto.idProductoMenu %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger">Si</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
-</div>
-
-<!-- Modal para deshabilitar -->
-<div class="modal fade" id="modal-deshabilitar" tabindex="-1" aria-labelledby="¿Está seguro?" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="modal-cancelar-titulo">CANCELAR</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>¿Está seguro de que desea cancelar?, no se guardaran los cambios realizados</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">No, quiero continuar</button>
-                <a type="button" class="btn btn-danger" href="{%url 'listar_productos'%}">Si, quiero cancelar</a>
-            </div>
-        </div>
     </div>
 </div>
 
