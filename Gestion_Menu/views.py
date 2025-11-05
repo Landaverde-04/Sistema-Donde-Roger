@@ -75,6 +75,12 @@ def listar_productos_menu(request):
     categorias = models.CategoriaProductoMenu.objects.all()
     return render(request, 'listar_menu.html' ,{'productos':productos,'categorias':categorias})
 
+#Controlador para listar productos del menu deshabilitados
+def listar_productos_deshabilitados_menu(request):
+    productos = models.ProductoMenu.objects.filter(estaHabilitadoProductoMenu=False)
+    categorias = models.CategoriaProductoMenu.objects.all()
+    return render(request, 'listar_menu_deshabilitados.html' ,{'productos':productos,'categorias':categorias})
+
 def cambiar_estado_producto_menu(request, productoMenuId=None):
     if not productoMenuId or not productoMenuId.isdigit() or int(productoMenuId) <1:
         return redirect(reverse('listar_productos_menu'))
@@ -83,9 +89,15 @@ def cambiar_estado_producto_menu(request, productoMenuId=None):
         if producto is None:
             return redirect(reverse('listar_productos_menu'))
         if request.method == "POST":
-            producto.estaHabilitadoProductoMenu = ast.literal_eval(request.POST.get("estaHabilitadoProductoMenu"))
+            action = ast.literal_eval(request.POST.get("estaHabilitadoProductoMenu"))
+            producto.estaHabilitadoProductoMenu = action
             producto.save()
-            return redirect(reverse('listar_productos_menu') if producto.estaHabilitadoProductoMenu else reverse('listar_productos_menu_deshabilitados'))
+            if action:
+                url = 'listar_productos_deshabilitados_menu'
+            else:
+                url = 'listar_productos_menu'
+            
+            return redirect(reverse(url))
         if request.method == "GET":
             return redirect(reverse('listar_productos_menu'))
 
