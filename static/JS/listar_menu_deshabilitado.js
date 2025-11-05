@@ -34,7 +34,7 @@
             data: {
                 nombre: nombre,
                 categoria: categoria,
-                habilitado: "True"
+                habilitado: "False"
             },
             success: function (response) {
                 var tBody = document.querySelector("#tablaProductos tbody");
@@ -59,13 +59,13 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>¿Está seguro de que desea deshabilitar del menu el producto <strong>${producto.nombreProductoMenu}</strong> ?</p>
+                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto<strong>${producto.nombreProductoMenu}</strong> ?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
                                     <form method="POST" action="{% url 'cambiar_estado_producto_menu' ${producto.idProductoMenu} %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="False">
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True">
                                         <button type="submit" class="btn btn-danger">Si</a>
                                     </form>
                                 </div>
@@ -79,8 +79,8 @@
                     descripcion.innerText = producto.descripcionProductoMenu;
                     acciones.innerHTML = `<a href="/Menu/ver_producto_menu/${producto.idProductoMenu}" class="btn btn-primary">Ver</a>
                     <a href="/Menu/editar_producto_menu/${producto.idProductoMenu}" class="btn btn-warning">Editar</a>
-                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#modal-deshabilitar-${producto.idProductoMenu}">Deshabilitar</button>`;
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modal-deshabilitar-${producto.idProductoMenu}">Habilitar</button>`;
                  
                 }
                 )
