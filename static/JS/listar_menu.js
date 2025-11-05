@@ -63,8 +63,9 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
-                                    <form method="POST" action="{% url 'deshabilitar_producto_menu' ${producto.idProductoMenu} %}">
+                                    <form method="POST" action="{% url 'cambiar_estado_producto_menu' ${producto.idProductoMenu} %}">
                                         {% csrf_token %}
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="False">
                                         <button type="submit" class="btn btn-danger">Si</a>
                                     </form>
                                 </div>

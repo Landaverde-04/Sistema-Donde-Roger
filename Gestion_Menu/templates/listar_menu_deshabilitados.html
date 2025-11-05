@@ -10,9 +10,9 @@
 
 <div class="container my-4">
     <div class="d-flex justify-content-start align-items-center my-4">
-        <a type="button" class="btn btn-success mx-2" style="border-radius:15px;"
-            href="{% url 'registrar_producto_menu' %}">Registrar Producto</a>
-        <h2 class="text-center my-2 w-75">Menu del restaurante</h2>
+        <a type="button" class="btn btn-info mx-2" style="border-radius:15px;"
+            href="{% url 'listar_productos_menu' %}">Ver menu activo</a>
+        <h2 class="text-center my-2 w-75">Productos deshabilitados del menu</h2>
     </div>
     <div class="d-flex justify-content-center align-items-center">
         <input id="inputBuscar" type="text" class="form-control mx-2 w-50" placeholder="Buscar producto...">
@@ -46,12 +46,12 @@
                         <a href="{% url 'ver_producto_menu' producto.idProductoMenu %}" class="btn btn-primary">Ver</a>
                         <a href="{% url 'editar_producto_menu' producto.idProductoMenu %}"
                             class="btn btn-warning">Editar</a>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                            data-bs-target="#modal-deshabilitar-{{producto.idProductoMenu}}">Deshabilitar</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modal-habilitar-{{producto.idProductoMenu}}">Habilitar</button>
                     </td>
 
-                    <!-- Modal para deshabilitar -->
-                    <div class="modal fade" id="modal-deshabilitar-{{producto.idProductoMenu}}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                    <!-- Modal para habilitar -->
+                    <div class="modal fade" id="modal-habilitar-{{producto.idProductoMenu}}" tabindex="-1" aria-labelledby="¿Está seguro?"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered ">
                             <div class="modal-content">
@@ -61,13 +61,13 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>¿Está seguro de que desea deshabilitar del menu el producto <strong>{{producto.nombreProductoMenu}}</strong> ?</p>
+                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto <strong>{{producto.nombreProductoMenu}}</strong> ?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
                                     <form method="POST" action="{% url 'cambiar_estado_producto_menu' producto.idProductoMenu %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="False">
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True">
                                         <button type="submit" class="btn btn-danger">Si</a>
                                     </form>
                                 </div>
