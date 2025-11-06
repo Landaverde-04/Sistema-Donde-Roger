@@ -48,8 +48,8 @@
                     const descripcion = row.insertCell(3);
                     const acciones = row.insertCell(4);
                     const modal = row.appendChild(document.createElement("div"));
-                    modal.innerHTML = `<!-- Modal para deshabilitar -->
-                    <div class="modal fade" id="modal-deshabilitar-${producto.idProductoMenu}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                    modal.innerHTML = `<!-- Modal para habilitar -->
+                    <div class="modal fade" id="modal-habilitar-${producto.idProductoMenu}" tabindex="-1" aria-labelledby="¿Está seguro?"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered ">
                             <div class="modal-content">
@@ -59,19 +59,20 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto<strong>${producto.nombreProductoMenu}</strong> ?</p>
+                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto <strong>${producto.nombreProductoMenu}</strong> ?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
                                     <form method="POST" action="{% url 'cambiar_estado_producto_menu' ${producto.idProductoMenu} %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True">
-                                        <button type="submit" class="btn btn-danger">Si</a>
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True"/>
+                                        <button type="submit" class="btn btn-danger">Si</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    </div>
+`;
 
                     nombre.innerText = producto.nombreProductoMenu;
                     precio.innerText = producto.precioProductoMenu;
@@ -80,7 +81,7 @@
                     acciones.innerHTML = `<a href="/Menu/ver_producto_menu/${producto.idProductoMenu}" class="btn btn-primary">Ver</a>
                     <a href="/Menu/editar_producto_menu/${producto.idProductoMenu}" class="btn btn-warning">Editar</a>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#modal-deshabilitar-${producto.idProductoMenu}">Habilitar</button>`;
+                            data-bs-target="#modal-habilitar-${producto.idProductoMenu}">Habilitar</button>`;
                  
                 }
                 )
