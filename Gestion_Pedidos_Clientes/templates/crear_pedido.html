@@ -8,7 +8,8 @@
             <div class="m-4">
                 <h4>Tipo de Pedido:</h4>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="tipo1" value="option1">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="tipo1" value="option1"
+                        checked>
                     <label class="form-check-label" for="tipo1">En restaurante</label>
                 </div>
                 <div class="form-check form-check-inline">
@@ -34,9 +35,9 @@
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil" type="button"
-                    role="tab" aria-controls="perfil" aria-selected="false">
-                    Datos Cliente
+                <button class="nav-link" id="destino-tab" data-bs-toggle="tab" data-bs-target="#destino" type="button"
+                    role="tab" aria-controls="destino" aria-selected="false">
+                    Destino Pedido
                 </button>
             </li>
         </ul>
@@ -52,16 +53,32 @@
                             <div class="accordion-item">
                                 <h2 class="accordion-header" id="headingOne">
                                     <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#{{categoria.idCategoriaProductoMenu}}" aria-expanded="true" aria-controls="{{categoria.idCategoriaProductoMenu}}">
+                                        data-bs-target="#{{categoria.idCategoriaProductoMenu}}" aria-expanded="true"
+                                        aria-controls="{{categoria.idCategoriaProductoMenu}}">
                                         {{categoria.nombreCategoriaProductoMenu}}
                                     </button>
                                 </h2>
                                 <div id="{{categoria.idCategoriaProductoMenu}}" class="accordion-collapse collapse show"
                                     aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body">
-                                        {%for producto in categoria.productomenu_set.all%}
-                                            <p>{{producto.nombreProductoMenu}}</p>
-                                        {%endfor%}
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <ul class="list-group list-group-flush">
+                                                    {%for producto in categoria.productomenu_set.all%}
+                                                    <li class="list-group-item">
+                                                        <tr id="producto-{{producto.idProductoMenu}}">
+                                                            <td>{{producto.nombreProductoMenu}}</td>
+                                                            <td>${{producto.precioProductoMenu}}</td>
+                                                            <td><button id="add-{{producto.idProductoMenu}}"
+                                                                    type="button" class="btn btn-primary">+</button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </li>
+                                                    {%endfor%}
+                                                </ul>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -75,21 +92,57 @@
                                 <tr>
                                     <th>Producto</th>
                                     <th>Precio</th>
-                                    <th>Cantidad</th>
+                                    <th style="width: 10%; ">Cantidad</th>
                                     <th>Sub total</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">Total:</th>
+                                    <td>$0.00</td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade p-3" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
-                <h4>Perfil</h4>
-                <p>Información del usuario y ajustes.</p>
+            <div class="tab-pane fade p-3" id="destino" role="tabpanel" aria-labelledby="perfil-tab">
+                <!-- En restaurante -->
+                <div id="campos-restaurante" class="tipo-campos mt-3">
+                    <div class="mb-3">
+                        <label for="mesa" class="form-label">Número de mesa</label>
+                        <input type="text" class="form-control" id="mesa" name="mesa">
+                    </div>
+                </div>
+
+                <!-- Cliente recogerá -->
+                <div id="campos-recoger" class="tipo-campos mt-3 d-none">
+                    <div class="mb-3">
+                        <label for="hora-recoger" class="form-label">Hora de recogida</label>
+                        <input type="time" class="form-control" id="hora-recoger" name="hora-recoger">
+                    </div>
+                </div>
+
+                <!-- A domicilio -->
+                <div id="campos-domicilio" class="tipo-campos mt-3 ">
+                    <div class="mb-3">
+                        <label for="direccion" class="form-label">Dirección de entrega</label>
+                        <input type="text" class="form-control" id="direccion" name="direccion">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono">
+                    </div>
+                </div>
+
             </div>
         </div>
+        <input type="hidden" id="detalles-pedido" name="detalles-pedido">
     </form>
 </div>
+
+<script src="{% static 'JS/crear_pedido_cliente.js' %}"></script>
 {%endblock%}

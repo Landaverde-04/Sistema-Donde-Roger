@@ -5,7 +5,7 @@ from empleado.models import Empleado
 
 class PedidoCliente(models.Model):
     idPedidoCliente = models.AutoField(primary_key=True)
-    idCliente = models.ForeignKey(models_clientes.Cliente, on_delete=models.CASCADE)
+    idCliente = models.ForeignKey(models_clientes.Cliente, on_delete=models.CASCADE, null=True)
     fechaPedidoCliente = models.DateField()
     horaPedidoCliente = models.DateTimeField()
     numCorrelativo = models.CharField(max_length=20)
@@ -19,7 +19,7 @@ class PedidoCliente(models.Model):
     
 class DetallePedido(models.Model):
     idDetallePedido = models.AutoField(primary_key=True)
-    idPedidodCliente = models.ForeignKey(PedidoCliente, on_delete=models.CASCADE)
+    idPedidoCliente = models.ForeignKey(PedidoCliente, on_delete=models.CASCADE)
     idProducto = models.ForeignKey(models_menu.ProductoMenu, on_delete=models.CASCADE)
     cantidadPedido = models.IntegerField()
     subtotalPedido = models.DecimalField(max_digits=20, decimal_places=2)
