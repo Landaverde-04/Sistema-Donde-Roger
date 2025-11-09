@@ -1,11 +1,13 @@
 const botonesProductos = document.querySelectorAll('button[id^="add"]');
 const form = document.getElementById('form-crear-pedido');
+const rbtnTipos = document.querySelectorAll('input[id^="tipo"]');
+const switchAsociar = document.getElementById('asociar');
 var botonesSubstract = document.querySelectorAll('button[id^="sub"]');
 var botonesBorrar = document.querySelectorAll('button[id^="remove"]');
 var detallesPedido = [];
 const tipoSeleccionado = document.querySelector('input[name="inlineRadioOptions"]:checked');
 const areaDestino = document.getElementById('destino');
-
+// actualizarAreaDestino('tipo1'); ⌦ 
 
 
 form.addEventListener('submit', function (event) {
@@ -21,9 +23,21 @@ form.addEventListener('submit', function (event) {
 
 botonesProductos.forEach(boton => {
     boton.addEventListener('click', function () {
-        const idProducto = this.id.split('-')[1];
+        const idProducto = this.id;
         agregarProducto(idProducto);
     });
+});
+
+rbtnTipos.forEach(rbtn => { 
+    rbtn.addEventListener('change', function () {
+        var selected = this.value;
+        actualizarAreaDestino(selected);
+    });
+
+});
+
+switchAsociar.addEventListener('change', function () {
+    switchCamposCliente(this.checked);
 });
 
 function updateButtons() {
@@ -103,4 +117,48 @@ function actualizarPedido() {
     });
     total.innerHTML = `$${sumatoria.toFixed(2)}`;
     updateButtons();
+}
+
+function actualizarAreaDestino(tipo) {
+    const restaurante = document.getElementById('campos-restaurante');
+    const clienteRecoger = document.getElementById('campos-recoger');
+    const domicilio = document.getElementById('campos-domicilio');
+
+    // SETEAMOS TODOS A OCULTOS Y LO CAMBIAMOS DEPENDIENDO DEL TIPO
+    restaurante.classList.add('d-none');
+    clienteRecoger.classList.add('d-none');
+    domicilio.classList.add('d-none');
+
+    // no se si ya lo tiene lo duplica, veré
+    switch (tipo) {
+        case 'tipo1':
+            restaurante.classList.remove('d-none');
+            break;
+        case 'tipo2':
+            clienteRecoger.classList.remove('d-none');
+            break;
+        case 'tipo3':
+            domicilio.classList.remove('d-none');
+            break;
+        default:
+            restaurante.classList.remove('d-none');
+            break;
+    }
+
+}
+
+function switchCamposCliente(checked){
+    const camposCliente = document.getElementById('datos-cliente');
+    const camposDestino = document.getElementById('datos-entrega');
+    if(checked){
+        camposCliente.classList.remove('d-none');
+        camposDestino.classList.remove('w-100');
+        camposDestino.classList.add('w-50');
+    }
+    else{
+        camposCliente.classList.add('d-none');
+        camposDestino.classList.remove('w-50');
+        camposDestino.classList.add('w-100');
+    }
+
 }
