@@ -1,0 +1,55 @@
+{% extends 'navegacion.html' %}
+{% block content %}
+<div class="container mt-3" style="max-width:900px">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">Detalle de mantenimiento</div>
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <p class="mb-1"><b>ID:</b> {{ mantenimiento.idMantenimiento }}</p>
+          <p class="mb-1"><b>Maquinaria:</b> {{ mantenimiento.maquinaria }}</p>
+          <p class="mb-1"><b>Fecha:</b> {{ mantenimiento.fechaMantenimiento|date:"d/m/Y" }}</p>
+          <p class="mb-1"><b>Técnico:</b> {{ mantenimiento.nombreTecnico }}</p>
+          <p class="mb-1"><b>Tipo:</b> {{ mantenimiento.esCorrectivo|yesno:"Correctivo,Preventivo" }}</p>
+        </div>
+        <div class="col-md-6">
+          <p class="mb-1"><b>Observaciones:</b></p>
+          <div>{{ mantenimiento.observaciones|default:"—" }}</div>
+        </div>
+      </div>
+
+      <hr class="my-3">
+
+      <p class="mb-2"><b>Fotos</b></p>
+      <div class="d-flex gap-3 flex-wrap">
+        {% if mantenimiento.fotoAntesURL %}
+          <div>
+            <div class="small text-muted mb-1">Antes</div>
+            <img src="{{ mantenimiento.fotoAntesURL.url }}" alt="Antes" class="img-thumbnail" style="max-height:180px">
+          </div>
+        {% endif %}
+        {% if mantenimiento.fotoDespuesURL %}
+          <div>
+            <div class="small text-muted mb-1">Después</div>
+            <img src="{{ mantenimiento.fotoDespuesURL.url }}" alt="Después" class="img-thumbnail" style="max-height:180px">
+          </div>
+        {% endif %}
+        {% if mantenimiento.fotoFacturaURL %}
+          <div>
+            <div class="small text-muted mb-1">Factura</div>
+            <img src="{{ mantenimiento.fotoFacturaURL.url }}" alt="Factura" class="img-thumbnail" style="max-height:180px">
+          </div>
+        {% endif %}
+        {% if not mantenimiento.fotoAntesURL and not mantenimiento.fotoDespuesURL and not mantenimiento.fotoFacturaURL %}
+          <div class="text-muted">— Sin imágenes —</div>
+        {% endif %}
+      </div>
+
+      <div class="d-flex gap-2 mt-3">
+        <a href="{% url 'lista_mantenimiento' %}" class="btn btn-secondary">Atrás</a>
+        <a href="{% url 'modificar_mantenimiento' mantenimiento.idMantenimiento %}" class="btn btn-success">Editar</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

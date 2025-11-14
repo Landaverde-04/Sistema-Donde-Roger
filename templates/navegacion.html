@@ -30,6 +30,10 @@
             <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}">Lista de inventarios</a></li>
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+              <li><a class="dropdown-item" href="{%url 'registrar_maquinaria' %}">Registar Maquinaria</a></li>
+               <li><a class="dropdown-item" href="{%url 'lista_maquinaria' %}">Lista de maquinarias</a></li>
+            <li><a class="dropdown-item" href="{%url 'registrar_mantenimiento' %}">Registrar Mantenimiento</a></li>
+            <li><a class="dropdown-item" href="{%url 'lista_mantenimiento' %}">Lista de Mantenimiento</a></li>
             {% endif %}
           </ul>
         </li>

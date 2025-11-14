@@ -1,0 +1,76 @@
+{% extends 'navegacion.html' %}
+{% block content %}
+<div class="container mt-3">
+  <h2 class="mb-3">Mantenimientos</h2>
+
+  <div class="row g-2 align-items-end">
+    <div class="col-md-4">
+      <form method="get" id="filtros">
+        <label class="form-label">Maquinaria</label>
+        <select class="form-select" name="maquinaria" onchange="document.getElementById('filtros').submit()">
+          <option value="">Todas</option>
+          {% for m in maquinarias %}
+            <option value="{{ m.idMaquinaria }}" {% if m.idMaquinaria|stringformat:'s' == maquinaria_sel %}selected{% endif %}>
+              {{ m.nombreMaquinaria }} ({{ m.marcaMaquinaria }})
+            </option>
+          {% endfor %}
+        </select>
+        <input class="form-control mt-2" type="text" name="busqueda" value="{{ busqueda }}" placeholder="Técnico / maquinaria">
+      </form>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'registrar_mantenimiento' %}" class="btn btn-success">Registrar mantenimiento</a>
+    </div>
+  </div>
+
+  {% for m in messages %}
+    {% if 'mantenimiento' in m.tags %}
+      <div class="alert alert-success alert-dismissible fade show mt-3">{{ m }}
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="table-responsive mt-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th><th>Fecha</th><th>Maquinaria</th><th>Técnico</th><th>Tipo</th><th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for x in mantenimientos %}
+        <tr>
+          <td>{{ x.idMantenimiento }}</td>
+          <td>{{ x.fechaMantenimiento|date:'d/m/Y' }}</td>
+          <td>{{ x.maquinaria }}</td>
+          <td>{{ x.nombreTecnico }}</td>
+          <td>{{ x.esCorrectivo|yesno:"Correctivo,Preventivo" }}</td>
+          <td class="d-flex gap-2">
+            <a class="btn btn-sm btn-info" href="{% url 'ver_mantenimiento' x.idMantenimiento %}">Ver</a>
+            <a class="btn btn-sm btn-primary" href="{% url 'modificar_mantenimiento' x.idMantenimiento %}">Editar</a>
+            <a class="btn btn-sm btn-danger" href="{% url 'eliminar_mantenimiento' x.idMantenimiento %}">Eliminar</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6" class="text-center">No hay registros</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if is_paginated %}
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&busqueda={{ busqueda }}&maquinaria={{ maquinaria_sel }}">Anterior</a></li>
+      {% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&busqueda={{ busqueda }}&maquinaria={{ maquinaria_sel }}">Siguiente</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}
