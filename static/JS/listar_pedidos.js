@@ -1,15 +1,14 @@
 
     $(document).ready(function () {
         const inputBuscar = document.getElementById("inputBuscar"); //Obtener el input de busqueda
-        const selectCategoria = document.getElementById("selectCategoria"); //Obtener el select de categoria
         const btnLimpiar = document.getElementById("btnLimpiar"); //Obtener el boton de limpieza
         btnLimpiar.addEventListener("click", limpiarBusqueda);
         inputBuscar.addEventListener("change", buscarProducto);
         selectCategoria.addEventListener("change", buscarProducto);
     });
-    function buscarProducto() {
+    function buscarPedido() {
         var busqueda = inputBuscar.value.toLowerCase();
-        var categoria = selectCategoria.value;
+        
         var criterios = [];
         if (selectCategoria.selectedIndex !== 0){
                 criterios[1] = categoria;
@@ -34,7 +33,7 @@
             data: {
                 nombre: nombre,
                 categoria: categoria,
-                habilitado: "False"
+                habilitado: "True"
             },
             success: function (response) {
                 var tBody = document.querySelector("#tablaProductos tbody");
@@ -48,8 +47,8 @@
                     const descripcion = row.insertCell(3);
                     const acciones = row.insertCell(4);
                     const modal = row.appendChild(document.createElement("div"));
-                    modal.innerHTML = `<!-- Modal para habilitar -->
-                    <div class="modal fade" id="modal-habilitar-${producto.idProductoMenu}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                    modal.innerHTML = `<!-- Modal para deshabilitar -->
+                    <div class="modal fade" id="modal-deshabilitar-${producto.idProductoMenu}" tabindex="-1" aria-labelledby="¿Está seguro?"
                         aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered ">
                             <div class="modal-content">
@@ -59,20 +58,19 @@
                                         aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto <strong>${producto.nombreProductoMenu}</strong> ?</p>
+                                    <p>¿Está seguro de que desea deshabilitar del menu el producto <strong>${producto.nombreProductoMenu}</strong> ?</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
                                     <form method="POST" action="{% url 'cambiar_estado_producto_menu' ${producto.idProductoMenu} %}">
                                         {% csrf_token %}
-                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True"/>
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="False">
                                         <button type="submit" class="btn btn-danger">Si</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
-`;
+                    </div>`;
 
                     nombre.innerText = producto.nombreProductoMenu;
                     precio.innerText = producto.precioProductoMenu;
@@ -80,8 +78,8 @@
                     descripcion.innerText = producto.descripcionProductoMenu;
                     acciones.innerHTML = `<a href="/Menu/ver_producto_menu/${producto.idProductoMenu}" class="btn btn-primary">Ver</a>
                     <a href="/Menu/editar_producto_menu/${producto.idProductoMenu}" class="btn btn-warning">Editar</a>
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                            data-bs-target="#modal-habilitar-${producto.idProductoMenu}">Habilitar</button>`;
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#modal-deshabilitar-${producto.idProductoMenu}">Deshabilitar</button>`;
                  
                 }
                 )

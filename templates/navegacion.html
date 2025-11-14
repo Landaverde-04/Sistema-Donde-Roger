@@ -131,6 +131,17 @@
             <li><a class="dropdown-item" href="{% url 'cancelar_reserva' %}">Cancelar Reserva</a></li>
           </ul>
         </li>
+        <!-- Lista para pedidos de clientes -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Pedidos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'crear_pedido' %}">Nuevo Pedido</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos' %}">Ver pedidos de hoy</a></li>
+            <li><a class="dropdown-item" href=#>Ver todos los pedidos</a></li>
+          </ul>
+        </li>
 </li>
         </ul>
         <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
