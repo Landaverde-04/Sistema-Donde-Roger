@@ -8,7 +8,7 @@ var detallesPedido = [];
 const tipoSeleccionado = document.querySelector('input[name="inlineRadioOptions"]:checked');
 const areaDestino = document.getElementById('destino');
 // actualizarAreaDestino('tipo1'); ⌦ 
-
+switchCamposCliente(true);
 
 form.addEventListener('submit', function (event) {
     if (detallesPedido.length === 0) {

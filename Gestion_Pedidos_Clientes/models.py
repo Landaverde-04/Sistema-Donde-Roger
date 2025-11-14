@@ -12,10 +12,20 @@ class EstadoPedidoCliente(models.Model):
         
     def __str__(self):
         return self.nombreEstado
+class TipoPedidoCliente(models.Model):
+    idTipoPedido = models.AutoField(primary_key=True)
+    nombreTipoPedido = models.CharField(max_length=50)
+    
+    class Meta:
+        db_table = 'TipoPedido'
+    
+    def __str__(self):
+        return self.nombreTipoPedido
 class PedidoCliente(models.Model):
     idPedidoCliente = models.AutoField(primary_key=True)
     idCliente = models.ForeignKey(models_clientes.Cliente, on_delete=models.CASCADE, null=True)
-    idMesa = models.IntegerField(null=True)
+    tipoPedido = models.ForeignKey(TipoPedidoCliente, on_delete=models.CASCADE)
+    direccionPedido = models.CharField(max_length=100, null=True)
     horaRecoger = models.DateTimeField(null=True)
     fechaPedidoCliente = models.DateField()
     horaPedidoCliente = models.DateTimeField()
@@ -44,15 +54,6 @@ class DetallePedido(models.Model):
         return self.idDetallePedido
 
     
-class TipoPedidoCliente(models.Model):
-    idTipoPedido = models.AutoField(primary_key=True)
-    nombreTipoPedido = models.CharField(max_length=50)
-    
-    class Meta:
-        db_table = 'TipoPedido'
-    
-    def __str__(self):
-        return self.nombreTipoPedido
     
 class ManipulacionPedido(models.Model):
     idManipulacion = models.AutoField(primary_key=True)
