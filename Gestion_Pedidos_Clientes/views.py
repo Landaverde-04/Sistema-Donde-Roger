@@ -1,9 +1,23 @@
 from django.shortcuts import render, redirect
 from Gestion_Menu.models import CategoriaProductoMenu, ProductoMenu
+from Gestion_Clientes.models import Cliente
 from django.db.models import Prefetch
 from Gestion_Pedidos_Clientes.models import *
 import datetime
 import json
+from django.http import JsonResponse
+
+# Create your views here.
+
+def api_clientes(request):
+    clientes = Cliente.objects.all().values(
+        'idCliente', 
+        'duiCliente', 
+        'nombreCliente',
+        'telefonoCliente',
+        'direccionCliente'
+    )
+    return JsonResponse(list(clientes), safe=False)
 
 # Create your views here.
 
@@ -35,4 +49,8 @@ def crear_pedido(request):
             pedido.totalPedido += detalle["subtotalPedido"]
             nuevoDetalle.save()
         return redirect('crear_pedido')
-    
+
+def listar_pedidos(request):
+    pedidos = PedidoCliente.objects.all().order_by('fechaPedidoCliente')
+    return render(request, 'listar_pedidos.html', {'pedidos':pedidos})
+

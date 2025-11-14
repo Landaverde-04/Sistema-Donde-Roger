@@ -8,7 +8,7 @@ var detallesPedido = [];
 const tipoSeleccionado = document.querySelector('input[name="inlineRadioOptions"]:checked');
 const areaDestino = document.getElementById('destino');
 // actualizarAreaDestino('tipo1'); ⌦ 
-switchCamposCliente(true);
+
 
 form.addEventListener('submit', function (event) {
     if (detallesPedido.length === 0) {
@@ -131,13 +131,13 @@ function actualizarAreaDestino(tipo) {
 
     // no se si ya lo tiene lo duplica, veré
     switch (tipo) {
-        case 'tipo1':
+        case '1':
             restaurante.classList.remove('d-none');
             break;
-        case 'tipo2':
+        case '2':
             clienteRecoger.classList.remove('d-none');
             break;
-        case 'tipo3':
+        case '3':
             domicilio.classList.remove('d-none');
             break;
         default:
