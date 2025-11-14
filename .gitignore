@@ -19,3 +19,5 @@ db.sqlite3
 .vscode/
 media/logos
 media/contratos
+media/mantenimientos
+media/pedidos_proveedores
