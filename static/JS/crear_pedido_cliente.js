@@ -23,7 +23,7 @@ form.addEventListener('submit', function (event) {
 
 botonesProductos.forEach(boton => {
     boton.addEventListener('click', function () {
-        const idProducto = this.id;
+        const idProducto = this.id.trim().split('-')[1];
         agregarProducto(idProducto);
     });
 });
