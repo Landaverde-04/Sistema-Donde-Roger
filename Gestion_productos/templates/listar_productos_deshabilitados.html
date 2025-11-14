@@ -1,0 +1,128 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'CSS/listar_producto.css' %}">
+    <title>Lista de Productos deshabilitados</title>
+</head>
+    <div class="container mt-3">
+        <h2 class="mb-4">Lista de Productos deshabilitados.</h2>
+        {% if messages %}
+            {% for message in messages %}
+              {% if 'producto' in message.tags %}
+                <div class="alert alert-success">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
+        <form method="get" class="row g-3 mb-3">
+          <div class="col-md-6">
+            <input
+              type="text"
+              name="nombre"
+              id="busquedaProducto"
+              class="form-control"
+              placeholder="Buscar por nombre de producto..."
+              value="{{ nombre }}"
+            >
+          </div>
+          <div class="col-md-6">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <a href="{% url 'listar_productos' %}" class="btn btn-secondary">Limpiar</a>
+          </div>
+        </form>
+        <div class="div-table">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Unidad de Medida</th>
+                    <th>Marca</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if productos.object_list %}
+                {% for producto in productos %}
+                    <tr>
+                        <td>{{ producto.nombreProducto }}</td>
+                        <td>{{ producto.unidadMedida }}</td>
+                        <td>{{ producto.marcaProducto }}</td>
+                        <td>{{ producto.descripcionProducto }}</td>
+                        <td>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#EliminarModal{{ producto.idProducto }}">Habilitar</button>
+                    </td>
+                    </tr>
+                    <!-- Modal de confirmación para eliminar producto -->
+                    <div class="modal fade" id="EliminarModal{{ producto.idProducto }}" tabindex="-1" aria-labelledby="EliminarModalLabel{{ producto.idProducto }}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="EliminarModalLabel{{ producto.idProducto }}">
+                              <i class="bi bi-exclamation-triangle-fill"></i> Advertencia
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                          </div>
+                          <div class="modal-body">
+                            ¿Estás seguro de que deseas habilitar el producto <strong>{{ producto.nombreProducto }}</strong>?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <form method="post" action="{% url 'habilitar_producto' producto.idProducto %}">
+                              {% csrf_token %}
+                              <button type="submit" class="btn btn-danger">Habilitar</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center">No hay productos deshabilitados.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+    <div class="paginacion-productos">
+    <nav aria-label="Paginación de productos">
+  <ul class="pagination justify-content-center">
+    {% if productos.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1{% if nombre %}&nombre={{ nombre }}{% endif %}">&laquo; Primero</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.previous_page_number }}{% if nombre %}&nombre={{ nombre }}{% endif %}">Anterior</a>
+      </li>
+    {% endif %}
+
+    {# Números de página #}
+    {% for num in productos.paginator.page_range %}
+      {% if productos.number == num %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}{% if nombre %}&nombre={{ nombre }}{% endif %}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if productos.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.next_page_number }}{% if nombre %}&nombre={{ nombre }}{% endif %}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ productos.paginator.num_pages }}{% if nombre %}&nombre={{ nombre }}{% endif %}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+</div>
+</div>
+{% endblock %}

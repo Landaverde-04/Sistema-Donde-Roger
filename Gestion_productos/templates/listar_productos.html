@@ -39,7 +39,6 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Nombre</th>
                     <th>Unidad de Medida</th>
                     <th>Marca</th>
@@ -51,7 +50,6 @@
                 {% if productos.object_list %}
                 {% for producto in productos %}
                     <tr>
-                        <td>{{ producto.idProducto }}</td>
                         <td>{{ producto.nombreProducto }}</td>
                         <td>{{ producto.unidadMedida }}</td>
                         <td>{{ producto.marcaProducto }}</td>

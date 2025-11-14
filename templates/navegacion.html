@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </head>
 <body>
     
@@ -28,6 +28,9 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'ver_inventario'%}">Ver inventario actual</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}">Lista de inventarios</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            {% endif %}
           </ul>
         </li>
           {% if user.groups.first.name == 'Jefe'%}
@@ -38,9 +41,37 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'registrar_producto' %}">Registrar Producto</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_productos'  %}">Lista de Productos</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados' %}">Productos Deshabilitados</a></li>
           </ul>
         </li>
         {% endif %}
+        <!--Lista para menu-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Menu
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{%url 'registrar_producto_menu' %}">Registrar Producto para Menu</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_productos_menu' %}">Lista de Productos</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados_menu' %}">Productos Deshabilitados</a></li>
+          </ul>
+        </li>
+        <!--Lista para recetas-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Recetas
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
+            {% endif %}
+            {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/recetas/listar_recetas_deshabilitadas/">Recetas deshabilitadas</a></li>
+            {% endif %}
+          </ul>
+        
+        <!--Lista para empleados-->
         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
         <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -48,7 +79,8 @@
   </a>
   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">    
     <li><a class="dropdown-item" href="/empleado/registrar_empleado/">Registrar Empleado</a></li>
-    <li><a class="dropdown-item" href="/empleado/empleado_lista/">Lista de Empleados</a></li>    
+    <li><a class="dropdown-item" href="/empleado/empleado_lista/">Lista de Empleados</a></li>  
+    <li><a class="dropdown-item" href="/empleado/empleado_lista_deshabilitados/">Empleados Deshabilitados</a></li>  
   </ul>
   {% endif %}
 </li>
@@ -60,7 +92,22 @@
             <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
-            {% endif %}          
+            {% endif %}
+            {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores_deshabilitados/">Proveedores Deshabilitados</a></li>
+            {% endif %}
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Clientes
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/clientes/listar_clientes/">Lista de Clientes</a></li>            
+            <li><a class="dropdown-item" href="/clientes/registrar_cliente/">Registrar Cliente</a></li>  
+                        {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/clientes/listar_clientes_deshabilitados/">Clientes Deshabilitados</a></li>
+            {% endif %}
           </ul>
         </li>
                <li class="nav-item dropdown">
@@ -81,7 +128,24 @@
   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
     <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
     <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuario</a></li>
+    <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
   </ul>
+  {% endif %}
+        <!--Lista para reservacion de mesa-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Reservacion de mesa
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'crear_reserva' %}">Crear Reserva</a></li>
+            <li><a class="dropdown-item" href="{% url 'ver_reservas' %}">Ver Reservas</a></li>
+            <li><a class="dropdown-item" href="{% url 'cancelar_reserva' %}">Cancelar Reserva</a></li>
+          </ul>
+        </li>
+  {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+  <li class="nav-item">
+  <a class="nav-link" href={%url 'crear_solicitud_compra' %}>Crear solicitud de compra</a>
+  </li>
   {% endif %}
 </li>
         </ul>

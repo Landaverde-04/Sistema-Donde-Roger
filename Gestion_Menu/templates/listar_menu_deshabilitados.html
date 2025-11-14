@@ -1,0 +1,88 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu del restaurante</title>
+</head>
+
+<div class="container my-4">
+    <div class="d-flex justify-content-start align-items-center my-4">
+        <a type="button" class="btn btn-info mx-2" style="border-radius:15px;"
+            href="{% url 'listar_productos_menu' %}">Ver menu activo</a>
+        <h2 class="text-center my-2 w-75">Productos deshabilitados del menu</h2>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <input id="inputBuscar" type="text" class="form-control mx-2 w-50" placeholder="Buscar producto...">
+        <select id="selectCategoria" class="form-select mx-2 w-25">
+            <option selected>Todas las categorias</option>
+            {%for categoria in categorias%}
+            <option value="{{categoria.idCategoriaProductoMenu}}">{{categoria.nombreCategoriaProductoMenu}}</option>
+            {%endfor%}
+        </select>
+        <button id="btnLimpiar" type="button" class="btn btn-primary">Limpiar</button>
+    </div>
+    <div>
+        <table id="tablaProductos" class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Unidad</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombreProductoMenu }}</td>
+                    <td>{{ producto.precioProductoMenu }}</td>
+                    <td>{{ producto.tamanioProductoMenu }}</td>
+                    <td>{{ producto.descripcionProductoMenu }}</td>
+                    <td>
+                        <a href="{% url 'ver_producto_menu' producto.idProductoMenu %}" class="btn btn-primary">Ver</a>
+                        <a href="{% url 'editar_producto_menu' producto.idProductoMenu %}"
+                            class="btn btn-warning">Editar</a>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#modal-habilitar-{{producto.idProductoMenu}}">Habilitar</button>
+                    </td>
+
+                    <!-- Modal para habilitar -->
+                    <div class="modal fade" id="modal-habilitar-{{producto.idProductoMenu}}" tabindex="-1" aria-labelledby="¿Está seguro?"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered ">
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title" id="modal-cancelar-titulo">ADVERTENCIA</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>¿Está seguro de que desea volver a HABILITAR en el menu el producto <strong>{{producto.nombreProductoMenu}}</strong> ?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">No</button>
+                                    <form method="POST" action="{% url 'cambiar_estado_producto_menu' producto.idProductoMenu %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="estaHabilitadoProductoMenu" value="True">
+                                        <button type="submit" class="btn btn-danger">Si</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'JS/listar_menu_deshabilitado.js' %}"></script>
+
+{% endblock %}

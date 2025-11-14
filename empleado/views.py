@@ -229,3 +229,37 @@ def historial_asistencia(request):
         'fecha': fecha,
     }
     return render(request, 'historial_asistencia.html', context)
+
+@login_required
+@groups_required('Jefe')
+def empleado_lista_deshabilitados(request):
+    busqueda = request.GET.get('busqueda', '')
+    empleados_query = Empleado.objects.filter(estaHabilitadoEmpleado=False).order_by('idEmpleado')
+
+    if busqueda:
+        empleados_query = empleados_query.filter(
+            Q(nombresEmpleado__icontains=busqueda) |
+            Q(apellidosEmpleado__icontains=busqueda)
+        )
+
+    paginator = Paginator(empleados_query, 10)  
+    page_number = request.GET.get('page')
+    empleados_paginacion = paginator.get_page(page_number)
+
+    return render(request, 'empleado_lista_deshabilitados.html', {
+        'empleados_paginacion': empleados_paginacion,
+        'busqueda': busqueda,
+    })
+@login_required
+@groups_required('Jefe')
+def habilitar_empleado(request, idEmpleado):
+    empleado = get_object_or_404(Empleado, idEmpleado=idEmpleado)
+    if empleado:
+        empleado.estaHabilitadoEmpleado = True
+        empleado.save()
+        messages.success(request, "¡Empleado habilitado exitosamente!", extra_tags='empleado-deshabilitados')
+        return redirect('empleado_lista_deshabilitados')
+    else:
+        messages.error(request, "El empleado no existe.", extra_tags='empleado-deshabilitados')
+        return redirect('empleado_lista_deshabilitados')
+

@@ -1,0 +1,136 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+<head>
+<title>Empleados deshabilitados</title>
+<link rel="stylesheet" href="{% static 'CSS/empleado_lista.css' %}">
+<script src="{% static 'JS/empleado_lista.js' %}"></script>
+</head>
+<div class="container mt-3">
+    <h2 class="mb-4">Lista de empleados deshabilitados</h2>
+    <div class="row my-4 align-items-center">
+        <div class="col">
+            <form method="get" class="d-flex justify-content-end search-bar-form">
+                <input type="text" name="busqueda" class="form-control shadow-sm rounded-start"
+                       placeholder="Buscar por nombre..." value="{{ busqueda }}" style="max-width: 260px;">
+                <button type="submit" class="btn btn-primary rounded-end ms-2 px-4">Buscar</button>
+            </form>
+        </div>
+    </div>
+<!-- DIV invisible solo si hay mensaje -->
+
+
+    <div class="div-table mt-3">
+       {% if messages %}
+            {% for message in messages %}
+              {% if 'empleado-deshabilitados' in message.tags %}
+                <div class="alert alert-success">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+        {% endif %}
+        <table class="table table-striped w-85 mx-auto">
+            <thead>
+                <tr>
+                    <th class="w-15">Nombres</th>
+                    <th class="w-15">Apellidos</th>
+                    <th class="w-7">DUI</th>
+                    <th class="w-7">Teléfono</th>
+                    <th class="w-10">Salario</th>
+                    <th class="w-10">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if empleados_paginacion %}
+                    {% for empleado in empleados_paginacion %}
+                    <tr>
+                        <td>{{ empleado.nombresEmpleado }}</td>
+                        <td>{{ empleado.apellidosEmpleado }}</td>
+                        <td>{{ empleado.duiEmpleado }}</td>
+                        <td>{{ empleado.telEmpleado }}</td>
+                        <td>{{ empleado.salarioEmpleado }}</td>
+                        <td>
+                            <div class="acciones-btns">
+                                <button 
+                                    type="button" 
+                                    class="btn btn-success " 
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#modalEliminar"
+                                    data-url="{% url 'habilitar_empleado' empleado.idEmpleado %}"
+                                    data-nombre="{{ empleado.nombresEmpleado }} {{ empleado.apellidosEmpleado }}">
+                                    Habilitar
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center">No hay empleados deshabilitados</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <form id="formEliminarEmpleado" method="post" action="">
+        {% csrf_token %}
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title" id="modalEliminarLabel">
+              <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar habilitación
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          ¿Estás seguro que deseas deshabilitar al empleado <strong id="modalNombreEmpleado"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger">Sí, Habilitar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="paginacion-empleados">
+    <nav aria-label="Paginación de empleados">
+      <ul class="pagination justify-content-center">
+        {% if empleados_paginacion.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page=1{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">&laquo; Primero</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.previous_page_number }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Anterior</a>
+          </li>
+        {% endif %}
+
+        {% for num in empleados_paginacion.paginator.page_range %}
+          {% if empleados_paginacion.number == num %}
+            <li class="page-item active">
+              <span class="page-link">{{ num }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link" href="?page={{ num }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if empleados_paginacion.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.next_page_number }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Siguiente</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="?page={{ empleados_paginacion.paginator.num_pages }}{% if busqueda %}&busqueda={{ busqueda }}{% endif %}">Última &raquo;</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+</div>
+
+{% endblock %}

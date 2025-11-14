@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es-Sv">
+    {% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/registrar_cliente.css' %}">
+    <script src="{% static 'JS/registrar_cliente.js' %}"></script>
+    <title>Registrar Cliente</title>
+</head>
+<body>
+    <div id="div-contenedor">
+        <form id="div-registro" method="post">
+            {% csrf_token %}
+            <h1>Registrar Cliente</h1>
+            <div id="div-fila-1">   
+            <div class="campo">
+                <label>Nombre:</label>
+                <input type="text" name="nombre" value="{{ data.nombre }}" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required>
+            </div>
+            <div class="campo">
+                <label>Apellidos:</label>
+                <input type="text" name="apellidos" required pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" value="{{ data.apellidos }}">
+            </div>
+            <div class="campo">
+                <label>DUI:</label>
+                <input type="text" name="dui" pattern="\d{8}-\d"
+          title="Formato: 00000000-0" required maxlength="10" value="{{ data.dui }}">
+            </div>
+            <div class="campo">
+                <label>Teléfono:</label>
+                <input type="text" name="telefono" pattern="\d{4}-\d{4}"           title="Formato requerido 0000-0000" maxlength="9" required value="{{ data.telefono }}">
+            </div>
+            <div class="campo">
+                <label>Correo:</label>
+                <input pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" type="text" name="correo" placeholder="ejemplo@correo.com" value="{{ data.correo }}">
+            </div>
+            <div class="campo">
+                <label>Fecha de nacimiento:</label>
+                <input type="date" name="fecha_nacimiento" required value="{{ data.fecha_nacimiento }}">
+            </div>
+            <!--Direcciones-->
+            <div id="direcciones" class="campo full">
+            <div id="div-direccion1" class="campo full">
+                <label>Dirección 1:</label>
+                <textarea name="direccion_cliente" id="direccion" rows="1" cols="80" required></textarea>
+            </div>
+            <div id="div-direccion2" class="campo full">
+                <label>Dirección 2:</label>
+                <textarea name="direccion_cliente" id="direccion2" rows="1" cols="80"></textarea>                
+            </div>
+            </div>
+            <div id="campo">
+                <button type="button" id="btnAgregar" class="btn btn-info" onclick="agregarDireccion()" >Agregar otra dirección</button>
+                </div> 
+            </div>
+            <div class="div-botones">
+                <button class="btn btn-success btn-registro" type="submit">Registrar</button>
+                <a class="btn btn-danger btn-registro" id="btnCancelar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+    <!-- Modal para confirmar cancelación -->
+        <div class="modal fade" id="modalCancelar" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title">
+          <i class="bi bi-exclamation-triangle"></i>  Advertencia</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        ¿Seguro que quieres cancelar el registro? Se perderá todo el progreso.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <a href="/clientes/listar_clientes" class="btn btn-danger">Sí, cancelar</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+{% endblock %}

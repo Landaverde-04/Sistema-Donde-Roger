@@ -1,0 +1,10 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+<h2>Cancelar Reserva</h2>
+<p>¿Estás seguro de que deseas cancelar la reserva?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirmar Cancelación</button>
+</form>
+{% endblock %}
