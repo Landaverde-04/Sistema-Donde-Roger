@@ -38,10 +38,7 @@
           <td class="d-flex gap-2">
             <a class="btn btn-sm btn-info" href="{% url 'ver_maquinaria' x.idMaquinaria %}">Ver</a>
             <a class="btn btn-sm btn-primary" href="{% url 'modificar_maquinaria' x.idMaquinaria %}">Editar</a>
-            <form method="post" action="{% url 'eliminar_maquinaria' x.idMaquinaria %}" onsubmit="return confirm('¿Inhabilitar esta maquinaria?');">
-              {% csrf_token %}
-              <button class="btn btn-sm btn-danger">Eliminar</button>
-            </form>
+            <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-sm btn-danger btn-eliminar" data-id="{{ x.idMaquinaria }}" data-nombre="{{ x.nombreMaquinaria }} - {{ x.marcaMaquinaria }}">Eliminar</button>
           </td>
         </tr>
         {% empty %}
@@ -65,4 +62,26 @@
   </nav>
   {% endif %}
 </div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-triangle"></i>  Aviso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de eliminar la maquinaria <strong id="modalNombreMaquinaria"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnEliminarMaquinaria" class="btn btn-danger">Sí, eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% load static %}
+<script src="{% static 'JS/lista_maquinaria.js' %}"></script>
 {% endblock %}

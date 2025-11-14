@@ -82,9 +82,7 @@ def modificar_maquinaria(request, idMaquinaria):
 @groups_required('Jefe')
 def eliminar_maquinaria(request, idMaquinaria):
     maquinaria = get_object_or_404(Maquinaria, idMaquinaria=idMaquinaria)
-    if request.method == 'POST':
-        maquinaria.delete()  
-        messages.success(request, "Maquinaria eliminada definitivamente.", extra_tags='maquinaria')
-        return redirect('lista_maquinaria')
-    return redirect('maquinaria_lista')
+    maquinaria.delete()  
+    messages.success(request, "Maquinaria eliminada definitivamente.", extra_tags='maquinaria')
+    return redirect('lista_maquinaria')
 
