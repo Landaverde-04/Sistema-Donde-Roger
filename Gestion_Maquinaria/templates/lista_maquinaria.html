@@ -1,0 +1,68 @@
+{% extends 'navegacion.html' %}
+{% block content %}
+<div class="container mt-3">
+  <h2 class="mb-3">Maquinaria</h2>
+
+  <div class="row g-2 align-items-center mb-2">
+    <div class="col-auto">
+      <a class="btn btn-success" href="{% url 'registrar_maquinaria' %}">Registrar maquinaria</a>
+    </div>
+    <div class="col">
+      <form method="get" class="d-flex justify-content-end">
+        <input name="busqueda" value="{{ busqueda }}" class="form-control" placeholder="Buscar por nombre o marca" style="max-width:280px">
+        <button class="btn btn-primary ms-2">Buscar</button>
+      </form>
+    </div>
+  </div>
+
+  {% for m in messages %}
+    {% if 'maquinaria' in m.tags %}
+      <div class="alert alert-success alert-dismissible fade show">{{ m }}
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Marca</th><th>Compra</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        {% for x in maquinarias %}
+        <tr>
+          <td>{{ x.idMaquinaria }}</td>
+          <td>{{ x.nombreMaquinaria }}</td>
+          <td>{{ x.marcaMaquinaria }}</td>
+          <td>{{ x.fechaCompraMaquinaria|date:"d/m/Y" }}</td>
+          <td class="d-flex gap-2">
+            <a class="btn btn-sm btn-info" href="{% url 'ver_maquinaria' x.idMaquinaria %}">Ver</a>
+            <a class="btn btn-sm btn-primary" href="{% url 'modificar_maquinaria' x.idMaquinaria %}">Editar</a>
+            <form method="post" action="{% url 'eliminar_maquinaria' x.idMaquinaria %}" onsubmit="return confirm('¿Inhabilitar esta maquinaria?');">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="text-center">No hay registros</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if is_paginated %}
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&busqueda={{ busqueda }}">Anterior</a></li>
+      {% endif %}
+      <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+      {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&busqueda={{ busqueda }}">Siguiente</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+</div>
+{% endblock %}
