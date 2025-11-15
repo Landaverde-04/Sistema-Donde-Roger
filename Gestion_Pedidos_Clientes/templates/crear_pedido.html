@@ -140,6 +140,11 @@
                             <div class="mb-3">
                                 <label for="direccion" class="form-label">Dirección de entrega</label>
                                 <input type="text" class="form-control" id="direccion" name="direccion">
+                                <div class="form-check mt-2">
+                                    <input class="form-check-input" type="checkbox" id="chk-nuevo-cliente">
+                                    <label class="form-check-label" for="chk-nuevo-cliente">Agregar como nueva
+                                        dirección</label>
+                                </div>
                             </div>
                         </div>
                         <label for="comments" class="form-label">Comentarios</label>
@@ -149,12 +154,11 @@
                         <p class="text-center fw-bold">Datos del cliente</p>
                         <input type="hidden" id="idCliente" name="idCliente">
                         <div class="" id="campos-dui">
-                            <label for="dui" class="form-label">Dui</label>
-                            <input id="dui" type="text" class="form-control">
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="chk-nuevo-cliente">
-                                <label class="form-check-label" for="chk-nuevo-cliente">Crear cliente nuevo</label>
-                            </div>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modal-seleccion-cliente" id="btn-seleccionar-cliente">Seleccionar
+                                cliente</button>
+                            <button type="button" class="btn btn-primary" id="btn-nuevo-cliente">Crear cliente
+                                nuevo</button>
 
                         </div>
                         <div class="mx-1 w-50 d-none" id="campos-tel">
@@ -169,6 +173,39 @@
         </div>
         <input type="hidden" id="detalles-pedido" name="detalles-pedido">
     </form>
+</div>
+
+<!-- Modal de seleccion de cliente-->
+<div class="modal fade" id="modal-seleccion-cliente" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Seleccionar cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-seleccion-cliente-body">
+                <input class="form-control" id="modal-seleccion-cliente-buscar" placeholder="Buscar por nombre...">
+                <table class="table table-borderless" id="modal-seleccion-tabla">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>DUI</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="pagination-container" class="text-center mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Seleccionar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="{% static 'JS/crear_pedido_cliente.js' %}"></script>

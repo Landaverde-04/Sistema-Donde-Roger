@@ -25,6 +25,7 @@ class PedidoCliente(models.Model):
     idPedidoCliente = models.AutoField(primary_key=True)
     idCliente = models.ForeignKey(models_clientes.Cliente, on_delete=models.CASCADE, null=True)
     tipoPedido = models.ForeignKey(TipoPedidoCliente, on_delete=models.CASCADE)
+    mesasPedido = models.CharField(max_length=100, null=True)
     direccionPedido = models.CharField(max_length=100, null=True)
     horaRecoger = models.DateTimeField(null=True)
     fechaPedidoCliente = models.DateField()

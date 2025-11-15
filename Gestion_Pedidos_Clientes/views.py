@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator
 from Gestion_Menu.models import CategoriaProductoMenu, ProductoMenu
 from Gestion_Clientes.models import Cliente
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from Gestion_Pedidos_Clientes.models import *
 import datetime
 import json
@@ -10,14 +11,33 @@ from django.http import JsonResponse
 # Create your views here.
 
 def api_clientes(request):
-    clientes = Cliente.objects.all().values(
-        'idCliente', 
-        'duiCliente', 
-        'nombreCliente',
-        'telefonoCliente',
-        'direccionCliente'
-    )
-    return JsonResponse(list(clientes), safe=False)
+    nombres = request.GET.get("names") if request.GET.get("names") != "undefined" else None
+    page = int(request.GET.get("page", 1))
+    per_page = int(request.GET.get("per_page", 5))
+    if nombres:
+        queryset = Cliente.objects.filter(
+            Q(nombreCliente__icontains=nombres) |
+            Q(apellidoCliente__icontains=nombres)
+        ).values(
+            "idCliente", "nombreCliente", "apellidoCliente",
+            "duiCliente", "telefonoCliente", "emailCliente",
+            "nacimientoCliente"
+        )
+    else:
+        queryset = Cliente.objects.all().values(
+            "idCliente", "nombreCliente", "apellidoCliente",
+            "duiCliente", "telefonoCliente", "emailCliente",
+            "nacimientoCliente"
+        )
+
+    paginator = Paginator(queryset, per_page)
+    page_obj = paginator.get_page(page)
+    return JsonResponse({
+        "results": list(page_obj),
+        "page": page_obj.number,
+        "total_pages": paginator.num_pages,
+        "total_items": paginator.count,
+    })
 
 # Create your views here.
 

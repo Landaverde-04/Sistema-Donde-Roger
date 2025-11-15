@@ -2,6 +2,10 @@ const botonesProductos = document.querySelectorAll('button[id^="add"]');
 const form = document.getElementById('form-crear-pedido');
 const rbtnTipos = document.querySelectorAll('input[id^="tipo"]');
 const switchAsociar = document.getElementById('asociar');
+const modalSeleccionCliente = document.getElementById('modal-seleccion-cliente');
+const modalSeleccionClienteBody = document.getElementById('modal-seleccion-cliente-body');
+const inputModalSeleccionClienteBuscar = document.getElementById('modal-seleccion-cliente-buscar');
+const btnTriggerSeleccionCliente = document.getElementById('btn-seleccionar-cliente');
 var botonesSubstract = document.querySelectorAll('button[id^="sub"]');
 var botonesBorrar = document.querySelectorAll('button[id^="remove"]');
 var detallesPedido = [];
@@ -40,6 +44,9 @@ switchAsociar.addEventListener('change', function () {
     switchCamposCliente(this.checked);
 });
 
+inputModalSeleccionClienteBuscar.addEventListener('change', buscarCliente);
+// btnTriggerSeleccionCliente.addEventListener('click',buscarCliente);
+modalSeleccionCliente.addEventListener('shown.bs.modal', buscarCliente);
 function updateButtons() {
     botonesSubstract = document.querySelectorAll('button[id^="sub"]');
     botonesBorrar = document.querySelectorAll('button[id^="remove"]');
@@ -162,3 +169,104 @@ function switchCamposCliente(checked){
     }
 
 }
+
+async function obtenerClientes(text, page = 1) {
+    try {
+        const response = await fetch(
+            `/pedidos/api/clientes/?names=${encodeURIComponent(text)}&page=${page}&per_page=5`
+        );
+
+        if (!response.ok) throw new Error("Error en la petición al servidor");
+
+        const data = await response.json();
+
+        renderTabla(data.results);
+        renderPaginacion(data.page, data.total_pages);
+
+        ultimaPagina = data.page;
+    } catch (error) {
+        console.error(error);
+        tablaBody.innerHTML = `
+            <tr><td colspan="5" class="text-center text-danger">Error cargando datos</td></tr>
+        `;
+    }
+}
+
+/* ===============================
+   RENDER TABLA
+================================= */
+
+function renderTabla(clientes) {
+    const tablaBody = modalSeleccionClienteBody.querySelector("tbody");
+    tablaBody.innerHTML = "";
+
+    if (!clientes.length) {
+        const row = tablaBody.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 5;
+        cell.textContent = "No hay clientes registrados";
+        cell.classList.add("text-center", "text-muted");
+        return;
+    }
+
+    clientes.forEach(cliente => {
+        const row = tablaBody.insertRow();
+        row.id = "fila-" + cliente.idCliente;
+
+        row.insertCell(0).textContent = cliente.nombreCliente + " " + cliente.apellidoCliente;
+        row.insertCell(1).textContent = cliente.duiCliente;
+        row.insertCell(2).textContent = cliente.telefonoCliente;
+        row.insertCell(3).textContent = cliente.emailCliente;
+        row.insertCell(4).textContent = cliente.nacimientoCliente;
+    });
+}
+
+/* ===============================
+   RENDER PAGINACION
+================================= */
+
+function renderPaginacion(current, total) {
+    const paginacion = document.getElementById("pagination-container");
+    paginacion.innerHTML = "";
+
+    if (total <= 1) return;
+
+    let html = `<div class="btn-group">`;
+
+    if (current > 1) {
+        html += `
+            <button class="btn btn-outline-primary"
+                    onclick="obtenerClientes('${ultimoTextoBuscado}', ${current - 1})">
+                « Anterior
+            </button>`;
+    }
+
+    for (let i = 1; i <= total; i++) {
+        html += `
+            <button class="btn btn-${i === current ? "primary" : "outline-primary"}"
+                    onclick="obtenerClientes('${ultimoTextoBuscado}', ${i})">
+                ${i}
+            </button>`;
+    }
+
+    if (current < total) {
+        html += `
+            <button class="btn btn-outline-primary"
+                    onclick="obtenerClientes('${ultimoTextoBuscado}', ${current + 1})">
+                Siguiente »
+            </button>`;
+    }
+
+    html += `</div>`;
+    paginacion.innerHTML = html;
+}
+
+
+function buscarCliente() {
+        var busqueda = inputModalSeleccionClienteBuscar.value.toLowerCase();
+        var criterios = [];
+        if (busqueda.length > 3) {
+            criterios[0] = busqueda;
+        }  
+        obtenerClientes(criterios[0]);
+    }
