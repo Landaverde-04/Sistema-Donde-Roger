@@ -28,12 +28,26 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'ver_inventario'%}">Ver inventario actual</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}">Lista de inventarios</a></li>
-            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-            <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}            
+            <li><a class="dropdown-item" href="{%url 'lista_maquinaria' %}">Lista de maquinarias</a></li>
               <li><a class="dropdown-item" href="{%url 'registrar_maquinaria' %}">Registar Maquinaria</a></li>
-               <li><a class="dropdown-item" href="{%url 'lista_maquinaria' %}">Lista de maquinarias</a></li>
+               <li><a class="dropdown-item" href="{%url 'lista_mantenimiento' %}">Lista de Mantenimiento</a></li>
             <li><a class="dropdown-item" href="{%url 'registrar_mantenimiento' %}">Registrar Mantenimiento</a></li>
-            <li><a class="dropdown-item" href="{%url 'lista_mantenimiento' %}">Lista de Mantenimiento</a></li>
+            {% endif %}
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Proveedores
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
+            <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
+            {% endif %}
+            {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores_deshabilitados/">Proveedores Deshabilitados</a></li>
             {% endif %}
           </ul>
         </li>
@@ -57,24 +71,16 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'registrar_producto_menu' %}">Registrar Producto para Menu</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_productos_menu' %}">Lista de Productos</a></li>
-            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados_menu' %}">Productos Deshabilitados</a></li>
-          </ul>
-        </li>
-        <!--Lista para recetas-->
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Recetas
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
             {% endif %}
             {% if user.groups.first.name == 'Jefe'%}
+            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados_menu' %}">Productos Deshabilitados</a></li>
             <li><a class="dropdown-item" href="/recetas/listar_recetas_deshabilitadas/">Recetas deshabilitadas</a></li>
             {% endif %}
           </ul>
-        
+        </li>        
         <!--Lista para empleados-->
         {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
         <li class="nav-item dropdown">
@@ -82,26 +88,16 @@
     Empleados
   </a>
   <ul class="dropdown-menu" aria-labelledby="navbarDropdown">    
-    <li><a class="dropdown-item" href="/empleado/registrar_empleado/">Registrar Empleado</a></li>
     <li><a class="dropdown-item" href="/empleado/empleado_lista/">Lista de Empleados</a></li>  
+    <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuarios</a></li>
+    <li><a class="dropdown-item" href="/empleado/registrar_empleado/">Registrar Empleado</a></li>
+    <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
     <li><a class="dropdown-item" href="/empleado/empleado_lista_deshabilitados/">Empleados Deshabilitados</a></li>  
+    <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
   </ul>
   {% endif %}
 </li>
-<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Proveedores
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
-            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
-            {% endif %}
-            {% if user.groups.first.name == 'Jefe'%}
-            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores_deshabilitados/">Proveedores Deshabilitados</a></li>
-            {% endif %}
-          </ul>
-        </li>
+
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Clientes
@@ -124,17 +120,6 @@
     <li><a class="dropdown-item" href="/empleado/historial_asistencia">Lista de Asistencias</a></li>
     {% endif %}
   </ul>        
-        {% if user.groups.first.name == 'Jefe' %}
-        <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Usuarios
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
-    <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuario</a></li>
-    <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
-  </ul>
-  {% endif %}
         <!--Lista para reservacion de mesa-->
         <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -164,6 +149,17 @@
   <a class="nav-link" href={%url 'crear_solicitud_compra' %}>Crear solicitud de compra</a>
   </li>
   {% endif %}
+        <!-- Lista para pedidos de clientes -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Pedidos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{% url 'crear_pedido' %}">Nuevo Pedido</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos' %}">Ver pedidos de hoy</a></li>
+            <li><a class="dropdown-item" href=#>Ver todos los pedidos</a></li>
+          </ul>
+        </li>
 </li>
         </ul>
         <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar Sesión</a>

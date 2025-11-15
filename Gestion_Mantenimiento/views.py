@@ -191,9 +191,7 @@ def modificar_mantenimiento(request, idMantenimiento):
 @groups_required('Jefe')
 def eliminar_mantenimiento(request, idMantenimiento):
     mant = get_object_or_404(Mantenimiento, idMantenimiento=idMantenimiento)
-    if request.method == 'POST':
-        mant.delete()
-        messages.success(request, "Mantenimiento eliminado definitivamente.")
-        return redirect('lista_mantenimiento')
+    mant.delete()
+    messages.success(request, "Mantenimiento eliminado definitivamente.")
+    return redirect('lista_mantenimiento')
 
-    return render(request, 'confirmar_eliminar_mantenimiento.html', {'mantenimiento': mant})
