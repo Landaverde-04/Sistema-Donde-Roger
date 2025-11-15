@@ -18,22 +18,22 @@ def crear_mesa(request):
         ubicacion = request.POST.get('ubicacion')
         estado = request.POST.get('estado')
         forma = request.POST.get('forma')
-        pos_x = request.POST.get('pos_x')
-        pos_y = request.POST.get('pos_y')
+        fila = request.POST.get('fila')
+        columna = request.POST.get('columna')
 
         if Mesa.objects.filter(numero=numero).exists():
             messages.error(request, "Ya existe una mesa con ese número.")
             return redirect('crear_mesa')
 
         mesa = Mesa(
-            numero=numero,
-            capacidad=capacidad,
-            ubicacion=ubicacion,
-            estado=estado,
-            forma=forma,
-            pos_x=pos_x,
-            pos_y=pos_y
-        )
+    numero=numero,
+    capacidad=capacidad,
+    ubicacion=ubicacion,
+    estado=estado,
+    forma=forma,
+    fila=fila,
+    columna=columna,
+)
         mesa.save()
         messages.success(request, "Mesa creada correctamente.")
         return redirect('mapa_mesas')
@@ -206,15 +206,13 @@ def historial_reservas_mesa(request):
 @login_required
 @groups_required('Jefe', 'Gerente', 'Colaborador')
 def mapa_mesas(request):
-    mesas = Mesa.objects.all().order_by('numero')
+    mesas = Mesa.objects.all()
 
-    # adjuntamos el estado calculado a cada mesa
+    matriz = {}
     for mesa in mesas:
-        mesa.estado_actual = mesa.get_estado_actual()
+        matriz.setdefault(mesa.fila, {})[mesa.columna] = mesa
 
-    return render(request, 'reservas_mesa/mapa_mesas.html', {
-        'mesas': mesas,
-    })
+    return render(request, "reservas_mesa/mapa_mesas.html", {"matriz": matriz})
 
 
 @login_required

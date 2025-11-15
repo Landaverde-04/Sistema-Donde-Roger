@@ -1,18 +1,20 @@
 /* Contenedor del mapa */
 .mapa-mesas {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    background-color: #f8f3e8;
-    border-radius: 8px;
-    overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(6, 120px); /* 9 columnas */
+    grid-template-rows: repeat(7, 120px); /* 9 filas */
+    gap: 20px;
+    justify-content: center;
+    background: #fff8e1;
 }
 
 /* Enlace que envuelve a cada mesa */
 .mesa-link {
-    position: absolute;
     text-decoration: none;
     color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Base de todas las mesas */
@@ -25,14 +27,14 @@
     transition: transform .15s ease, box-shadow .15s ease;
 }
 
-/* Efecto hover */
+/* Hover */
 .mesa-icon:hover {
     transform: scale(1.08);
     box-shadow: 0 0 10px rgba(0, 0, 0, .25);
 }
 
 /* Formas */
-.mesa-rect {
+.mesa-rectangulo {
     width: 80px;
     height: 40px;
     border-radius: 6px;
@@ -51,22 +53,13 @@
     border-radius: 8px;
 }
 
-/* Colores según estado */
-.mesa-libre {
-    background-color: #d4edda;   /* verde claro */
-}
+/* Colores */
+.mesa-libre { background-color: #d4edda; }
+.mesa-reservada { background-color: #ffeeba; }
+.mesa-ocupada { background-color: #f8d7da; }
 
-.mesa-reservada {
-    background-color: #ffeeba;   /* amarillo */
-}
-
-.mesa-ocupada {
-    background-color: #f8d7da;   /* rojo claro */
-}
-
-/* Número de mesa */
+/* Número */
 .mesa-numero {
     font-weight: 600;
     font-size: 16px;
-    /* para que se vea bien también en el rombo, si quieres rotarlo, puedes jugar con transform aquí */
 }

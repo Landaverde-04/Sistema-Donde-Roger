@@ -14,6 +14,14 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger mt-2">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
 
             <!-- CARD -->
             <div class="card shadow-lg border-0">
@@ -28,14 +36,14 @@
 
                         <div class="mb-3">
                             <label for="numero" class="form-label fw-bold">Número de mesa</label>
-                            <input type="text" class="form-control" id="numero" name="numero" required>
+                            <input type="text" class="form-control" id="numero" name="numero" pattern="[0-9]+" maxlength="2" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="forma" class="form-label fw-bold">Forma de la mesa</label>
                             <select class="form-select" id="forma" name="forma" required>
-                                <option value="CIRCULAR">Circular</option>
-                                <option value="RECTANGULAR">Rectangular</option>
+                                <option value="CIRCULO">Círculo</option>
+                                <option value="RECTANGULO">Rectángulo</option>
                                 <option value="ROMBO">Rombo</option>
                             </select>
                         </div>
@@ -60,16 +68,17 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="pos_x" class="form-label fw-bold">Posición X en el mapa</label>
-                                <input type="text" class="form-control" id="pos_x" name="pos_x" placeholder="Posición X" pattern="[0-9]+" maxlength="4" title="Solo números menores que 99" required>
-                            </div>
+    <div class="col-md-6 mb-3">
+        <label for="fila" class="form-label fw-bold">Fila</label>
+        <input type="text" class="form-control" id="fila" name="fila" pattern="[1-7]+" maxlength="1" placeholder="Fila tiene que ser entre 1 y 7"  required>
+    </div>
 
-                            <div class="col-md-6 mb-3">
-                                <label for="pos_y" class="form-label fw-bold">Posición Y en el mapa</label>
-                                <input type="text" class="form-control" id="pos_y" name="pos_y" placeholder="Posición Y" pattern="[0-9]+" maxlength="4" title="Solo números menores que 99" required>
-                            </div>
-                        </div>
+    <div class="col-md-6 mb-3">
+        <label for="columna" class="form-label fw-bold">Columna</label>
+        <input type="text" class="form-control" id="columna" name="columna" pattern="[1-6]+" maxlength="1"  placeholder="Columna tiene que ser entre 1 y 6" required>
+    </div>
+</div>
+
 
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-success px-5 py-2" style="border-radius:50px;">
