@@ -1,0 +1,72 @@
+/* Contenedor del mapa */
+.mapa-mesas {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    background-color: #f8f3e8;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Enlace que envuelve a cada mesa */
+.mesa-link {
+    position: absolute;
+    text-decoration: none;
+    color: #000;
+}
+
+/* Base de todas las mesas */
+.mesa-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, .2);
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+
+/* Efecto hover */
+.mesa-icon:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .25);
+}
+
+/* Formas */
+.mesa-rect {
+    width: 80px;
+    height: 40px;
+    border-radius: 6px;
+}
+
+.mesa-circulo {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.mesa-rombo {
+    width: 60px;
+    height: 60px;
+    transform: rotate(45deg);
+    border-radius: 8px;
+}
+
+/* Colores según estado */
+.mesa-libre {
+    background-color: #d4edda;   /* verde claro */
+}
+
+.mesa-reservada {
+    background-color: #ffeeba;   /* amarillo */
+}
+
+.mesa-ocupada {
+    background-color: #f8d7da;   /* rojo claro */
+}
+
+/* Número de mesa */
+.mesa-numero {
+    font-weight: 600;
+    font-size: 16px;
+    /* para que se vea bien también en el rombo, si quieres rotarlo, puedes jugar con transform aquí */
+}

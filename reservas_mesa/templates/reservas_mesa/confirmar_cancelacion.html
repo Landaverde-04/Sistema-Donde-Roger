@@ -1,0 +1,26 @@
+{% extends "navegacion.html" %}
+
+{% block title %}Cancelar reservación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Cancelar reservación</h2>
+  <hr>
+
+  <div class="alert alert-warning">
+    <p><strong>¿Seguro que deseas cancelar esta reservación?</strong></p>
+    <ul>
+      <li><b>Nombre contacto:</b> {{ reserva.nombre_contacto }}</li>
+      <li><b>Mesa:</b> Mesa {{ reserva.mesa.numero }}</li>
+      <li><b>Fecha y hora:</b> {{ reserva.fecha_hora|date:"d/m/Y H:i" }}</li>
+      <li><b>Personas:</b> {{ reserva.cantidad_personas }}</li>
+    </ul>
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Sí, cancelar reservación</button>
+    <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-secondary">No, volver</a>
+  </form>
+</div>
+{% endblock %}

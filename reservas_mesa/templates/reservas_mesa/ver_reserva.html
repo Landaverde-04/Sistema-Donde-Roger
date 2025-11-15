@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle de reservación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Reservación de mesa</h2>
+  <p class="text-muted">
+    Creada por: {{ reserva.creado_por }} |
+    Fecha de creación: {{ reserva.creado_en|date:"d/m/Y H:i" }}
+  </p>
+  <hr>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} mt-2">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+      <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Nombre de contacto</label>
+          {{ form.nombre_contacto}}
+          {{ form.nombre_contacto.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Teléfono</label>
+          {{ form.telefono_contacto }}
+          {{ form.telefono_contacto.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Mesa</label>
+          {{ form.mesa }}
+          {{ form.mesa.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fecha y hora</label>
+          {{ form.fecha_hora}}
+          {{ form.fecha_hora.errors }}
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="mb-3">
+          <label class="form-label">Cantidad de personas</label>
+          {{ form.cantidad_personas }}
+          {{ form.cantidad_personas.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Tipo de reserva</label>
+          {{ form.tipo_reserva}}
+          {{ form.tipo_reserva.errors }}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Observaciones</label>
+          {{ form.observaciones }}
+          {{ form.observaciones.errors }}
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-secondary">Volver</a>
+
+    {% if reserva.estado != 'CANCELADA' %}
+      <a href="{% url 'cancelar_reserva_mesa' reserva.pk %}"
+         class="btn btn-danger float-end">Cancelar reservación</a>
+    {% endif %}
+  </form>
+</div>
+{% endblock %}

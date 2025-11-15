@@ -1,0 +1,66 @@
+{% extends "navegacion.html" %}
+{% load static %}
+
+{% block title %}Mapa de mesas{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/mapa_mesas.css' %}">
+
+<div class="container mt-4">
+  <div class="row">
+    <!-- AREA DEL MAPA -->
+    <div class="col-lg-9">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+  <div>
+    <span>Mapa de mesas</span><br>
+    <small class="text-light">Haz clic en una mesa para crear una reservación</small>
+  </div>
+  <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-outline-light btn-sm">
+    Ver reservas de hoy
+  </a>
+</div>
+
+        <div class="card-body">
+          <div id="mapa-mesas" class="mapa-mesas">
+            {% for mesa in mesas %}
+              <!-- ENLACE A CREAR RESERVA CON LA MESA PRESELECCIONADA -->
+              <a href="{% url 'detalle_mesa' mesa.id %}"
+   class="mesa-link"
+   style="left: {{ mesa.pos_x }}px; top: {{ mesa.pos_y }}px;">
+                <div class="mesa-icon
+            mesa-{{ mesa.forma|lower }}
+            {% if mesa.estado_actual == 'RESERVADA' %}mesa-reservada
+            {% elif mesa.estado_actual == 'OCUPADA' %}mesa-ocupada
+            {% else %}mesa-libre
+            {% endif %}">
+                  <span class="mesa-numero">
+                    {{ mesa.numero }}
+                  </span>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PANEL LATERAL -->
+    <div class="col-lg-3 mt-3 mt-lg-0">
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <strong>Leyenda</strong>
+        </div>
+        <div class="card-body small">
+          <p><span class="badge bg-success">&nbsp;</span> Libre</p>
+          <p><span class="badge bg-warning text-dark">&nbsp;</span> Reservada</p>
+          <p><span class="badge bg-danger">&nbsp;</span> Ocupada</p>
+          <hr>
+          <p><strong>Formas:</strong></p>
+          <p>Círculo, rectángulo o rombo según el tipo de mesa.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

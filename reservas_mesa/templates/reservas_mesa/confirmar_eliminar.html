@@ -1,0 +1,30 @@
+{% extends "navegacion.html" %}
+
+{% block title %}Eliminar reservación{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-danger text-white">
+      <h4 class="mb-0">Eliminar reservación</h4>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-warning">
+        <p><strong>¿Seguro que deseas eliminar esta reservación?</strong></p>
+        <p>Esta acción no se puede deshacer.</p>
+        <ul>
+          <li><strong>Mesa:</strong> {{ reserva.mesa.numero }}</li>
+          <li><strong>Nombre contacto:</strong> {{ reserva.nombre_contacto }}</li>
+          <li><strong>Fecha y hora:</strong> {{ reserva.fecha_hora|date:"d/m/Y H:i" }}</li>
+          <li><strong>Personas:</strong> {{ reserva.cantidad_personas }}</li>
+        </ul>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
