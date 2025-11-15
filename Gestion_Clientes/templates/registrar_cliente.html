@@ -25,7 +25,7 @@
             <div class="campo">
                 <label>DUI:</label>
                 <input type="text" name="dui" pattern="\d{8}-\d"
-          title="Formato: 00000000-0" required maxlength="10" value="{{ data.dui }}">
+          title="Formato: 00000000-0" maxlength="10" value="{{ data.dui }}">
             </div>
             <div class="campo">
                 <label>Teléfono:</label>
@@ -37,7 +37,7 @@
             </div>
             <div class="campo">
                 <label>Fecha de nacimiento:</label>
-                <input type="date" name="fecha_nacimiento" required value="{{ data.fecha_nacimiento }}">
+                <input type="date" name="fecha_nacimiento" value="{{ data.fecha_nacimiento }}">
             </div>
             <!--Direcciones-->
             <div id="direcciones" class="campo full">
