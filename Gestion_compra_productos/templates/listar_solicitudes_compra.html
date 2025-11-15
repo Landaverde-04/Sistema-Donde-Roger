@@ -1,0 +1,138 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'CSS/listar_inventario.css' %}">
+  <title>Solicitudes de Compra</title>
+</head>
+
+<div class="container mt-3">
+
+  <h2 class="mb-4">Lista de Solicitudes de Compra</h2>
+
+  <!-- Botón para crear nueva solicitud -->
+  <div class="mb-4 text-start">
+    <a href="{% url 'crear_solicitud_compra' %}" class="btn btn-success">
+      Crear Nueva Solicitud
+    </a>
+  </div>
+
+  <!-- Mensajes -->
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- FILTROS -->
+  <form method="get" class="mb-3 d-flex align-items-center">
+
+    <!-- FILTRO ORDEN -->
+    <label for="ordenar" class="me-2">Ordenar:</label>
+    <select name="ordenar" id="ordenar" class="form-select w-auto me-3" onchange="this.form.submit()">
+      <option value="desc" {% if request.GET.ordenar == "desc" or not request.GET.ordenar %}selected{% endif %}>
+        Más reciente primero
+      </option>
+      <option value="asc" {% if request.GET.ordenar == "asc" %}selected{% endif %}>
+        Más antiguo primero
+      </option>
+    </select>
+
+    <!-- FILTRO PROVEEDOR -->
+    <label for="proveedor" class="me-2">Proveedor:</label>
+    <select name="proveedor" id="proveedor" class="form-select w-auto me-3">
+      <option value="">Todos</option>
+      {% for p in proveedores %}
+      <option value="{{ p.idProveedor }}"
+        {% if request.GET.proveedor == p.idProveedor|stringformat:"s" %}selected{% endif %}>
+        {{ p.nombreEmpresa }}
+      </option>
+      {% endfor %}
+    </select>
+
+    <!-- FILTRO FECHA -->
+    <label for="fecha" class="me-2">Fecha:</label>
+    <input type="date" name="fecha" id="fecha" class="form-control w-auto me-3"
+      value="{{ request.GET.fecha }}">
+
+    <button type="submit" class="btn btn-primary">Filtrar</button>
+
+  </form>
+
+  <!-- TABLA -->
+  <table class="table table-striped mt-3">
+    <thead>
+      <tr>
+        <th>Proveedor</th>
+        <th>Estado</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if solicitudes.object_list %}
+      {% for solicitud in solicitudes %}
+      <tr>
+        <td>{{ solicitud.proveedor.nombreEmpresa }}</td>
+        <td>
+          {% if solicitud.estado == "BORRADOR" %}
+          <span class="badge bg-warning text-dark">Borrador</span>
+          {% else %}
+          <span class="badge bg-success">Finalizada</span>
+          {% endif %}
+        </td>
+        <td>$ {{ solicitud.totalPP }}</td>
+        <td>
+          <a href="{% url 'ver_solicitud_compra_pdf' solicitud.idPedidoProveedor %}" class="btn btn-info btn-sm">
+            Ver Detalles
+          </a>
+
+          {% if solicitud.estado == "FINALIZADA" %}
+          <a href="{% url 'generar_pedido' solicitud.id %}" class="btn btn-primary btn-sm">
+            Generar Pedido
+          </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+      {% else %}
+      <tr>
+        <td colspan="5" class="text-center">No hay solicitudes registradas.</td>
+      </tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<!-- PAGINACIÓN -->
+<div class="paginacion-inventarios">
+  <nav aria-label="Paginación de solicitudes">
+    <ul class="pagination justify-content-center">
+
+      {% if solicitudes.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primero</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ solicitudes.previous_page_number }}">Anterior</a></li>
+      {% endif %}
+
+      {% for num in solicitudes.paginator.page_range %}
+      {% if solicitudes.number == num %}
+      <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+      {% endif %}
+      {% endfor %}
+
+      {% if solicitudes.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ solicitudes.next_page_number }}">Siguiente</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ solicitudes.paginator.num_pages }}">Última &raquo;</a></li>
+      {% endif %}
+
+    </ul>
+  </nav>
+</div>
+
+{% endblock %}

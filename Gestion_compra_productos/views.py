@@ -9,6 +9,60 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from io import BytesIO
 from django.core.files.base import ContentFile
+from django.core.paginator import Paginator
+
+
+@groups_required('Jefe', 'Gerente')
+@login_required
+def ver_solicitud_compra_pdf(request, pedido_id):
+    pedido = get_object_or_404(PedidoProveedor, idPedidoProveedor=pedido_id)
+    template = get_template('pedido_pdf.html')
+    context = {'pedido': pedido, 'detalles': pedido.detalles.all()}
+    html = template.render(context)
+    pdf_file = BytesIO()
+    pisa_status = pisa.CreatePDF(html, dest=pdf_file)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar PDF <pre>' + html + '</pre>')
+    
+    response = HttpResponse(pdf_file.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="pedido_{pedido.idPedidoProveedor}.pdf"'
+    return response
+
+@groups_required('Jefe', 'Gerente')
+@login_required
+def listar_solicitudes_compra(request):
+    proveedor = request.GET.get('proveedor', '')
+    fecha = request.GET.get('fecha', '')
+    ordenar = request.GET.get('ordenar', 'desc')  # por defecto descendente
+
+    solicitudes = PedidoProveedor.objects.all()
+
+    # FILTRO POR PROVEEDOR
+    if proveedor:
+        solicitudes = solicitudes.filter(proveedor_id=proveedor)
+
+    # FILTRO POR FECHA
+    if fecha:
+        solicitudes = solicitudes.filter(fechaPedidoProveedor=fecha)
+
+    # ORDENAMIENTO
+    if ordenar == 'asc':
+        solicitudes = solicitudes.order_by('fechaPedidoProveedor')
+    else:
+        solicitudes = solicitudes.order_by('-fechaPedidoProveedor')  # descendente
+
+    # PAGINACIÓN (10 por página)
+    paginator = Paginator(solicitudes, 10)
+    page_number = request.GET.get('page')
+    solicitudes_page = paginator.get_page(page_number)
+
+    proveedores = Proveedor.objects.all()
+
+    return render(request, 'listar_solicitudes_compra.html', {
+        'solicitudes': solicitudes_page,
+        'proveedores': proveedores,
+    })
 
 
 @groups_required('Jefe', 'Gerente')

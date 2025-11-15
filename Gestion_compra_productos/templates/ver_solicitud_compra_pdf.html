@@ -1,0 +1,40 @@
+{% extends "navegacion.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Detalle de la Solicitud de Compra</h2>
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Solicitud de Compra #{{ solicitud.idPedidoProveedor }}</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Proveedor:</strong> {{ solicitud.proveedor.nombreEmpresa }}</p>
+            <p><strong>Fecha de Pedido:</strong> {{ solicitud.fechaPedidoProveedor|date:"d/m/Y" }}</p>
+            <p><strong>Total:</strong> ${{ solicitud.totalPedidoProveedor|floatformat:2 }}</p>
+
+            <h5 class="mt-4">Productos Solicitados:</h5>
+            <table class="table table-bordered mt-2">
+                <thead class="table-light">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for detalle in detalles %}
+                    <tr>
+                        <td>{{ detalle.producto.nombreProducto }}</td>
+                        <td>{{ detalle.cantidadProducto }}</td>
+                        <td>${{ detalle.precioUnitario|floatformat:2 }}</td>
+                        <td>${{ detalle.subtotal|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

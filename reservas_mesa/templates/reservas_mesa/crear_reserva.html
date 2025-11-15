@@ -34,19 +34,19 @@
                 <div class="mb-3">
                   <label class="form-label">Nombre de contacto</label>
                   {{ form.nombre_contacto }}
-                  <div class="text-danger small">{{ form.nombre_contacto.errors }}</div>
+                  <div class="text-danger small" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required>{{ form.nombre_contacto.errors }}</div>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">Teléfono</label>
                   {{ form.telefono_contacto }}
-                  <div class="text-danger small">{{ form.telefono_contacto.errors }}</div>
+                  <div class="text" pattern="\d{4}-\d{4}" maxlength="9" format=  title="Solo números, máximo 10 dígitos" required>{{ form.telefono_contacto.errors }}</div>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">Mesa</label>
                   {{ form.mesa }}
-                  <div class="text-danger small">{{ form.mesa.errors }}</div>
+                  <div class="text-danger small" pattern="[0-9]+" title="Solo números" required>{{ form.mesa.errors }}</div>
                 </div>
 
                 <div class="mb-3">
@@ -55,7 +55,7 @@
                   <div class="form-text">
                     Selecciona fecha y hora de la reservación.
                   </div>
-                  <div class="text-danger small">{{ form.fecha_hora.errors }}</div>
+                  <div class="text-danger small" required>{{ form.fecha_hora.errors }}</div>
                 </div>
               </div>
 
@@ -63,13 +63,13 @@
                 <div class="mb-3">
                   <label class="form-label">Cantidad de personas</label>
                   {{ form.cantidad_personas }}
-                  <div class="text-danger small">{{ form.cantidad_personas.errors }}</div>
+                  <div class="text-danger small" pattern="[0-9]+" maxlength="1" title="Solo números menores que 10" required>{{ form.cantidad_personas.errors }}</div>
                 </div>
 
                 <div class="mb-3">
                   <label class="form-label">Tipo de reserva</label>
                   {{ form.tipo_reserva }}
-                  <div class="text-danger small">{{ form.tipo_reserva.errors }}</div>
+                  <div class="text-danger small" >{{ form.tipo_reserva.errors }}</div>
                 </div>
 
                 <div class="mb-3">

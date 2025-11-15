@@ -9,6 +9,36 @@ from django.urls import reverse
 from datetime import timedelta
 
 
+#crear una mesa
+@login_required
+def crear_mesa(request):
+    if request.method == 'POST':
+        numero = request.POST.get('numero')
+        capacidad = request.POST.get('capacidad')
+        ubicacion = request.POST.get('ubicacion')
+        estado = request.POST.get('estado')
+        forma = request.POST.get('forma')
+        pos_x = request.POST.get('pos_x')
+        pos_y = request.POST.get('pos_y')
+
+        if Mesa.objects.filter(numero=numero).exists():
+            messages.error(request, "Ya existe una mesa con ese número.")
+            return redirect('crear_mesa')
+
+        mesa = Mesa(
+            numero=numero,
+            capacidad=capacidad,
+            ubicacion=ubicacion,
+            estado=estado,
+            forma=forma,
+            pos_x=pos_x,
+            pos_y=pos_y
+        )
+        mesa.save()
+        messages.success(request, "Mesa creada correctamente.")
+        return redirect('mapa_mesas')
+    return render(request, 'reservas_mesa/crear_mesa.html')
+
 # Decorador local: groups_required('Jefe', 'Gerente', ...)
 def groups_required(*group_names):
     """

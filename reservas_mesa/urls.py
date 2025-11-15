@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/cancelar/', views.cancelar_reserva_mesa, name='cancelar_reserva_mesa'),
     path('<int:pk>/eliminar/', views.eliminar_reserva_mesa, name='eliminar_reserva_mesa'),
     path('historial/', views.historial_reservas_mesa, name='historial_reservas_mesa'),
+    path('mesa/crear/', views.crear_mesa, name='crear_mesa'),
 ]

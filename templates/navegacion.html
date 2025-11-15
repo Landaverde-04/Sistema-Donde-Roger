@@ -42,7 +42,10 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_solicitudes_compra' %}">Lista de Solicitudes de Compra</a></li>
+            {% endif %}
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
             {% endif %}
@@ -142,13 +145,13 @@
         Historial de reservas
       </a>
     </li>
+    <li>
+      <a class="dropdown-item" href="{% url 'mapa_mesas' %}">
+        Ver mesas
+      </a>
+    </li>
   </ul>
 </li>
-  {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-  <li class="nav-item">
-  <a class="nav-link" href={%url 'crear_solicitud_compra' %}>Crear solicitud de compra</a>
-  </li>
-  {% endif %}
         <!-- Lista para pedidos de clientes -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
