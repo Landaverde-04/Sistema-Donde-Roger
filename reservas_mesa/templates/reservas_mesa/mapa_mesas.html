@@ -22,25 +22,20 @@
 </div>
 
         <div class="card-body">
-          <div id="mapa-mesas" class="mapa-mesas">
-            {% for mesa in mesas %}
-              <!-- ENLACE A CREAR RESERVA CON LA MESA PRESELECCIONADA -->
-              <a href="{% url 'detalle_mesa' mesa.id %}"
+         <div id="mapa-mesas" class="mapa-mesas">
+  {% for fila, columnas in matriz.items %}
+      {% for columna, mesa in columnas.items %}
+          <a href="{% url 'detalle_mesa' mesa.id %}"
    class="mesa-link"
-   style="left: {{ mesa.pos_x }}px; top: {{ mesa.pos_y }}px;">
-                <div class="mesa-icon
-            mesa-{{ mesa.forma|lower }}
-            {% if mesa.estado_actual == 'RESERVADA' %}mesa-reservada
-            {% elif mesa.estado_actual == 'OCUPADA' %}mesa-ocupada
-            {% else %}mesa-libre
-            {% endif %}">
-                  <span class="mesa-numero">
-                    {{ mesa.numero }}
-                  </span>
-                </div>
-              </a>
-            {% endfor %}
-          </div>
+   style="grid-column: {{ columna }}; grid-row: {{ fila }};">
+    <div class="mesa-icon mesa-{{ mesa.forma|lower }} mesa-{{ mesa.get_estado_actual|lower }}">
+        <span class="mesa-numero">{{ mesa.numero }}</span>
+    </div>
+</a>
+
+      {% endfor %}
+  {% endfor %}
+</div>
         </div>
       </div>
     </div>
@@ -62,7 +57,7 @@
       </div>
       <div class="text-center mt-3">
         <a href="{% url 'crear_mesa' %}" class="btn btn-primary w-100">
-          Crear nueva reservación
+          Crear nueva mesa
         </a>
     </div>
   </div>

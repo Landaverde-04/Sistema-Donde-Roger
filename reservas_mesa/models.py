@@ -50,8 +50,9 @@ class Mesa(models.Model):
     )
 
     # posición dentro del “mapa” (en píxeles, simple)
-    pos_x = models.IntegerField(default=50)
-    pos_y = models.IntegerField(default=50)
+    fila = models.IntegerField()
+    columna = models.IntegerField()
+
 
 
     def get_estado_actual(self):

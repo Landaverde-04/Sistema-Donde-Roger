@@ -5,8 +5,8 @@ from .models import Mesa, ReservaMesa
 
 @admin.register(Mesa)
 class MesaAdmin(admin.ModelAdmin):
-    list_display = ('numero', 'capacidad', 'ubicacion', 'forma', 'estado', 'pos_x', 'pos_y')
-    list_editable = ('capacidad', 'forma', 'estado', 'pos_x', 'pos_y')
+    list_display = ('numero', 'capacidad', 'ubicacion', 'forma', 'estado', 'fila', 'columna')
+    list_editable = ('capacidad', 'forma', 'estado', 'fila', 'columna')
     search_fields = ('numero', 'ubicacion')
 
 
