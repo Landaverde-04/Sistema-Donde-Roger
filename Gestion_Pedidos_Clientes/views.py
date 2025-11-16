@@ -162,3 +162,7 @@ def listar_pedidos(request):
     pedidos = PedidoCliente.objects.all().order_by('fechaPedidoCliente')
     return render(request, 'listar_pedidos.html', {'pedidos':pedidos})
 
+def listar_pedidos_hoy(request):
+    pedidos = PedidoCliente.objects.filter(fechaPedidoCliente=datetime.date.today()).order_by('fechaPedidoCliente')
+    return render(request, 'listar_pedidos_hoy.html', {'pedidos':pedidos})
+

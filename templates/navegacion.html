@@ -169,8 +169,8 @@
             <!-- HU-52, HU-53, HU-54: Jefe, Gerente y colaborador -->
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' or user.groups.first.name == 'Colaborador' %}
             <li><a class="dropdown-item" href="{% url 'crear_pedido' %}">Nuevo Pedido</a></li>
-            <li><a class="dropdown-item" href="{% url 'listar_pedidos' %}">Ver pedidos de hoy</a></li>
-            <li><a class="dropdown-item" href="#">Ver todos los pedidos</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos_hoy' %}">Ver pedidos de hoy</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos' %}">Ver todos los pedidos</a></li>
             {% endif %}
           </ul>
         </li>
