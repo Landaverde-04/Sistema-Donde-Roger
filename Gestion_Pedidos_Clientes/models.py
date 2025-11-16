@@ -29,10 +29,11 @@ class PedidoCliente(models.Model):
     direccionPedido = models.CharField(max_length=100, null=True)
     horaRecoger = models.DateTimeField(null=True)
     fechaPedidoCliente = models.DateField()
-    horaPedidoCliente = models.DateTimeField()
+    horaPedidoCliente = models.TimeField()
     numCorrelativo = models.CharField(max_length=20)
     totalPedido = models.DecimalField(max_digits=10, decimal_places=2)
     comentario = models.TextField(null=True)
+    encomendista = models.CharField(max_length=100, null=True)
     estadoPedido = models.ForeignKey(EstadoPedidoCliente, on_delete=models.CASCADE)
     
     class Meta:

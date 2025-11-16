@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.core.paginator import Paginator
 from Gestion_Menu.models import CategoriaProductoMenu, ProductoMenu
 from Gestion_Clientes.models import *
@@ -125,6 +126,37 @@ def crear_pedido(request):
             nuevoDetalle.save()
             pedido.save()
         return redirect('crear_pedido')
+
+def ver_pedido(request, idPedido):
+    if not idPedido or not idPedido.isdigit() or int(idPedido) < 1:
+        return redirect(reverse('listar_pedidos'))
+    pedido = PedidoCliente.objects.get(idPedidoCliente=idPedido)
+    detalles = DetallePedido.objects.filter(idPedidoCliente=idPedido)
+    return render(request, 'ver_pedido.html', {'pedido':pedido, 'detalles':detalles})
+
+def actualizar_estado_pedido(request, idPedido):
+    if not idPedido or not idPedido.isdigit() or int(idPedido) < 1:
+        return redirect(reverse('listar_pedidos'))
+    pedido = PedidoCliente.objects.get(idPedidoCliente=idPedido)
+    estadoActual = pedido.estadoPedido.idEstado
+    if pedido.tipoPedido.idTipoPedido == 1:
+        if estadoActual == 1:
+            estadoSiguiente = 2
+        else:
+            estadoSiguiente = 5
+    elif pedido.tipoPedido.idTipoPedido == 2:
+        if estadoActual == 1:
+            estadoSiguiente = 3
+        else:
+            estadoSiguiente = 5
+    elif pedido.tipoPedido.idTipoPedido == 3:
+        if estadoActual == 1:
+            estadoSiguiente = 4
+        else:
+            estadoSiguiente = 6
+    pedido.estadoPedido = EstadoPedidoCliente.objects.get(idEstado=estadoSiguiente)
+    pedido.save()
+    return redirect(reverse('ver_pedido', kwargs={'idPedido':idPedido}))
 
 def listar_pedidos(request):
     pedidos = PedidoCliente.objects.all().order_by('fechaPedidoCliente')
