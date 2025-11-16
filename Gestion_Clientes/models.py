@@ -8,7 +8,7 @@ class Cliente(models.Model):
     duiCliente = models.CharField(max_length=10)
     telefonoCliente = models.CharField(max_length=9)
     emailCliente = models.EmailField(max_length=50)
-    nacimientoCliente = models.DateField()
+    nacimientoCliente = models.DateField(null=True)
     estaHabilitadoCliente = models.BooleanField(default=True)
 
     class Meta:

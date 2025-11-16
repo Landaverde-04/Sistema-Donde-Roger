@@ -5,5 +5,6 @@ from . import views
 urlpatterns = [
     path('crear_pedido', views.crear_pedido, name='crear_pedido'),
     path('api/clientes/', views.api_clientes, name='api_clientes'),
+    path('api/clientes/direcciones/', views.api_direcciones, name='api_clientes'),
     path('pedidosHoy/', views.listar_pedidos, name='listar_pedidos'),
 ]
