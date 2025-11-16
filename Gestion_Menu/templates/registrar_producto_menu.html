@@ -1,0 +1,91 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Producto para Menu</title>
+</head>
+<div class="container mt-4 card shadow w-50">
+    <div class="card-body">
+        <form id="form-crear-producto" class="needs-validation" method="post"
+            action="{% url 'registrar_producto_menu' %}" novalidate>
+            {% csrf_token %}
+            <h4 class="card-title m-3 text-center">Registrar Producto</h4>
+            <label for="nombre-producto" class="form-label">Nombre:</label>
+            <input type="text" id="nombre-producto" name="nombre-producto" class="form-control" required />
+            <div class="form-text">
+                Campo requerido.
+            </div>
+
+            <label for="tamanio-producto" class="form-label mt-2">Unidad (Porcion/Tamaño):</label>
+            <input type="text" id="tamanio-producto" name="tamanio-producto" class="form-control" required />
+            <div class="form-text">
+                Campo requerido.
+            </div>
+
+            <label for="descripcion-producto" class="form-label mt-2">Descripción:</label>
+            <textarea id="descripcion-producto" name="descripcion-producto" class="form-control" rows="3"></textarea>
+            <div class="d-flex mt-3">
+                <div class="flex-column mx-2">
+                    <label for="precio-producto" class="form-label">Precio unitario:</label>
+                    <input type="number" id="precio-producto" name="precio-producto" step="0.01" min="0"
+                        class="form-control w-100" placeholder="0.00" required />
+                    <div class="form-text">
+                        Campo requerido.
+                    </div>
+                </div>
+                <div class="flex-column w-75 mx-2">
+                    <label for="categoria-producto" class="form-label">Categoria:</label>
+                    <select id="categoria-producto" name="categoria-producto" class="form-select w-100" required>
+                        {%if categorias%}
+                        <option value="0" disabled selected>Seleccione una categoria</option>
+                        {%endif%}
+                        {%if not categorias%}
+                        <option value="-1" disabled selected>No hay categorias disponibles</option>
+                        {%endif%}
+                        {% for categoria in categorias %}
+                        <option value="{{categoria.idCategoriaProductoMenu}}">{{categoria.nombreCategoriaProductoMenu}}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <div class="form-text">
+                        Campo requerido.
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+                <button type="submit" class="btn btn-success w-50 my-2 me-2">Registrar</button>
+                <button type="button" class="btn btn-danger w-50 my-2 me-2" data-bs-toggle="modal"
+                    data-bs-target="#modal-cancelar">Cancelar</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<!-- Modal para cancelar -->
+<div class="modal fade" id="modal-cancelar" tabindex="-1" aria-labelledby="¿Está seguro?" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modal-cancelar-titulo">CANCELAR</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro de que desea cancelar?, no se guardará el nuevo producto</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">No, quiero continuar</button>
+                <a type="button" class="btn btn-danger" href="{%url 'listar_productos'%}">Si, quiero cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'JS/registrar_producto_menu.js' %}"></script>
+{% endblock %}

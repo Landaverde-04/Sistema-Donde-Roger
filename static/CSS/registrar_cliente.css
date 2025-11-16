@@ -1,0 +1,94 @@
+#div-contenedor {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  
+}
+
+#div-registro {
+  margin-top: 60px;
+  width: 600px;
+  height: auto;
+  background: #f5f5f5;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0px 15px #0007;
+}
+
+#div-registro h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Fila principal con grid */
+#div-fila-1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* dos columnas */
+  gap: 20px;
+}
+
+.div-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.btn-registro{
+    margin: 10px 20%;
+    margin-top: 20px;
+}
+/* Cada campo (label arriba del input) */
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px; /* 👈 espacio debajo */
+}
+
+.campo.full {
+  grid-column: span 2; /* ocupa toda la fila */
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+textarea {
+    border-radius: 6px;
+    resize: none;
+}
+
+/* 📱 Responsive: en pantallas chicas, 1 columna */
+@media (max-width: 600px) {
+  #div-fila-1 {
+    grid-template-columns: 1fr;   /* solo una columna */
+  }
+  .campo.full {
+    grid-column: span 1;          /* ya no necesita ocupar 2 columnas */
+  }
+}
+/* Cada bloque de dirección: etiqueta arriba, textarea + botón a la par */
+#direcciones .direccion {
+  display: grid;
+  grid-template-columns: 1fr auto; /* textarea crece, botón tamaño natural */
+  gap: 8px;
+  align-items: start;
+}
+
+/* El label ocupa toda la fila arriba */
+#direcciones .direccion > label {
+  grid-column: 1 / -1;
+  margin-bottom: 0; /* ya tenemos gap */
+}
+
+/* Estilos para el botón eliminar a la par del textarea */
+#direcciones .direccion .btn-eliminar {
+  align-self: start;
+  white-space: nowrap;
+}

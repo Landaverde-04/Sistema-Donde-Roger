@@ -6,6 +6,7 @@ __pycache__/
 # Virtual environment
 venv/
 env/
+.venv313/
 
 # Django
 *.log
@@ -19,3 +20,5 @@ static
 .vscode/
 media/logos
 media/contratos
+media/mantenimientos
+media/pedidos_proveedores

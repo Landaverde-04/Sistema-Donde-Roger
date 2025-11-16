@@ -53,7 +53,7 @@ def crear_usuario_view(request):
         user = User.objects.create_user(username=username, password=password,email=email,estaHabilitadoUsuario= True)
         user.idEmpleado = empleado  # Ajusta según tu modelo
         user.save()
-        messages.success(request, "Usuario creado exitosamente.")
+        messages.success(request, "Usuario creado exitosamente.",extra_tags='usuario')
         user.groups.add(grupo)
         return redirect('usuario_lista')  
 
@@ -106,7 +106,7 @@ def modificar_usuario_view(request, usuario_id):
         usuario.groups.clear()
         usuario.groups.add(grupo)
         usuario.save()
-        messages.success(request, "Usuario modificado exitosamente.")
+        messages.success(request, "Usuario modificado exitosamente.",extra_tags='usuario')
         return redirect('usuario_lista')
     
     return render(request, 'modificar_usuario.html', {
@@ -121,7 +121,32 @@ def eliminar_usuario_view(request, usuario_id):
     usuario = get_object_or_404(User, id=usuario_id)
     if request.method == 'POST':
         usuario.estaHabilitadoUsuario = False
-        usuario.save()
-        messages.success(request, "Usuario inhabilitado exitosamente.")
+        usuario.save()  
+        messages.success(request, "Usuario deshabilitado exitosamente.", extra_tags='usuario')
         return redirect('usuario_lista')
     return render(request, 'eliminar_usuario.html', {'usuario': usuario})
+
+
+#lista de usuarios deshabilitados
+@login_required
+@groups_required('Jefe')
+def usuario_lista_deshabilitados_view(request):
+    usuarios_list = User.objects.filter(estaHabilitadoUsuario=False)
+    paginator = Paginator(usuarios_list, 10)  
+    page_number = request.GET.get('page')
+    usuarios_paginacion = paginator.get_page(page_number)
+
+    return render(request, 'usuario_lista_deshabilitados.html', {
+        'usuarios_paginacion': usuarios_paginacion
+    })
+
+@login_required
+@groups_required('Jefe')
+def habilitar_usuario_view(request, usuario_id):
+    usuario = get_object_or_404(User, id=usuario_id)
+    if request.method == 'POST':
+        usuario.estaHabilitadoUsuario = True
+        usuario.save()
+        messages.success(request, "Usuario habilitado exitosamente.", extra_tags='usuario')
+        return redirect('usuario_lista')
+    return render(request, 'habilitar_usuario.html', {'usuario': usuario})

@@ -20,7 +20,21 @@ window.addEventListener('DOMContentLoaded', () => {
     mostrarModalEditar("¡Proveedor editado exitosamente!", "Edicion exitosa");
     };
 })
-  
+//metodo para mostrar el modal de confirmacion de habilitar proveedor
+document.addEventListener('DOMContentLoaded', function () {
+  const modal = document.getElementById('modalConfirmarHabilitar');
+  const nombreSpan = document.getElementById('modalNombreProveedorHabilitar');
+  const btnHabilitar = document.getElementById('btnHabilitarProveedor');
+  modal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const proveedorId = button.getAttribute('data-id');
+    const proveedorNombre = button.getAttribute('data-nombre');
+    nombreSpan.textContent = proveedorNombre;
+    btnHabilitar.href = `/Proveedor/habilitar/${proveedorId}/`;
+  });
+});
+
+//metodo para mostrar el modal de confirmacion de eliminar proveedor
 
 document.addEventListener('DOMContentLoaded', function () {
   const modal = document.getElementById('modalConfirmarEliminar');

@@ -3,15 +3,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    </head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
 <body>
-    
-
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
@@ -21,16 +18,45 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
+        <!-- Inventario -->
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Inventario
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'ver_inventario'%}">Ver inventario actual</a></li>
-            <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}"}>Lista de inventarios</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_inventario'  %}">Lista de inventarios</a></li>
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}            
+            <li><a class="dropdown-item" href="{%url 'lista_maquinaria' %}">Lista de maquinarias</a></li>
+            <li><a class="dropdown-item" href="{%url 'registrar_maquinaria' %}">Registar Maquinaria</a></li>
+            <li><a class="dropdown-item" href="{%url 'lista_mantenimiento' %}">Lista de Mantenimiento</a></li>
+            <li><a class="dropdown-item" href="{%url 'registrar_mantenimiento' %}">Registrar Mantenimiento</a></li>
+            {% endif %}
           </ul>
         </li>
-          {% if user.groups.first.name == 'Jefe'%}
+
+        <!-- Proveedores -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Proveedores
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
+            <!-- HU-26: Gerente y colaborador pueden crear solicitud de compra -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' or user.groups.first.name == 'Colaborador' %}
+            <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_solicitudes_compra' %}">Lista de Solicitudes de Compra</a></li>
+            {% endif %}
+            <!-- HU-28: Solo Jefe puede habilitar proveedores -->
+            {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
+            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores_deshabilitados/">Proveedores Deshabilitados</a></li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Productos (Solo Jefe) -->
+        {% if user.groups.first.name == 'Jefe' %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Productos
@@ -38,55 +64,120 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="{%url 'registrar_producto' %}">Registrar Producto</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_productos'  %}">Lista de Productos</a></li>
+            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados' %}">Productos Deshabilitados</a></li>
           </ul>
         </li>
         {% endif %}
-        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+
+        <!-- Menú -->
         <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Empleados
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">    
-    <li><a class="dropdown-item" href="/empleado/registrar_empleado/">Registrar Empleado</a></li>
-    <li><a class="dropdown-item" href="/empleado/empleado_lista/">Lista de Empleados</a></li>    
-  </ul>
-  {% endif %}
-</li>
-<li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Proveedores
+            Menu
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="/Proveedor/listar_proveedores/">Lista de Proveedores</a></li>
+            <!-- HU-65, HU-66: Jefe y Gerente pueden registrar/ver productos menú -->
             {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
-            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
-            {% endif %}          
+            <li><a class="dropdown-item" href="{%url 'registrar_producto_menu' %}">Registrar Producto para Menu</a></li>
+            {% endif %}
+            <li><a class="dropdown-item" href="{%url 'listar_productos_menu' %}">Lista de Productos</a></li>
+            <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
+            <!-- HU-60: Jefe y Gerente pueden registrar recetas -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
+            {% endif %}
+            <!-- HU-71: Solo Jefe puede ver productos deshabilitados -->
+            {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="{%url 'listar_productos_deshabilitados_menu' %}">Productos Deshabilitados</a></li>
+            <li><a class="dropdown-item" href="/recetas/listar_recetas_deshabilitadas/">Recetas deshabilitadas</a></li>
+            {% endif %}
+          </ul>
+        </li>        
+
+        <!-- Empleados -->
+        {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Empleados
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">    
+            <li><a class="dropdown-item" href="/empleado/empleado_lista/">Lista de Empleados</a></li>  
+            <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuarios</a></li>
+            <!-- HU-29: Solo Jefe puede habilitar empleados -->
+            {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="/empleado/registrar_empleado/">Registrar Empleado</a></li>
+            <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
+            <li><a class="dropdown-item" href="/empleado/empleado_lista_deshabilitados/">Empleados Deshabilitados</a></li>  
+            <li><a class="dropdown-item" href="/seguridad/usuario_lista_deshabilitados/">Usuarios Deshabilitados</a></li>
+            {% endif %}
           </ul>
         </li>
-               <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Asistencia
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <li><a class="dropdown-item" href="/empleado/marcar_asistencia/">Marcar Asistencia</a></li>
-    {% if user.groups.first.name == 'Jefe' %}
-    <li><a class="dropdown-item" href="/empleado/historial_asistencia">Lista de Asistencias</a></li>
-    {% endif %}
-  </ul>        
-        {% if user.groups.first.name == 'Jefe' %}
+        {% endif %}
+
+        <!-- Clientes -->
         <li class="nav-item dropdown">
-  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Usuarios
-  </a>
-  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-    <li><a class="dropdown-item" href="/seguridad/crear_usuario/">Crear Usuario</a></li>
-    <li><a class="dropdown-item" href="/seguridad/usuario_lista/">Lista de Usuario</a></li>
-  </ul>
-  {% endif %}
-</li>
-        </ul>
-        <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
-        </div>
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Clientes
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/clientes/listar_clientes/">Lista de Clientes</a></li>            
+            <!-- HU-45: Jefe, Gerente y colaborador pueden registrar clientes -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' or user.groups.first.name == 'Colaborador' %}
+            <li><a class="dropdown-item" href="/clientes/registrar_cliente/">Registrar Cliente</a></li>  
+            {% endif %}
+            <!-- HU-51: Solo Jefe puede habilitar clientes -->
+            {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="/clientes/listar_clientes_deshabilitados/">Clientes Deshabilitados</a></li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Asistencia -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Asistencia
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="/empleado/marcar_asistencia/">Marcar Asistencia</a></li>
+            {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="/empleado/historial_asistencia">Lista de Asistencias</a></li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Reservación de mesa -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Reservación de mesa
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- HU-32, HU-33, HU-34, HU-35, HU-36: Jefe, Gerente y colaborador -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' or user.groups.first.name == 'Colaborador' %}
+            <li><a class="dropdown-item" href="{% url 'crear_reserva_mesa' %}">Crear reserva</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_reservas_hoy' %}">Ver reservas de hoy</a></li>
+            <li><a class="dropdown-item" href="{% url 'historial_reservas_mesa' %}">Historial de reservas</a></li>
+            <li><a class="dropdown-item" href="{% url 'mapa_mesas' %}">Ver mesas</a></li>
+            {% endif %}
+          </ul>
+        </li>
+
+        <!-- Pedidos de clientes -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Pedidos
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- HU-52, HU-53, HU-54: Jefe, Gerente y colaborador -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' or user.groups.first.name == 'Colaborador' %}
+            <li><a class="dropdown-item" href="{% url 'crear_pedido' %}">Nuevo Pedido</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos_hoy' %}">Ver pedidos de hoy</a></li>
+            <li><a class="dropdown-item" href="{% url 'listar_pedidos' %}">Ver todos los pedidos</a></li>
+            {% endif %}
+          </ul>
+        </li>
+      </ul>
+      
+      <a href="{% url 'logout' %}" class="btn btn-outline-danger">Cerrar Sesión</a>
+    </div>
   </div>
 </nav>
 

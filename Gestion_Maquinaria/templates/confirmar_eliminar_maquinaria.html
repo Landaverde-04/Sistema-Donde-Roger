@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Inhabilitar Maquinaria{% endblock %}
+{% block content %}
+  <h2 class="mb-4">Inhabilitar Maquinaria</h2>
+  <div class="bg-white p-4 rounded shadow-sm">
+    <p>{{ confirm_text }}</p>
+    <form method="post">{% csrf_token %}
+      <button class="btn btn-danger" type="submit">Sí, inhabilitar</button>
+      <a class="btn btn-secondary" href="{% url 'maquinaria:listar' %}">Cancelar</a>
+    </form>
+  </div>
+{% endblock %}

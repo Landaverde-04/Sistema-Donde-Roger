@@ -40,7 +40,16 @@ INSTALLED_APPS = [
     'seguridad',
     'Gestion_Proveedores',
     'Gestion_productos',
-    'Gestion_Inventario'
+    'Gestion_Inventario',
+    'Gestion_Maquinaria',
+    'Gestion_Mantenimiento',
+    'Gestion_Clientes',
+    'Gestion_compra_productos',
+    'Gestion_Menu',
+    'Gestion_Pedidos_Clientes',
+    'core',
+    'Gestion_Recetas',
+    'reservas_mesa',
 ]
 
 MIDDLEWARE = [
