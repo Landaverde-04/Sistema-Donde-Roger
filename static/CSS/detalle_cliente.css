@@ -109,3 +109,40 @@ h1{
     display: grid;
     grid-template-columns: 1fr auto;
 }
+
+/* ======= Efecto difuminado en tabla de pedidos ======= */
+.tabla-pedidos-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+.tabla-pedidos-fade tbody tr {
+    transition: opacity 0.3s ease;
+}
+
+/* Primera fila - completamente visible */
+.tabla-pedidos-fade .fila-pedido-1 {
+    opacity: 1;
+}
+
+/* Segunda fila - ligeramente difuminada */
+.tabla-pedidos-fade .fila-pedido-2 {
+    opacity: 0.7;
+}
+
+/* Tercera fila - más difuminada */
+.tabla-pedidos-fade .fila-pedido-3 {
+    opacity: 0.4;
+}
+
+/* Efecto de degradado al final de la tabla */
+.tabla-pedidos-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9));
+    pointer-events: none;
+}

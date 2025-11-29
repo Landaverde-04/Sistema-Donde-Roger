@@ -26,8 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
       const txt = direccionAEliminar.querySelector('input[name="direccion_texto"]');
       if (txt) {
         txt.required = false;
-        txt.disabled = true;
-        txt.value = "";
+        // NO deshabilitar para que se envíe en el formulario
+        // txt.disabled = true;
+        // txt.value = "";
       }
 
       const visible = direccionAEliminar.querySelector(".direccion-visible");
