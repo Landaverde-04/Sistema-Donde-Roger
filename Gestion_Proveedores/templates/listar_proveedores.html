@@ -21,9 +21,11 @@
         value="{{ nombre }}"
       >
     </div>
-            <div class="col-md-6" id="div-registrar">
+    {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+    <div class="col-md-6" id="div-registrar">
         <a href="{% url 'registrar_proveedor' %}" class="btn btn-success">Registrar nuevo proveedor</a>
     </div>
+    {% endif %}
     <div class="col-md-12">
       <button type="submit" class="btn btn-primary">Buscar</button>
       <a href="{% url 'listar_proveedores' %}" class="btn btn-secondary">Limpiar</a>

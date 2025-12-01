@@ -47,26 +47,26 @@
             <button class="btn btn-secondary">Ver pedidos</button>
         </div>
         {% if pedidos %}
-        <table class="table table-striped">
+        <div class="tabla-pedidos-wrapper">
+        <table class="table table-striped tabla-pedidos-fade">
             <thead>
                 <tr>                    
                     <th>Fecha</th>
-                    <th>Descripcion</th>
                     <th>Total</th>
                     <th>Estado</th>
                 </tr>
             </thead>
             <tbody>
                 {% for pedido in pedidos %}
-                <tr>
-                    <td>{{ pedido.idPedido }}</td>
-                    <td>{{ pedido.fechaPedido|date:"d/m/Y H:i" }}</td>
+                <tr class="fila-pedido fila-pedido-{{ forloop.counter }}">
+                    <td>{{ pedido.fechaPedidoCliente|date:"d/m/Y" }} {{ pedido.horaPedidoCliente }}</td>
                     <td>${{ pedido.totalPedido }}</td>
                     <td>{{ pedido.estadoPedido }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        </div>
         {% else %}
             <p>No hay pedidos registrados para este cliente.</p>
         {% endif %}

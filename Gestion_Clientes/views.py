@@ -20,6 +20,10 @@ def registrar_cliente(request):
         telefono_cliente = request.POST.get('telefono')
         correo_cliente = request.POST.get('correo')
         fecha_nacimiento_cliente = request.POST.get('fecha_nacimiento')
+        
+        # Convertir string vacío a None para el campo de fecha
+        if not fecha_nacimiento_cliente:
+            fecha_nacimiento_cliente = None
 
         direccion = request.POST.getlist("direccion_cliente")
         
@@ -107,12 +111,18 @@ def habilitar_cliente(request, id):
 
 @login_required
 def detalle_cliente(request, id):
+    from Gestion_Pedidos_Clientes.models import PedidoCliente
+    
     cliente = Cliente.objects.get(idCliente=id)
     direcciones = DireccionCliente.objects.filter(idCliente=cliente)
+    
+    # Obtener solo los últimos 3 pedidos ordenados por fecha descendente
+    pedidos = PedidoCliente.objects.filter(idCliente=cliente).order_by('-fechaPedidoCliente')[:3]
 
     context = {
         'cliente': cliente,
         'direcciones': direcciones,
+        'pedidos': pedidos,
     }
 
     return render(request, 'detalle_cliente.html', context)

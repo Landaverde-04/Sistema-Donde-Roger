@@ -47,9 +47,12 @@
             <li><a class="dropdown-item" href="{%url 'crear_solicitud_compra' %}">Crear solicitud de compra</a></li>
             <li><a class="dropdown-item" href="{%url 'listar_solicitudes_compra' %}">Lista de Solicitudes de Compra</a></li>
             {% endif %}
+            <!-- Jefe y Gerente pueden registrar proveedores -->
+            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
+            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
+            {% endif %}
             <!-- HU-28: Solo Jefe puede habilitar proveedores -->
             {% if user.groups.first.name == 'Jefe' %}
-            <li><a class="dropdown-item" href="/Proveedor/registrar_proveedor/">Registrar Proveedor</a></li>  
             <li><a class="dropdown-item" href="/Proveedor/listar_proveedores_deshabilitados/">Proveedores Deshabilitados</a></li>
             {% endif %}
           </ul>
@@ -80,9 +83,9 @@
             <li><a class="dropdown-item" href="{%url 'registrar_producto_menu' %}">Registrar Producto para Menu</a></li>
             {% endif %}
             <li><a class="dropdown-item" href="{%url 'listar_productos_menu' %}">Lista de Productos</a></li>
+            <!-- HU-60: Solo Jefe puede gestionar recetas -->
+            {% if user.groups.first.name == 'Jefe' %}
             <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
-            <!-- HU-60: Jefe y Gerente pueden registrar recetas -->
-            {% if user.groups.first.name == 'Jefe' or user.groups.first.name == 'Gerente' %}
             <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
             {% endif %}
             <!-- HU-71: Solo Jefe puede ver productos deshabilitados -->
