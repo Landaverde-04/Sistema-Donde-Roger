@@ -59,14 +59,25 @@ switchAsociar.addEventListener('change', function () {
     const direccionSelect = document.getElementById('direccion');
     const direccionInput = document.getElementById('direccion-nueva');
     if (this.checked) {
-        direccionCheck.classList.remove('d-none');
-        direccionSelect.classList.remove('d-none');
-        direccionInput.classList.add('d-none');
+
+        //direccionCheck.classList.remove('d-none');
+        setElementMode(direccionCheck, true, 0);
+        // direccionSelect.classList.remove('d-none');
+        // direccionSelect.setAttribute('required', '');
+        setElementMode(direccionSelect, true, 1);
+        // direccionInput.classList.add('d-none');
+        // direccionInput.removeAttribute('required');
+        setElementMode(direccionInput, false, 0);
     }
     else {
-        direccionCheck.classList.add('d-none');
-        direccionSelect.classList.add('d-none');
-        direccionInput.classList.remove('d-none');
+        // direccionCheck.classList.add('d-none');
+        setElementMode(direccionCheck, false, 0);
+        setElementMode(direccionSelect, false, 0);
+        setElementMode(direccionInput, true, 1);
+        // direccionSelect.classList.add('d-none');
+        // direccionSelect.removeAttribute('required');
+        // direccionInput.classList.remove('d-none');
+        // direccionInput.setAttribute('required', '');
     }
 });
 
@@ -93,20 +104,26 @@ btnSeleccionarCliente.addEventListener('click', async () => {
     const idCliente = filaSeleccionada.id.split('-')[1];
     const cliente = await obtenerCliente(idCliente);
     await seleccionarCliente(cliente);
-
-
 });
 
 addNuevaDireccion.addEventListener('change', function () {
     const direccionInput = document.getElementById('direccion-nueva');
     const direccionSelect = document.getElementById('direccion');
     if (addNuevaDireccion.checked) {
-        direccionSelect.classList.add('d-none');
-        direccionInput.classList.remove('d-none');
+        // direccionSelect.classList.add('d-none');
+        // direccionSelect.removeAttribute('required');
+        setElementMode(direccionSelect, false, 0);
+        // direccionInput.classList.remove('d-none');
+        // direccionInput.setAttribute('required', '');
+        setElementMode(direccionInput, true, 1);
     }
     else {
-        direccionSelect.classList.remove('d-none');
-        direccionInput.classList.add('d-none');
+        // direccionSelect.classList.remove('d-none');
+        // direccionSelect.setAttribute('required', '');
+        setElementMode(direccionSelect, true, 1);
+        // direccionInput.classList.add('d-none');
+        // direccionInput.removeAttribute('required');
+        setElementMode(direccionInput, false, 0);
     }
 });
 
@@ -214,29 +231,32 @@ function actualizarPedido() {
 }
 
 function actualizarAreaDestino(tipo) {
-    const restaurante = document.getElementById('campos-restaurante');
-    const clienteRecoger = document.getElementById('campos-recoger');
-    const domicilio = document.getElementById('campos-domicilio');
+    const tipos = [
+        document.getElementById('campos-restaurante'),
+        document.getElementById('campos-recoger'),
+        document.getElementById('campos-domicilio')];
 
-    // SETEAMOS TODOS A OCULTOS Y LO CAMBIAMOS DEPENDIENDO DEL TIPO
-    restaurante.classList.add('d-none');
-    clienteRecoger.classList.add('d-none');
-    domicilio.classList.add('d-none');
+    for (let i = 0; i < 3; i++) {
 
-    // no se si ya lo tiene lo duplica, veré
-    switch (tipo) {
-        case '1':
-            restaurante.classList.remove('d-none');
-            break;
-        case '2':
-            clienteRecoger.classList.remove('d-none');
-            break;
-        case '3':
-            domicilio.classList.remove('d-none');
-            break;
-        default:
-            restaurante.classList.remove('d-none');
-            break;
+        const numTipo = tipos[i];
+
+        setElementMode(numTipo, false, 0);
+
+        const childs = numTipo.children[0].children;
+        if (i != 2) {
+            for (const child of childs) {
+                setElementMode(child, false, 0);
+            }
+        }
+    }
+
+    const selected = tipos[tipo - 1];
+    setElementMode(selected, true, 0);
+    if (tipo <= 2) {
+        const childs = selected.children[0].children;
+        for (const child of childs) {
+            setElementMode(child, true, 1);
+        }
     }
 
 }
@@ -467,23 +487,45 @@ function resetCliente() {
     idClienteSeleccionado.value = null;
 }
 
+//Este es un intento de hacer una solucion elegante a los campos a validar dentro de este formulario, va comentado porque se usará mucho
+
+function setElementMode(element, display, required) {
+    const reqOptions = [ //Vector de opciones para validar el atributo, en lugar de usar un if se usa la posicion
+        () => element.removeAttribute('required'), // [0] no es requerido
+        () => element.setAttribute('required', '') // [1] es requerido
+    ]
+
+    if (required === undefined || required < 0 || required > 1) { //Valida si el parametro es correcto
+        required = 0; //Por defecto no es requerido
+    }
+
+    if (display) { //Si se muestra o no
+        element.classList.remove('d-none');
+    }
+    else {
+        element.classList.add('d-none');
+    }
+
+    reqOptions[required]();  //Ejecuta funcion anonima segun el parametro
+}
+
 // Example starter JavaScript for disabling form submissions if there are invalid fields
 (function () {
-  'use strict'
+    'use strict'
 
-  // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  var forms = document.querySelectorAll('.needs-validation')
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
 
-  // Loop over them and prevent submission
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
 
-        form.classList.add('was-validated')
-      }, false)
-    })
+                form.classList.add('was-validated')
+            }, false)
+        })
 })()
