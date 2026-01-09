@@ -72,11 +72,11 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
     
     resumenDetalles = {}
     ultimo_inventario = models.Inventario.objects.all().last()
+    current_date = datetime.datetime.now()
     if ultimo_inventario is not None:
         detallesInventario = models.DetalleInventario.objects.filter(idInventario=ultimo_inventario)
         resumenDetalles = resumir_inventario(detallesInventario)
         if ultimo_inventario.sePuedeEditar == False:
-            current_date = datetime.datetime.now()
             fechaInventario = current_date
             horaInventario = current_date
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
@@ -94,9 +94,9 @@ def crear_inventario(request): # Funcion que renderiza la pantalla de creacion d
         elif ultimo_inventario.sePuedeEditar == True:
             inventario = ultimo_inventario
     elif ultimo_inventario is None:
-            current_date = datetime.datetime.now()
-            fechaInventario = current_date.strftime('%Y-%m-%d')
-            horaInventario = current_date.strftime('%H:%M:%S')
+            # current_date = datetime.datetime.now()
+            fechaInventario = current_date
+            horaInventario = current_date
             inventario = models.Inventario.objects.create(idUsuario=request.user, fechaInventario=fechaInventario, horaInventario=horaInventario, sePuedeEditar=True)
             inventario.save()
                 
