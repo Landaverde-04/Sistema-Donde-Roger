@@ -18,6 +18,11 @@ def api_producto_menu(request):
         productos = list(productos.values())
     return JsonResponse(productos, safe=False)
 
+def api_categorias_producto_menu(request):
+    if request.method == "GET":
+        categorias = list(models.CategoriaProductoMenu.objects.all().values())
+    return JsonResponse(categorias, safe=False)
+
 #CONTROLADOR PARA REGISTRO DE PRODUCTOS PARA MENU
 def registrar_producto_menu(request):
     if request.method == "POST":

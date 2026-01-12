@@ -110,7 +110,6 @@ function crearListadoProductos() {
             item.id = "producto-" + producto.idProducto;
             item.innerText = producto.nombreProducto;
             item.onmousedown = function () {
-                console.log(item.id);
                 seleccionarProducto(item.id.substring(9));
             }
             listadoFiltrado.push(producto);
@@ -218,7 +217,6 @@ async function obtenerProductos() {
         .then(response => response.json())
         .then(data => {
             productos = data;
-            console.log(productos);
         })
 }
 
