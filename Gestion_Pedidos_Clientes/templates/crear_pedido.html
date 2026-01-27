@@ -130,8 +130,9 @@
                         <!-- Cliente recogerá -->
                         <div id="campos-recoger" class="tipo-campos mt-3 d-none">
                             <div class="mb-3">
-                                <label for="hora-recoger" class="form-label">Hora de recogida</label>
-                                <input type="time" class="form-control" id="hora-recoger" name="hora-recoger" required>
+                                <label for="hora-recoger" class="form-label">Fecha y hora de recogida</label>
+                                <input type="datetime-local" class="form-control" id="hora-recoger" name="hora-recoger">
+                                <div class="form-text">Opcional: Indique cuándo el cliente recogerá el pedido</div>
                             </div>
                         </div>
 
@@ -139,14 +140,12 @@
                         <div id="campos-domicilio" class="tipo-campos mt-3 d-none">
                             <div class="mb-3">
                                 <label for="direccion" class="form-label">Dirección de entrega</label>
-                                <select type="text" class="form-control d-none" id="direccion" name="direccion"
-                                    >
+                                <select type="text" class="form-control d-none" id="direccion" name="direccion">
                                     <option value="" default selected disabled>Seleccione un cliente</option>
                                 </select>
 
-                                <input type="text" class="form-control" id="direccion-nueva" name="direccion-nueva"
-                                    required>
-                                <div class="invalid-feedback">Por favor, rellene este campo.</div>
+                                <input type="text" class="form-control" id="direccion-nueva" name="direccion-nueva">
+                                <div class="form-text">Si no asocia un cliente, ingrese la dirección aquí.</div>
                                 <div class="form-check mt-2 d-none" id="chk-direccion">
                                     <input class="form-check-input" type="checkbox" id="chk-nuevo-direccion"
                                         name="esNuevaDireccion">
@@ -244,21 +243,53 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" id="modal-crear-cliente-body">
-                <form class="needs-validation" id="form-cliente-nuevo">
-                    <label for="input-nuevo-cliente-nombres" class="form-label">Nombres</label>
-                    <input class="form-control" id="input-nuevo-cliente-nombres" required>
-                    <div class="invalid-feedback">Por favor, rellene este campo.</div>
-                    <label for="input-nuevo-cliente-apellidos" class="form-label">Apellidos</label>
-                    <input class="form-control" id="input-nuevo-cliente-apellidos" required>
-                    <div class="invalid-feedback">Por favor, rellene este campo.</div>
-                    <label for="input-nuevo-cliente-dui" class="form-label">DUI</label>
-                    <input class="form-control" id="input-nuevo-cliente-dui">
-                    <label for="input-nuevo-cliente-telefono" class="form-label">Telefono</label>
-                    <input class="form-control" id="input-nuevo-cliente-telefono">
-                    <label for="input-nuevo-cliente-email" class="form-label">Email</label>
-                    <input class="form-control" id="input-nuevo-cliente-email">
-                    <label for="input-nuevo-cliente-nacimiento" class="form-label">Nacimiento</label>
-                    <input type="date" class="form-control" id="input-nuevo-cliente-nacimiento">
+                <form class="needs-validation" id="form-cliente-nuevo" novalidate>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-nombres" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-nombres" 
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                               title="Solo letras y espacios" 
+                               minlength="2" maxlength="50" required>
+                        <div class="invalid-feedback">Por favor ingrese un nombre válido (solo letras y espacios).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-apellidos" 
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                               title="Solo letras y espacios" 
+                               minlength="2" maxlength="50" required>
+                        <div class="invalid-feedback">Por favor ingrese apellidos válidos (solo letras y espacios).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-dui" class="form-label">DUI (Opcional)</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-dui" 
+                               pattern="\d{8}-\d" 
+                               title="Formato: 00000000-0" 
+                               maxlength="10" 
+                               placeholder="12345678-9">
+                        <div class="invalid-feedback">Formato requerido: 00000000-0</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-telefono" 
+                               pattern="\d{4}-\d{4}" 
+                               title="Formato requerido: 0000-0000" 
+                               maxlength="9" 
+                               placeholder="1234-5678" required>
+                        <div class="invalid-feedback">Formato requerido: 0000-0000</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-email" class="form-label">Email (Opcional)</label>
+                        <input type="email" class="form-control" id="input-nuevo-cliente-email" 
+                               pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" 
+                               placeholder="ejemplo@correo.com">
+                        <div class="invalid-feedback">Ingrese un email válido.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-nacimiento" class="form-label">Fecha de Nacimiento (Opcional)</label>
+                        <input type="date" class="form-control" id="input-nuevo-cliente-nacimiento" 
+                               max="{{ today|date:'Y-m-d' }}">
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">

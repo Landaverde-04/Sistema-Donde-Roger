@@ -20,20 +20,21 @@ def api_clientes(request):
             queryset = Cliente.objects.filter(
                 Q(nombreCliente__icontains=nombres) |
                 Q(apellidoCliente__icontains=nombres)|
-                Q(telefonoCliente__icontains=nombres)
+                Q(telefonoCliente__icontains=nombres),
+                estaHabilitadoCliente=True
             ).values(
                 "idCliente", "nombreCliente", "apellidoCliente",
                 "duiCliente", "telefonoCliente", "emailCliente",
                 "nacimientoCliente"
             )
         elif request.GET.get("idCliente"):
-            queryset = Cliente.objects.filter(idCliente=request.GET.get("idCliente")).values(
+            queryset = Cliente.objects.filter(idCliente=request.GET.get("idCliente"), estaHabilitadoCliente=True).values(
                 "idCliente", "nombreCliente", "apellidoCliente",
                 "duiCliente", "telefonoCliente", "emailCliente",
                 "nacimientoCliente"
             )
         else:
-            queryset = Cliente.objects.all().values(
+            queryset = Cliente.objects.filter(estaHabilitadoCliente=True).values(
                 "idCliente", "nombreCliente", "apellidoCliente",
                 "duiCliente", "telefonoCliente", "emailCliente",
                 "nacimientoCliente"
@@ -84,7 +85,11 @@ def crear_pedido(request):
         productomenu__estaHabilitadoProductoMenu=True).distinct().prefetch_related(
         Prefetch('productomenu_set',queryset=ProductoMenu.objects.filter(estaHabilitadoProductoMenu=True))))
         numCorrelativo = PedidoCliente.objects.filter(fechaPedidoCliente=datetime.date.today()).count() + 1
-        return render(request, 'crear_pedido.html', {'categorias_con_productos':categorias_con_productos, 'numCorrelativo':numCorrelativo})
+        return render(request, 'crear_pedido.html', {
+            'categorias_con_productos': categorias_con_productos, 
+            'numCorrelativo': numCorrelativo,
+            'today': datetime.date.today()
+        })
     elif request.method == 'POST':
         print(request.POST)
         pedido = PedidoCliente()
@@ -95,24 +100,39 @@ def crear_pedido(request):
         tipoPedido = request.POST.get('tipoPedido')
         pedido.tipoPedido = TipoPedidoCliente.objects.get(idTipoPedido=tipoPedido)
         pedido.estadoPedido = EstadoPedidoCliente.objects.get(idEstado=1)
+        
+        # Asociar cliente si existe
         if request.POST.get('idCliente'):
             pedido.idCliente = Cliente.objects.get(idCliente=request.POST.get('idCliente'))
+        
+        # Configurar campos específicos según tipo de pedido
         if tipoPedido == '1':
+            # En restaurante
             pedido.mesasPedido = request.POST.get('mesa')
         elif tipoPedido == '2':
-            pedido.horaRecoger = request.POST.get('hora-recoger')
+            # Cliente recogerá
+            hora_recoger = request.POST.get('hora-recoger')
+            if hora_recoger:
+                # El campo datetime-local viene en formato: YYYY-MM-DDTHH:MM
+                pedido.horaRecoger = datetime.datetime.strptime(hora_recoger, '%Y-%m-%dT%H:%M')
         elif tipoPedido == '3':
-            direccion = request.POST.get('direccion-nueva') if len(request.POST.get('direccion-nueva')) > 0 else request.POST.get('direccion')
-            if request.POST.get('esNuevaDireccion') == 'on':
-                direccion = request.POST.get('direccion-nueva')
+            # A domicilio
+            direccion = request.POST.get('direccion-nueva') if request.POST.get('direccion-nueva') else request.POST.get('direccion')
+            
+            # Solo guardar nueva dirección si hay cliente asociado
+            if pedido.idCliente and request.POST.get('esNuevaDireccion') == 'on' and request.POST.get('direccion-nueva'):
                 nuevaDireccion = DireccionCliente()
                 nuevaDireccion.idCliente = pedido.idCliente
-                nuevaDireccion.direccion = direccion
+                nuevaDireccion.direccion = request.POST.get('direccion-nueva')
                 nuevaDireccion.save()
-                pedido.direccionPedido = direccion
-            elif request.POST.get('esNuevaDireccion') == 'off':
-                direccion = request.POST.get('direccion')
+            
             pedido.direccionPedido = direccion
+        
+        # Agregar comentarios si existen
+        comentarios = request.POST.get('comentarios')
+        if comentarios:
+            pedido.comentario = comentarios
+        
         pedido.save()
         detalles_json = request.POST.get('detalles-pedido')
         detalles = json.loads(detalles_json)
@@ -159,10 +179,68 @@ def actualizar_estado_pedido(request, idPedido):
     return redirect(reverse('ver_pedido', kwargs={'idPedido':idPedido}))
 
 def listar_pedidos(request):
-    pedidos = PedidoCliente.objects.all().order_by('fechaPedidoCliente')
-    return render(request, 'listar_pedidos.html', {'pedidos':pedidos})
+    pedidos = PedidoCliente.objects.all().order_by('-fechaPedidoCliente', '-horaPedidoCliente')
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Dividir el query en palabras para buscar mejor
+        palabras = query.split()
+        q_filter = Q(numCorrelativo__icontains=query)
+        
+        # Si hay una sola palabra, buscar en nombre o apellido
+        if len(palabras) == 1:
+            q_filter |= Q(idCliente__nombreCliente__icontains=palabras[0])
+            q_filter |= Q(idCliente__apellidoCliente__icontains=palabras[0])
+        # Si hay dos o más palabras, buscar combinaciones
+        elif len(palabras) >= 2:
+            # Buscar primera palabra en nombre y resto en apellido
+            for i in range(len(palabras)):
+                nombre_parte = ' '.join(palabras[:i+1])
+                apellido_parte = ' '.join(palabras[i+1:]) if i+1 < len(palabras) else ''
+                
+                q_nombre = Q(idCliente__nombreCliente__icontains=nombre_parte)
+                if apellido_parte:
+                    q_nombre &= Q(idCliente__apellidoCliente__icontains=apellido_parte)
+                q_filter |= q_nombre
+                
+                # También buscar cada palabra individualmente
+                q_filter |= Q(idCliente__nombreCliente__icontains=palabras[i])
+                q_filter |= Q(idCliente__apellidoCliente__icontains=palabras[i])
+        
+        pedidos = pedidos.filter(q_filter)
+    
+    return render(request, 'listar_pedidos.html', {'pedidos': pedidos, 'query': query})
 
 def listar_pedidos_hoy(request):
-    pedidos = PedidoCliente.objects.filter(fechaPedidoCliente=datetime.date.today()).order_by('fechaPedidoCliente')
-    return render(request, 'listar_pedidos_hoy.html', {'pedidos':pedidos})
+    pedidos = PedidoCliente.objects.filter(fechaPedidoCliente=datetime.date.today()).order_by('-horaPedidoCliente')
+    query = request.GET.get('q', '').strip()
+    
+    if query:
+        # Dividir el query en palabras para buscar mejor
+        palabras = query.split()
+        q_filter = Q(numCorrelativo__icontains=query)
+        
+        # Si hay una sola palabra, buscar en nombre o apellido
+        if len(palabras) == 1:
+            q_filter |= Q(idCliente__nombreCliente__icontains=palabras[0])
+            q_filter |= Q(idCliente__apellidoCliente__icontains=palabras[0])
+        # Si hay dos o más palabras, buscar combinaciones
+        elif len(palabras) >= 2:
+            # Buscar primera palabra en nombre y resto en apellido
+            for i in range(len(palabras)):
+                nombre_parte = ' '.join(palabras[:i+1])
+                apellido_parte = ' '.join(palabras[i+1:]) if i+1 < len(palabras) else ''
+                
+                q_nombre = Q(idCliente__nombreCliente__icontains=nombre_parte)
+                if apellido_parte:
+                    q_nombre &= Q(idCliente__apellidoCliente__icontains=apellido_parte)
+                q_filter |= q_nombre
+                
+                # También buscar cada palabra individualmente
+                q_filter |= Q(idCliente__nombreCliente__icontains=palabras[i])
+                q_filter |= Q(idCliente__apellidoCliente__icontains=palabras[i])
+        
+        pedidos = pedidos.filter(q_filter)
+    
+    return render(request, 'listar_pedidos_hoy.html', {'pedidos': pedidos, 'query': query})
 

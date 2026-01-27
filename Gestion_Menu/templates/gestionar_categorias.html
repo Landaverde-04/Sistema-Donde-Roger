@@ -1,0 +1,136 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Categorías</title>
+</head>
+
+<div class="container my-4">
+    <h2 class="text-center my-4">Gestión de Categorías</h2>
+
+    <!-- Mensajes de éxito -->
+    {% if request.GET.exito == '1' %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>¡Éxito!</strong> Categoría creada correctamente.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% elif request.GET.exito == '2' %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>¡Éxito!</strong> Categoría actualizada correctamente.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
+    <!-- Formulario para crear nueva categoría -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0">Crear Nueva Categoría</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{% url 'gestionar_categorias' %}">
+                {% csrf_token %}
+                <input type="hidden" name="accion" value="crear">
+                <div class="row align-items-end">
+                    <div class="col-md-10">
+                        <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" 
+                               placeholder="Ej: Bebidas, Entradas, Platos Fuertes..." required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">Crear</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de categorías existentes -->
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Categorías Existentes</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if categorias %}
+                            {% for categoria in categorias %}
+                            <tr>
+                                <td>{{ categoria.idCategoriaProductoMenu }}</td>
+                                <td>
+                                    <span id="nombre-{{ categoria.idCategoriaProductoMenu }}">
+                                        {{ categoria.nombreCategoriaProductoMenu }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-sm" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#modalEditar{{ categoria.idCategoriaProductoMenu }}">
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <!-- Modal para editar -->
+                            <div class="modal fade" id="modalEditar{{ categoria.idCategoriaProductoMenu }}" 
+                                 tabindex="-1" aria-labelledby="modalEditarLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-warning">
+                                            <h5 class="modal-title" id="modalEditarLabel">
+                                                Editar Categoría
+                                            </h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" 
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <form method="POST" action="{% url 'gestionar_categorias' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="accion" value="editar">
+                                            <input type="hidden" name="categoria_id" 
+                                                   value="{{ categoria.idCategoriaProductoMenu }}">
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="nombre-edit" class="form-label">
+                                                        Nombre de la Categoría
+                                                    </label>
+                                                    <input type="text" class="form-control" 
+                                                           name="nombre" 
+                                                           value="{{ categoria.nombreCategoriaProductoMenu }}" 
+                                                           required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" 
+                                                        data-bs-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-warning">
+                                                    Guardar Cambios
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="3" class="text-center">No hay categorías registradas</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

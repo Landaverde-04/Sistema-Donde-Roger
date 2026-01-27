@@ -44,7 +44,7 @@
     <div class="container mt-3" id="div-pedidos">
         <div class="div-h3pedidos">
             <h3 id="h3-pedidos">Ultimos pedidos del cliente</h3>
-            <button class="btn btn-secondary">Ver pedidos</button>
+            <a href="{% url 'listar_pedidos' %}?q={{ cliente.nombreCliente }} {{ cliente.apellidoCliente }}" class="btn btn-secondary">Ver pedidos</a>
         </div>
         {% if pedidos %}
         <div class="tabla-pedidos-wrapper">

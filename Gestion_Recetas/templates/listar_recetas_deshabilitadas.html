@@ -31,7 +31,7 @@
             {% for receta in recetas_paginadas %}
             <tr>
                 <td>{{ receta.nombreReceta }}</td>
-                <td>{{ receta.Categoria.nombreCategoria }}</td>
+                <td>{{ receta.Categoria.nombreCategoriaProductoMenu }}</td>
                 <td>{{ receta.tamanio }}</td>
                 <td>
                     <button data-bs-toggle="modal" data-bs-target="#modalConfirmarHabilitar" type="button" class="btn btn-success btn-habilitar" href="#" data-id="{{ receta.idReceta }}" data-nombre="{{ receta.nombreReceta }}">Habilitar</button>

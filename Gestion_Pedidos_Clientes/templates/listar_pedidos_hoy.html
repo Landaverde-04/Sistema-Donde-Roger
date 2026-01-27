@@ -12,18 +12,22 @@
     <div class="d-flex justify-content-start align-items-center my-4">
         <h2 class="text-center my-2 w-100">PEDIDOS DE HOY</h2>
     </div>
-    <div class="d-flex justify-content-center align-items-center">
-        <input id="inputBuscar" type="text" class="form-control mx-2 w-50" placeholder="Buscar correlativo...">
-        <button id="btnLimpiar" type="button" class="btn btn-primary">Limpiar</button>
-    </div>
+    <form method="GET" action="{% url 'listar_pedidos_hoy' %}" class="d-flex justify-content-center align-items-center mb-3">
+        <input id="inputBuscar" name="q" type="text" class="form-control mx-2 w-50" 
+               placeholder="Buscar por correlativo o nombre de cliente..." value="{{ query }}">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+        <a href="{% url 'listar_pedidos_hoy' %}" class="btn btn-secondary mx-2">Limpiar</a>
+    </form>
     <div>
         <table id="tablaProductos" class="table">
             <thead>
                 <tr>
                     <th>#</th>
+                    <th>Cliente</th>
                     <th>Tipo</th>
                     <th>Fecha</th>
                     <th>Hora</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -31,9 +35,17 @@
                 {% for pedido in pedidos %}
                 <tr>
                     <td>{{ pedido.numCorrelativo}}</td>
+                    <td>
+                        {% if pedido.idCliente %}
+                            {{ pedido.idCliente.nombreCliente }} {{ pedido.idCliente.apellidoCliente }}
+                        {% else %}
+                            <span class="text-muted">Sin cliente</span>
+                        {% endif %}
+                    </td>
                     <td>{{ pedido.tipoPedido.nombreTipoPedido}}</td>
                     <td>{{ pedido.fechaPedidoCliente}}</td>
-                    <td>{{ pedido.horaPedidoCliente}}</td>
+                    <td>{{ pedido.horaPedidoCliente|time:"H:i"}}</td>
+                    <td>{{ pedido.estadoPedido.nombreEstado}}</td>
                     <td><a class="btn btn-primary" href="{% url 'ver_pedido' pedido.idPedidoCliente %}">Ver</a></td>
                 </tr>
                 {% endfor %}

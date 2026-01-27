@@ -17,7 +17,7 @@ class ProductoMenu(models.Model):
     idProductoMenu = models.AutoField(primary_key=True)
     idCategoriaProductoMenu = models.ForeignKey(CategoriaProductoMenu, on_delete=models.CASCADE)
     nombreProductoMenu = models.CharField(max_length=50)
-    tamanioProductoMenu = models.CharField(max_length=20)
+    tamanioProductoMenu = models.CharField(max_length=50)
     descripcionProductoMenu = models.TextField()
     estaHabilitadoProductoMenu = models.BooleanField(default=True)
     precioProductoMenu = models.DecimalField(max_digits=10, decimal_places=2)

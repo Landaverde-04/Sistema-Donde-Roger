@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from Gestion_Recetas.models import Categoria, Receta
+from Gestion_Recetas.models import Receta
+from Gestion_Menu.models import CategoriaProductoMenu
 from django.db.models import Q
 from django.core.paginator import Paginator #para paginar
 from django.urls import reverse
@@ -10,7 +11,7 @@ from seguridad.decoradores import groups_required
 @login_required
 @groups_required('Jefe')
 def registrar_receta(request):
-    categorias = Categoria.objects.all()
+    categorias = CategoriaProductoMenu.objects.all()
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         categoria_id = request.POST.get('categoria')
@@ -18,7 +19,7 @@ def registrar_receta(request):
         ingredientes = request.POST.get('ingredientes')
         pasos = request.POST.get('preparacion')
 
-        categoria = Categoria.objects.get(idCategoria   =categoria_id)
+        categoria = CategoriaProductoMenu.objects.get(idCategoriaProductoMenu=categoria_id)
 
         nueva_receta = Receta(
             nombreReceta=nombre,
@@ -42,7 +43,7 @@ def listar_recetas(request):
         if query:
             recetas = recetas.filter(
                 Q(nombreReceta__icontains=query) | 
-                Q(Categoria__nombreCategoria__icontains=query))
+                Q(Categoria__nombreCategoriaProductoMenu__icontains=query))
             paginaror = Paginator(recetas, 10)
 
         recetas = recetas.order_by('idReceta')
@@ -58,7 +59,7 @@ def listar_recetas(request):
 @groups_required('Jefe')
 def editar_receta(request, idReceta):
     receta = Receta.objects.get(idReceta=idReceta)
-    categorias = Categoria.objects.all()
+    categorias = CategoriaProductoMenu.objects.all()
     if request.method == 'POST':
         receta.nombreReceta = request.POST.get('nombre')
         categoria_id = request.POST.get('categoria')
@@ -66,7 +67,7 @@ def editar_receta(request, idReceta):
         receta.ingredientes = request.POST.get('ingredientes')
         receta.pasos = request.POST.get('preparacion')
 
-        receta.Categoria = Categoria.objects.get(idCategoria=categoria_id)
+        receta.Categoria = CategoriaProductoMenu.objects.get(idCategoriaProductoMenu=categoria_id)
 
         receta.save()
         url = reverse('listar_recetas')
@@ -80,7 +81,7 @@ def editar_receta(request, idReceta):
 @groups_required('Jefe')
 def detalle_receta(request, idReceta):
         receta = Receta.objects.get(idReceta=idReceta)
-        categoria = Categoria.objects.get(idCategoria=receta.Categoria.idCategoria)
+        categoria = CategoriaProductoMenu.objects.get(idCategoriaProductoMenu=receta.Categoria.idCategoriaProductoMenu)
         return render(request, 'detalle_receta.html', {
             'receta': receta
         })
@@ -101,7 +102,7 @@ def listar_recetas_deshabilitadas(request):
         if query:
             recetas = recetas.filter(
                 Q(nombreReceta__icontains=query) | 
-                Q(Categoria__nombreCategoria__icontains=query))
+                Q(Categoria__nombreCategoriaProductoMenu__icontains=query))
             paginaror = Paginator(recetas, 10)
 
         recetas = recetas.order_by('idReceta')

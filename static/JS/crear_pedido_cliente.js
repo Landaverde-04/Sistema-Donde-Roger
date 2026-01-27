@@ -46,7 +46,7 @@ botonesProductos.forEach(boton => {
 //Evento para cambiar los campos segun el tipo de pedido
 rbtnTipos.forEach(rbtn => {
     rbtn.addEventListener('change', function () {
-        var selected = this.value;
+        var selected = parseInt(this.value);
         actualizarAreaDestino(selected);
     });
 
@@ -55,29 +55,27 @@ rbtnTipos.forEach(rbtn => {
 //Evento para asociar un cliente al pedido, habilita los botones correspondientes
 switchAsociar.addEventListener('change', function () {
     switchCamposCliente(this.checked);
-    const direccionCheck = document.getElementById('chk-direccion');
-    const direccionSelect = document.getElementById('direccion');
-    const direccionInput = document.getElementById('direccion-nueva');
-    if (this.checked) {
-
-        //direccionCheck.classList.remove('d-none');
-        setElementMode(direccionCheck, true, 0);
-        // direccionSelect.classList.remove('d-none');
-        // direccionSelect.setAttribute('required', '');
-        setElementMode(direccionSelect, true, 1);
-        // direccionInput.classList.add('d-none');
-        // direccionInput.removeAttribute('required');
-        setElementMode(direccionInput, false, 0);
-    }
-    else {
-        // direccionCheck.classList.add('d-none');
-        setElementMode(direccionCheck, false, 0);
-        setElementMode(direccionSelect, false, 0);
-        setElementMode(direccionInput, true, 1);
-        // direccionSelect.classList.add('d-none');
-        // direccionSelect.removeAttribute('required');
-        // direccionInput.classList.remove('d-none');
-        // direccionInput.setAttribute('required', '');
+    
+    // Solo afectar campos de dirección si el tipo de pedido es "A domicilio" (tipo3)
+    const tipo3Selected = document.getElementById('tipo3').checked;
+    
+    if (tipo3Selected) {
+        const direccionCheck = document.getElementById('chk-direccion');
+        const direccionSelect = document.getElementById('direccion');
+        const direccionInput = document.getElementById('direccion-nueva');
+        
+        if (this.checked) {
+            // Cliente asociado: mostrar select de direcciones
+            setElementMode(direccionCheck, true, 0);
+            setElementMode(direccionSelect, true, 1);
+            setElementMode(direccionInput, false, 0);
+        }
+        else {
+            // Sin cliente: solo input de dirección nueva
+            setElementMode(direccionCheck, false, 0);
+            setElementMode(direccionSelect, false, 0);
+            setElementMode(direccionInput, true, 0);
+        }
     }
 });
 
@@ -132,16 +130,53 @@ btnGuardarCliente.addEventListener('click', async () => {
 
     if (!formClienteNuevo.checkValidity()) {
         formClienteNuevo.classList.add("was-validated");
+        // Mostrar mensaje de error
+        alert('Por favor complete correctamente todos los campos requeridos.');
         return;
     }
-    const nombres = document.getElementById('input-nuevo-cliente-nombres').value;
-    const apellidos = document.getElementById('input-nuevo-cliente-apellidos').value;
-    const dui = document.getElementById('input-nuevo-cliente-dui').value;
-    const telefono = document.getElementById('input-nuevo-cliente-telefono').value;
-    const email = document.getElementById('input-nuevo-cliente-email').value;
+    
+    const nombres = document.getElementById('input-nuevo-cliente-nombres').value.trim();
+    const apellidos = document.getElementById('input-nuevo-cliente-apellidos').value.trim();
+    const dui = document.getElementById('input-nuevo-cliente-dui').value.trim();
+    const telefono = document.getElementById('input-nuevo-cliente-telefono').value.trim();
+    const email = document.getElementById('input-nuevo-cliente-email').value.trim();
     const nacimiento = document.getElementById('input-nuevo-cliente-nacimiento').value;
+    
+    // Validaciones adicionales
+    if (!nombres || !apellidos || !telefono) {
+        alert('Nombre, apellidos y teléfono son obligatorios.');
+        return;
+    }
+    
+    // Validar formato de teléfono
+    const telefonoPattern = /^\d{4}-\d{4}$/;
+    if (!telefonoPattern.test(telefono)) {
+        alert('El teléfono debe tener el formato: 0000-0000');
+        return;
+    }
+    
+    // Validar formato de DUI si se proporciona
+    if (dui) {
+        const duiPattern = /^\d{8}-\d$/;
+        if (!duiPattern.test(dui)) {
+            alert('El DUI debe tener el formato: 00000000-0');
+            return;
+        }
+    }
+    
+    // Validar formato de email si se proporciona
+    if (email) {
+        const emailPattern = /^[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}$/;
+        if (!emailPattern.test(email)) {
+            alert('El email no tiene un formato válido.');
+            return;
+        }
+    }
+    
     resetCliente();
     await seleccionarCliente(await agregarCliente(nombres, apellidos, dui, telefono, email, nacimiento));
+    formClienteNuevo.classList.remove("was-validated");
+    formClienteNuevo.reset();
     modalCrearCliente.hide();
 });
 // FUNCIONES --------------------
@@ -252,10 +287,19 @@ function actualizarAreaDestino(tipo) {
 
     const selected = tipos[tipo - 1];
     setElementMode(selected, true, 0);
-    if (tipo <= 2) {
+    
+    // Solo hacer requerido el campo de mesa para tipo 1 (restaurante)
+    if (tipo === 1) {
         const childs = selected.children[0].children;
         for (const child of childs) {
             setElementMode(child, true, 1);
+        }
+    }
+    // Para tipo 2 y 3, los campos son opcionales a menos que haya cliente asociado
+    else if (tipo === 2 || tipo === 3) {
+        const childs = selected.children[0].children;
+        for (const child of childs) {
+            setElementMode(child, true, 0); // Hacerlos visibles pero no requeridos
         }
     }
 

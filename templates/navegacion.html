@@ -85,6 +85,7 @@
             <li><a class="dropdown-item" href="{%url 'listar_productos_menu' %}">Lista de Productos</a></li>
             <!-- HU-60: Solo Jefe puede gestionar recetas -->
             {% if user.groups.first.name == 'Jefe' %}
+            <li><a class="dropdown-item" href="{%url 'gestionar_categorias' %}">Gestionar Categorías</a></li>
             <li><a class="dropdown-item" href="/recetas/listar_recetas/">Lista de recetas</a></li>
             <li><a class="dropdown-item" href="/recetas/registrar_receta/">Registrar receta</a></li>  
             {% endif %}

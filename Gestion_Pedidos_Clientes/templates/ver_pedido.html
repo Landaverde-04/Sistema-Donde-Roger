@@ -35,22 +35,38 @@
                     <p id="telefono-cliente-selected">
                         <i class="bi bi-person-vcard-fill mx-2"></i>
                         DUI:
-                        {{pedido.idCliente.duiCliente}}
+                        {% if pedido.idCliente.duiCliente %}
+                            {{pedido.idCliente.duiCliente}}
+                        {% else %}
+                            <span class="text-muted">No registrado</span>
+                        {% endif %}
                     </p>
                     <p id="telefono-cliente-selected">
                         <i class="bi bi-telephone-fill mx-2"></i>
                         Tel:
-                        {{pedido.idCliente.telefonoCliente}}
+                        {% if pedido.idCliente.telefonoCliente %}
+                            {{pedido.idCliente.telefonoCliente}}
+                        {% else %}
+                            <span class="text-muted">No registrado</span>
+                        {% endif %}
                     </p>
                     <p id="email-cliente-selected">
                         <i class="bi bi-envelope mx-2"></i>
                         E-mail:
-                        {{pedido.idCliente.emailCliente}}
+                        {% if pedido.idCliente.emailCliente %}
+                            {{pedido.idCliente.emailCliente}}
+                        {% else %}
+                            <span class="text-muted">No registrado</span>
+                        {% endif %}
                     </p>
                     <p id="nacimiento-cliente-selected">
                         <i class="bi bi-balloon"></i>
                         Nacimiento:
-                        {{pedido.idCliente.nacimientoCliente}}
+                        {% if pedido.idCliente.nacimientoCliente %}
+                            {{pedido.idCliente.nacimientoCliente|date:"d/m/Y"}}
+                        {% else %}
+                            <span class="text-muted">No registrado</span>
+                        {% endif %}
                     </p>
                 </div>
             </div>
@@ -104,26 +120,52 @@
                         Tipo de pedido: {{pedido.tipoPedido.nombreTipoPedido}}
                     </p>
 
-                    <p id="telefono-cliente-selected">
-                        <i class="bi bi-send-fill"></i>
-                        {%if pedido.mesasPedido %}
-                        Mesas: {{pedido.mesasPedido}}
-                        {%elif pedido.direccion%}
-                        Direccion: {{pedido.direccionPedido}}
-                        {%else%}
-                        Hora recogida: {{pedido.horaRecoger}}
-                        {%endif%}
-                    </p>
-                    {%if pedido.comentario%}
+                    {% if pedido.tipoPedido.idTipoPedido == 1 %}
+                        <!-- En restaurante -->
+                        <p>
+                            <i class="bi bi-table"></i>
+                            Mesas: 
+                            {% if pedido.mesasPedido %}
+                                {{pedido.mesasPedido}}
+                            {% else %}
+                                <span class="text-muted">No especificado</span>
+                            {% endif %}
+                        </p>
+                    {% elif pedido.tipoPedido.idTipoPedido == 2 %}
+                        <!-- Cliente recogerá -->
+                        <p>
+                            <i class="bi bi-clock-fill"></i>
+                            Hora de recogida: 
+                            {% if pedido.horaRecoger %}
+                                {{pedido.horaRecoger|date:"d/m/Y H:i"}}
+                            {% else %}
+                                <span class="text-muted">No especificada</span>
+                            {% endif %}
+                        </p>
+                    {% elif pedido.tipoPedido.idTipoPedido == 3 %}
+                        <!-- A domicilio -->
+                        <p>
+                            <i class="bi bi-send-fill"></i>
+                            Dirección: 
+                            {% if pedido.direccionPedido %}
+                                {{pedido.direccionPedido}}
+                            {% else %}
+                                <span class="text-muted">No especificada</span>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                    
+                    {% if pedido.comentario %}
                     <p id="email-cliente-selected">
                         <i class="bi bi-chat-square-text-fill"></i>
                         Comentarios: {{pedido.comentario}}
                     </p>
-                    {%endif%}
-                    {%if pedido.tipoPedido.idTipoPedido == 3 and pedido.estadoPedido.idEstado == 4 %}
+                    {% endif %}
+                    
+                    {% if pedido.tipoPedido.idTipoPedido == 3 and pedido.estadoPedido.idEstado == 4 %}
                     <button type="button" class="btn btn-primary m-2 w-100" id="generar-datos-envio"
                         data-bs-toggle="modal" data-bs-target="#modal-datos-envio">Generar datos para envio</button>
-                    {%endif%}
+                    {% endif %}
                 </div>
             </div>
         </div>

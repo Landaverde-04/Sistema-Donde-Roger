@@ -13,4 +13,5 @@ urlpatterns = [
     path('deshabilitados', views.listar_productos_deshabilitados_menu, name='listar_productos_deshabilitados_menu'),
     path('api/productos/', views.api_producto_menu, name='api_producto_menu'),
     path('api/categorias/', views.api_categorias_producto_menu, name='api_categorias_producto_menu'),
+    path('categorias', views.gestionar_categorias, name='gestionar_categorias'),
 ]

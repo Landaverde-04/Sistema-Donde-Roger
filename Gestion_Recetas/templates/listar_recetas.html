@@ -38,7 +38,7 @@
             {% for receta in recetas_paginadas %}
             <tr>
                 <td>{{ receta.nombreReceta }}</td>
-                <td>{{ receta.Categoria.nombreCategoria }}</td>
+                <td>{{ receta.Categoria.nombreCategoriaProductoMenu }}</td>
                 <td>{{ receta.tamanio }}</td>
                 <td>
                     <a class="btn btn-primary" href="{% url 'editar_receta' receta.idReceta %}">Editar</a>

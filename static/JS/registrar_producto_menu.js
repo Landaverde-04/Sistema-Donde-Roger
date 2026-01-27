@@ -79,10 +79,64 @@ function seleccionarCategoria(idCategoria){
     for (categoria of categorias){
         if (categoria.idCategoriaProductoMenu == idCategoria){
             input_categoria.value = categoria.nombreCategoriaProductoMenu;
+            // Guardar el ID en el campo oculto
+            document.getElementById('categoria-producto').value = categoria.idCategoriaProductoMenu;
+            // Marcar como válido
+            input_categoria.classList.remove('is-invalid');
+            input_categoria.classList.add('is-valid');
             destruirListadoCategorias();
             return;
         }
       }
+}
+
+// Validación adicional para el campo de categoría
+if (input_categoria) {
+    input_categoria.addEventListener('click', function() {
+        const hiddenInput = document.getElementById('categoria-producto');
+        if (!hiddenInput.value) {
+            input_categoria.classList.remove('is-valid');
+        }
+    });
+}
+
+// Validación en tiempo real para nombre
+const nombreInput = document.getElementById('nombre-producto');
+if (nombreInput) {
+    nombreInput.addEventListener('input', function() {
+        const valor = this.value.trim();
+        if (valor.length >= 3 && valor.length <= 50) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        }
+    });
+}
+
+// Validación en tiempo real para tamaño
+const tamanioInput = document.getElementById('tamanio-producto');
+if (tamanioInput) {
+    tamanioInput.addEventListener('input', function() {
+        const valor = this.value.trim();
+        if (valor.length >= 2 && valor.length <= 50) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        }
+    });
+}
+
+// Validación en tiempo real para precio
+const precioInput = document.getElementById('precio-producto');
+if (precioInput) {
+    precioInput.addEventListener('input', function() {
+        const valor = parseFloat(this.value);
+        if (valor > 0 && valor <= 9999.99) {
+            this.classList.remove('is-invalid');
+            this.classList.add('is-valid');
+        } else {
+            this.classList.remove('is-valid');
+            this.classList.add('is-invalid');
+        }
+    });
 }
 
 // JS para validación de formularios de Bootstrap:

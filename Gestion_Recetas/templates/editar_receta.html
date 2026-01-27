@@ -22,7 +22,7 @@
             <select id="categoria" name="categoria" required>
                 <option value="">-- Seleccionar --</option>
                 {% for categoria in categorias %}
-                <option value="{{ categoria.idCategoria }}" {% if categoria.idCategoria == receta.Categoria.idCategoria %}selected{% endif %}> {{ categoria.nombreCategoria }} </option>
+                <option value="{{ categoria.idCategoriaProductoMenu }}" {% if categoria.idCategoriaProductoMenu == receta.Categoria.idCategoriaProductoMenu %}selected{% endif %}> {{ categoria.nombreCategoriaProductoMenu }} </option>
                 {% endfor %}
             </select>
                 </div>
