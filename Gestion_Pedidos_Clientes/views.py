@@ -7,7 +7,12 @@ from django.db.models import Prefetch, Q
 from Gestion_Pedidos_Clientes.models import *
 import datetime
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from io import BytesIO
+from django.conf import settings
+import os
 
 # Create your views here.
 
@@ -244,3 +249,37 @@ def listar_pedidos_hoy(request):
     
     return render(request, 'listar_pedidos_hoy.html', {'pedidos': pedidos, 'query': query})
 
+
+def generar_pdf_pedido(request, idPedido):
+    if not idPedido or not idPedido.isdigit() or int(idPedido) < 1:
+        return redirect(reverse('listar_pedidos'))
+    
+    # Obtener datos del pedido
+    pedido = PedidoCliente.objects.get(idPedidoCliente=idPedido)
+    detalles = DetallePedido.objects.filter(idPedidoCliente=idPedido)
+    
+    # Renderizar template HTML
+    template = get_template('pedido_cliente_pdf.html')
+    logo_path = os.path.join(settings.MEDIA_ROOT, 'logo-Donde-Roger.jpg')
+    context = {
+        'pedido': pedido, 
+        'detalles': detalles,
+        'logo_path': logo_path
+    }
+    html = template.render(context)
+    
+    # Crear PDF con función de link para imágenes locales
+    pdf_file = BytesIO()
+    pisa_status = pisa.CreatePDF(
+        html, 
+        dest=pdf_file,
+        link_callback=lambda uri, rel: os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ""))
+    )
+    
+    if pisa_status.err:
+        return HttpResponse('Error al generar PDF <pre>' + html + '</pre>')
+    
+    # Retornar respuesta con PDF
+    response = HttpResponse(pdf_file.getvalue(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="pedido_{pedido.numCorrelativo}.pdf"'
+    return response

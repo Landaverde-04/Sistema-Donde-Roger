@@ -20,6 +20,9 @@
             {%if pedido.estadoPedido.idEstado < 5%}
             <button type="button" class="btn btn-success mx-2" data-bs-toggle="modal" data-bs-target="#modal-actualizar-estado">Actualizar estado</button>
             {%endif%}
+            <a href="{% url 'pdf_pedido' pedido.idPedidoCliente %}" target="_blank" class="btn btn-danger mx-2">
+                <i class="bi bi-file-pdf-fill"></i> Generar PDF
+            </a>
             <h4>Pedido Nº {{pedido.numCorrelativo}}</h4>
         </div>
         <div class="card-body d-flex justify-content-center align-items-start w-auto">
