@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-0ar&9*ej_t_czg(3g#(#ev8$gffv=)!ke!*tg^me^5=5cg7(&$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.218.199.237','127.0.0.1']
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 
 
@@ -42,7 +42,16 @@ INSTALLED_APPS = [
     'seguridad',
     'Gestion_Proveedores',
     'Gestion_productos',
-    'Gestion_Inventario'
+    'Gestion_Inventario',
+    'Gestion_Maquinaria',
+    'Gestion_Mantenimiento',
+    'Gestion_Clientes',
+    'Gestion_compra_productos',
+    'Gestion_Menu',
+    'Gestion_Pedidos_Clientes',
+    'core',
+    'Gestion_Recetas',
+    'reservas_mesa',
 ]
 
 MIDDLEWARE = [

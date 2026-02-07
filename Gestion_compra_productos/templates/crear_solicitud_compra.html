@@ -1,0 +1,146 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Solicitud de Compra</title>
+    <link rel="stylesheet" href="{% static 'CSS/detalle_producto.css' %}">
+</head>
+
+<div class="container mt-5">
+    <div class="card mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Nueva Solicitud de Compra</h4>
+        </div>
+
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form id="form-solicitud" method="POST" action="{% url 'preview_solicitud_compra' %}">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label">Proveedor:</label>
+                    <select name="proveedor" id="proveedor" class="form-select" required>
+                        <option value="">-- Seleccione un proveedor --</option>
+                        {% for p in proveedores %}
+                        <option value="{{ p.idProveedor }}">{{ p.nombreEmpresa }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <table class="table table-bordered mt-4" id="tabla-productos">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Las filas se agregan dinámicamente -->
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-success" id="agregar-fila">Agregar producto</button>
+                <button type="button" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#modalConfirmar">
+                    Finalizar solicitud
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal de confirmación -->
+<div class="modal fade" id="modalConfirmar" tabindex="-1" aria-labelledby="modalConfirmarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success">
+        <h5 class="modal-title" id="modalConfirmarLabel">
+          <i class="bi bi-check-circle"></i> Confirmar
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que quieres finalizar esta solicitud de compra?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <!-- Este botón envía el formulario -->
+        <button type="submit" class="btn btn-success" form="form-solicitud">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const proveedorSelect = document.getElementById("proveedor");
+    const tablaProductos = document.getElementById("tabla-productos").querySelector("tbody");
+    const btnAgregar = document.getElementById("agregar-fila");
+
+    let productosProveedor = [];
+
+    proveedorSelect.addEventListener("change", function() {
+        const proveedorId = this.value;
+        if (!proveedorId) {
+            tablaProductos.innerHTML = "";
+            productosProveedor = [];
+            return;
+        }
+
+        
+        fetch("{% url 'obtener_productos' 0 %}".replace("0", proveedorId))
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Error al cargar productos: " + data.error);
+                    return;
+                }
+                productosProveedor = data.productos;
+                tablaProductos.innerHTML = ""; // Limpia tabla al cambiar proveedor
+            })
+            .catch(err => {
+                alert("Error al obtener productos.");
+                console.error(err);
+            });
+    });
+
+    btnAgregar.addEventListener("click", () => {
+        if (!proveedorSelect.value) {
+            alert("Selecciona un proveedor primero.");
+            return;
+        }
+
+        if (productosProveedor.length === 0) {
+            alert("Este proveedor no tiene productos disponibles.");
+            return;
+        }
+
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+            <td>
+                <select name="producto[]" class="form-select" required>
+                    <option value="">-- Seleccione un producto --</option>
+                    ${productosProveedor.map(p => `<option value="${p.id}">${p.nombre}</option>`).join('')}
+                </select>
+            </td>
+            <td><input type="number" name="cantidad[]" min="1" value="1" class="form-control" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm eliminar-fila">Eliminar</button></td>
+        `;
+        tablaProductos.appendChild(fila);
+    });
+
+    tablaProductos.addEventListener("click", e => {
+        if (e.target.classList.contains("eliminar-fila")) {
+            e.target.closest("tr").remove();
+        }
+    });
+});
+</script>
+
+{% endblock %}

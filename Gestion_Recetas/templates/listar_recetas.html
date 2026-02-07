@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+    {% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/listar_recetas.css' %}">
+    <script src="{% static 'JS/listar_recetas.js' %}"></script>
+    <title>Listar Recetas</title>
+</head>
+<body>
+    <div class="container mt-3">
+    <h1>Lista de Recetas</h1>
+    <form method="get" class="form-busqueda">
+        <div class="campo-busqueda">
+            <input type="text" name="q" id="busquedaCliente" class="form-control" placeholder="Buscar por nombre y categoria..." value="{{ query }}">
+        </div>
+        <div class = "div-boton-buscar">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="button" id="btn-reiniciar" class="btn btn-secondary">Reiniciar</button>
+        </div>
+        <div class="campo-registrar">
+            <a href="/recetas/registrar_receta" class="btn btn-success" id="btn-registrar">Registrar receta</a>
+            </div>
+    </form>
+    <div class="div-table" id="resultados">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Porción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recetas_paginadas.object_list %}
+            {% for receta in recetas_paginadas %}
+            <tr>
+                <td>{{ receta.nombreReceta }}</td>
+                <td>{{ receta.Categoria.nombreCategoriaProductoMenu }}</td>
+                <td>{{ receta.tamanio }}</td>
+                <td>
+                    <a class="btn btn-primary" href="{% url 'editar_receta' receta.idReceta %}">Editar</a>
+                    <button data-bs-toggle="modal" data-bs-target="#modalConfirmarEliminar" type="button" class="btn btn-danger btn-eliminar" href="#" data-id="{{ receta.idReceta }}" data-nombre="{{ receta.nombreReceta }}">Eliminar</button>
+                    <a class="btn btn-info" href="{% url 'detalle_receta' receta.idReceta %}">Detalles</a>
+                </td>                
+            </tr>
+            {% endfor %}
+            {% else %}
+                    <div class="container mt-4">
+                        <h2>No hay recetas registradas.</h2>
+                    </div>
+                    {% endif %}
+        </tbody>
+    </table>
+    </div> 
+    </div>
+    <!--Paginacion-->
+    <div class="div-paginacion" id="paginacion">
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if recetas_paginadas.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&q={{ query }}">&laquo; Primero</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.previous_page_number }}&q={{ query }}">Anterior</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ recetas_paginadas.number }} de {{ recetas_paginadas.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if recetas_paginadas.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.next_page_number }}&q={{ query }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.paginator.num_pages }}&q={{ query }}">Último &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<!-- Modal de mensaje de exito y edicion -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="mensajeModalLabel"><i class="bi bi-check-circle"></i>  Registro satisfactorio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        Aquí va el mensaje
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Modal de eliminar-->
+    <div class="modal fade" id="modalConfirmarEliminar" tabindex="-1" aria-labelledby="confirmarEliminarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="confirmarEliminarLabel"><i class="bi bi-exclamation-triangle"></i>  Aviso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de eliminar la receta <strong id="modalNombreReceta"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnEliminarReceta" class="btn btn-danger">Sí, eliminar</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+{% endblock %}

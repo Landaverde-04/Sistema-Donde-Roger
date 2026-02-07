@@ -1,0 +1,304 @@
+{% extends "navegacion.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-4 shadow">
+    <form id="form-crear-pedido" class="needs-validation" method="post" action="{% url 'crear_pedido' %}" novalidate>
+        {% csrf_token %}
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="m-4">
+                <h4>Tipo de Pedido:</h4>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="tipoPedido" id="tipo1" value="1" checked>
+                    <label class="form-check-label" for="tipo1">En restaurante</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="tipoPedido" id="tipo2" value="2">
+                    <label class="form-check-label" for="tipo2">Cliente recogerá</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="tipoPedido" id="tipo3" value="3">
+                    <label class="form-check-label" for="tipo3">A domicilio</label>
+                </div>
+            </div>
+            <div class="m-4">
+                <h4>Pedido numero: #{{numCorrelativo}}</h4>
+                <input type="hidden" id="num-correlativo" name="num-correlativo" value="{{numCorrelativo}}">
+                <button type="submit" class="btn btn-success">Guardar Pedido</button>
+            </div>
+        </div>
+
+        <!-- NAV DE TABS -->
+        <ul class="nav nav-tabs justify-content-center" id="miTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
+                    role="tab" aria-controls="home" aria-selected="true">
+                    Detalles Pedido
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="destino-tab" data-bs-toggle="tab" data-bs-target="#destino" type="button"
+                    role="tab" aria-controls="destino" aria-selected="false">
+                    Destino Pedido
+                </button>
+            </li>
+        </ul>
+
+        <!-- CONTENIDO DE TABS -->
+        <div class="tab-content" id="miTabContent">
+            <div class="tab-pane fade show active p-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="d-flex">
+                    <div class="w-50 mx-3">
+                        <p class="text-center">PRODUCTOS</p>
+                        <div class="accordion" id="accordionExample">
+                            {%for categoria in categorias_con_productos%}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#{{categoria.idCategoriaProductoMenu}}" aria-expanded="true"
+                                        aria-controls="{{categoria.idCategoriaProductoMenu}}">
+                                        {{categoria.nombreCategoriaProductoMenu}}
+                                    </button>
+                                </h2>
+                                <div id="{{categoria.idCategoriaProductoMenu}}" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <ul class="list-group list-group-flush">
+                                                    {%for producto in categoria.productomenu_set.all%}
+                                                    <li class="list-group-item">
+                                                        <tr id="producto-{{producto.idProductoMenu}}">
+                                                            <td>{{producto.nombreProductoMenu}}</td>
+                                                            <td>${{producto.precioProductoMenu}}</td>
+                                                            <td><button id="add-{{producto.idProductoMenu}}"
+                                                                    type="button" class="btn btn-primary">+</button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </li>
+                                                    {%endfor%}
+                                                </ul>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            {%endfor%}
+                        </div>
+                    </div>
+                    <div class="w-50 mx-3">
+                        <p class="text-center">RESUMEN PEDIDO</p>
+                        <table class="table text-center" id="detalle-pedido">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Precio</th>
+                                    <th style="width: 10%; ">Cantidad</th>
+                                    <th>Sub total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3">Total:</th>
+                                    <td>$0.00</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade p-3" id="destino" role="tabpanel" aria-labelledby="perfil-tab">
+                <div class="form-check form-switch d-flex justify-content-end my-2 align-content-center">
+                    <input class="form-check-input" type="checkbox" id="asociar">
+                    <label class="form-check-label mx-2" for="flexSwitchCheckChecked"> Asociar un cliente a este
+                        pedido</label>
+                </div>
+                <div class="d-flex">
+                    <div class="w-100 mx-2" id="datos-entrega">
+                        <p class="text-center fw-bold"> Datos de entrega:</p>
+                        <!-- En restaurante -->
+                        <div id="campos-restaurante" class="tipo-campos mt-3">
+                            <div class="mb-3">
+                                <label for="mesa" class="form-label">Número de mesa</label>
+                                <input type="text" class="form-control" id="mesa" name="mesa" required>
+                            </div>
+                        </div>
+
+                        <!-- Cliente recogerá -->
+                        <div id="campos-recoger" class="tipo-campos mt-3 d-none">
+                            <div class="mb-3">
+                                <label for="hora-recoger" class="form-label">Fecha y hora de recogida</label>
+                                <input type="datetime-local" class="form-control" id="hora-recoger" name="hora-recoger">
+                                <div class="form-text">Opcional: Indique cuándo el cliente recogerá el pedido</div>
+                            </div>
+                        </div>
+
+                        <!-- A domicilio -->
+                        <div id="campos-domicilio" class="tipo-campos mt-3 d-none">
+                            <div class="mb-3">
+                                <label for="direccion" class="form-label">Dirección de entrega</label>
+                                <select type="text" class="form-control d-none" id="direccion" name="direccion">
+                                    <option value="" default selected disabled>Seleccione un cliente</option>
+                                </select>
+
+                                <input type="text" class="form-control" id="direccion-nueva" name="direccion-nueva">
+                                <div class="form-text">Si no asocia un cliente, ingrese la dirección aquí.</div>
+                                <div class="form-check mt-2 d-none" id="chk-direccion">
+                                    <input class="form-check-input" type="checkbox" id="chk-nuevo-direccion"
+                                        name="esNuevaDireccion">
+                                    <label class="form-check-label" for="chk-nuevo-direccion">Agregar como nueva
+                                        dirección</label>
+                                </div>
+                            </div>
+                        </div>
+                        <label for="comments" class="form-label">Comentarios</label>
+                        <textarea id="comments" class="form-control" name="comentarios" rows="3"></textarea>
+                    </div>
+                    <div class="w-50 mx-2 d-none" id="datos-cliente">
+                        <p class="text-center fw-bold">Datos del cliente</p>
+                        <input type="hidden" id="idCliente" name="idCliente">
+                        <div class="" id="campos-dui">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modal-seleccion-cliente" id="btn-seleccionar-cliente">Seleccionar
+                                cliente</button>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#modal-crear-cliente" id="btn-nuevo-cliente">Crear cliente
+                                nuevo</button>
+
+                        </div>
+                        <div class="mx-1 my-3 w-100 d-none" id="cliente-selected">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-center">
+                                    <h5 class="card-title" id="nombre-cliente-selected">
+                                    </h5>
+                                    <button type="button" class="btn btn-danger btn-sm mx-2"
+                                        id="btn-eliminar-cliente"><i class="bi bi-x-circle-fill"></i></button>
+                                </div>
+                                <div class="card-body d-flex justify-content-evenly">
+                                    <i class="bi bi-telephone"></i>
+                                    <p id="telefono-cliente-selected">
+                                    </p>
+                                    <i class="bi bi-envelope"></i>
+                                    <p id="email-cliente-selected">
+                                    </p>
+                                    <i class="bi bi-calendar-event"></i>
+                                    <p id="nacimiento-cliente-selected">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <input type="hidden" id="detalles-pedido" name="detalles-pedido">
+    </form>
+</div>
+
+<!-- Modal de seleccion de cliente-->
+<div class="modal fade" id="modal-seleccion-cliente" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Seleccionar cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-seleccion-cliente-body">
+                <input class="form-control my-2" id="modal-seleccion-cliente-buscar" placeholder="Buscar por nombre...">
+                <table class="table table-bordered table-hover" id="modal-seleccion-tabla">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>DUI</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Nacimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="pagination-container" class="text-center mt-3"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal"
+                    id="modal-cliente-seleccionar">Seleccionar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Creacion de cliente-->
+<div class="modal fade" id="modal-crear-cliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar nuevo cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modal-crear-cliente-body">
+                <form class="needs-validation" id="form-cliente-nuevo" novalidate>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-nombres" class="form-label">Nombres</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-nombres" 
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                               title="Solo letras y espacios" 
+                               minlength="2" maxlength="50" required>
+                        <div class="invalid-feedback">Por favor ingrese un nombre válido (solo letras y espacios).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-apellidos" 
+                               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
+                               title="Solo letras y espacios" 
+                               minlength="2" maxlength="50" required>
+                        <div class="invalid-feedback">Por favor ingrese apellidos válidos (solo letras y espacios).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-dui" class="form-label">DUI (Opcional)</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-dui" 
+                               pattern="\d{8}-\d" 
+                               title="Formato: 00000000-0" 
+                               maxlength="10" 
+                               placeholder="12345678-9">
+                        <div class="invalid-feedback">Formato requerido: 00000000-0</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="input-nuevo-cliente-telefono" 
+                               pattern="\d{4}-\d{4}" 
+                               title="Formato requerido: 0000-0000" 
+                               maxlength="9" 
+                               placeholder="1234-5678" required>
+                        <div class="invalid-feedback">Formato requerido: 0000-0000</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-email" class="form-label">Email (Opcional)</label>
+                        <input type="email" class="form-control" id="input-nuevo-cliente-email" 
+                               pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}" 
+                               placeholder="ejemplo@correo.com">
+                        <div class="invalid-feedback">Ingrese un email válido.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-nuevo-cliente-nacimiento" class="form-label">Fecha de Nacimiento (Opcional)</label>
+                        <input type="date" class="form-control" id="input-nuevo-cliente-nacimiento" 
+                               max="{{ today|date:'Y-m-d' }}">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="modal-crear-cliente-guardar">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script defer src="{% static 'JS/crear_pedido_cliente.js' %}"></script>
+{%endblock%}

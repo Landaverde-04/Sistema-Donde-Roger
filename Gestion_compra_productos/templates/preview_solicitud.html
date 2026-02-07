@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% extends 'navegacion.html' %} {% load static %} {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/pedido_pdf.css' %}">    
+    <title>Previsualización de la Solicitud</title>
+</head>
+<body>
+<div class="container-pdf">
+    <div class="card">
+        <h2>Previsualización de la Solicitud</h2>
+    <!-- Encabezado con tabla -->
+    <table class="header-table">
+        <tr>
+            <td class="header-left">
+                <p><strong>Proveedor:</strong> {{ proveedor.nombreEmpresa }}</p>
+                <p><strong>Encargado:</strong> {{ proveedor.nombreEncargado }} {{ proveedor.apellidoEncargado }}</p>
+                <p><strong>Correo:</strong> {{ proveedor.emailProveedor|default:"-" }}</p>
+                <p><strong>Teléfono:</strong> {{ proveedor.telProveedor|default:"-" }}</p>
+                <p><strong>Dirección:</strong> {{ proveedor.ubicacionProveedor|default:"-" }}</p>
+            </td>
+            <td class="header-right">
+                <p><strong>Restaurante Donde Roger</strong></p>
+                <p><strong>Dirección:</strong> Av. Principal #123, Ciudad, País</p>
+                <p><strong>Teléfono:</strong> 7085-8927</p>
+                <p><strong>Correo:</strong> info@donderoger.com</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Tabla de productos -->
+    <table class="productos">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+       <tbody>
+        {% for item in detalle_preview %}
+        <tr>
+            <td>{{ item.producto.nombreProductoProveedor }}</td>
+            <td>{{ item.cantidad }}</td>
+            <td>{{ item.producto.precioProductoProveedor|floatformat:2 }}</td>
+            <td>{{ item.subtotal|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+
+<p class="total-box"><strong>Total:</strong> {{ total_preview|floatformat:2 }}</p>
+
+<!-- Formulario -->
+
+<form method="POST" action="{% url 'guardar_y_generar_pdf' %}">
+    {% csrf_token %}
+    {% for key, value_list in form_data.lists %}
+        {% for value in value_list %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Guardar y generar PDF</button>
+            <a href="{% url 'crear_solicitud_compra' %}" class="btn btn-danger">Cancelar</a>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+{% endblock %}

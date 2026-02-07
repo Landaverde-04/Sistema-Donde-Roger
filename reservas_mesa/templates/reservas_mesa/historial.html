@@ -1,0 +1,74 @@
+{% extends "navegacion.html" %}
+
+{% block title %}Historial de reservaciones{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Historial de reservaciones</h2>
+  <hr>
+
+  <form method="get" class="row g-3 mb-3">
+    <div class="col-md-3">
+      <label class="form-label">Fecha</label>
+      <input type="date" name="fecha" value="{{ fecha }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Nombre de contacto</label>
+      <input type="text" name="nombre" value="{{ nombre }}" class="form-control"
+             placeholder="Buscar por nombre">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Cantidad de registros</label>
+      <input type="number" name="limite" value="{{ limite|default:10 }}"
+             min="1" max="30" class="form-control">
+      <div class="form-text">Por defecto 10, máximo 30.</div>
+    </div>
+    <div class="col-md-3 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+      <a href="{% url 'historial_reservas_mesa' %}" class="btn btn-outline-secondary">Limpiar</a>
+    </div>
+  </form>
+
+  <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-secondary mb-3">Volver a reservas de hoy</a>
+
+  {% if reservas %}
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Mesa</th>
+            <th>Nombre contacto</th>
+            <th>Personas</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in reservas %}
+            <tr>
+              <td>{{ r.fecha_hora|date:"d/m/Y" }}</td>
+              <td>{{ r.fecha_hora|date:"H:i" }}</td>
+              <td>Mesa {{ r.mesa.numero }}</td>
+              <td>{{ r.nombre_contacto }}</td>
+              <td>{{ r.cantidad_personas }}</td>
+              <td>
+                {% if r.tipo_reserva == 'EVENTO' %}
+                  <span class="badge bg-warning text-dark">Evento</span>
+                {% else %}
+                  <span class="badge bg-info text-dark">Común</span>
+                {% endif %}
+              </td>
+              <td>{{ r.get_estado_display }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted">No hay reservaciones en el historial con los filtros actuales.</p>
+  {% endif %}
+</div>
+{% endblock %}
+    

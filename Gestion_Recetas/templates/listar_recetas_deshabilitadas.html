@@ -1,0 +1,99 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'CSS/listar_recetas.css' %}">
+<script src="{% static 'JS/listar_recetas_deshabilitadas.js' %}"></script>
+
+        <div class="container mt-3">
+    <h1>Lista de Recetas deshabilitados</h1>
+    <form method="get" class="form-busqueda">
+        <div class="campo-busqueda">
+            <input type="text" name="q" id="busquedaCliente" class="form-control" placeholder="Buscar por nombre y categoria..." value="{{ query }}">
+        </div>
+        <div class = "div-boton-buscar">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="button" id="btn-reiniciar" class="btn btn-secondary">Reiniciar</button>
+        </div>
+    </form>
+    <div class="div-table" id="resultados">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Porción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if recetas_paginadas.object_list %}
+            {% for receta in recetas_paginadas %}
+            <tr>
+                <td>{{ receta.nombreReceta }}</td>
+                <td>{{ receta.Categoria.nombreCategoriaProductoMenu }}</td>
+                <td>{{ receta.tamanio }}</td>
+                <td>
+                    <button data-bs-toggle="modal" data-bs-target="#modalConfirmarHabilitar" type="button" class="btn btn-success btn-habilitar" href="#" data-id="{{ receta.idReceta }}" data-nombre="{{ receta.nombreReceta }}">Habilitar</button>
+                </td>                
+            </tr>
+            {% endfor %}
+            {% else %}
+                    <div class="container mt-4">
+                        <h2>No hay recetas deshabilitados.</h2>
+                    </div>
+                    {% endif %}
+        </tbody>
+    </table>
+    </div> 
+    </div>
+    <!--Paginacion-->
+    <div class="div-paginacion" id="paginacion">
+    <nav>
+        <ul class="pagination justify-content-center">
+            {% if recetas_paginadas.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&q={{ query }}">&laquo; Primero</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.previous_page_number }}&q={{ query }}">Anterior</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ recetas_paginadas.number }} de {{ recetas_paginadas.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if recetas_paginadas.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.next_page_number }}&q={{ query }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ recetas_paginadas.paginator.num_pages }}&q={{ query }}">Último &raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+<!--Modal de eliminar-->
+    <div class="modal fade" id="modalConfirmarHabilitar" tabindex="-1" aria-labelledby="confirmarHabilitarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title" id="confirmarHabilitarLabel"><i class="bi bi-exclamation-triangle"></i>  Aviso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de habilitar la receta <strong id="modalNombreReceta"></strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <a href="#" id="btnHabilitarReceta" class="btn btn-danger">Sí, habilitar</a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+{% endblock %}

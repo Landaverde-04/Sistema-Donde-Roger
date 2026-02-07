@@ -1,0 +1,107 @@
+/* Contenedor tipo tarjeta centrado */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background: #f5f5f5;
+}
+
+.container-pdf {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #0003;
+    width: 100%;
+    max-width: 900px;
+}
+
+/* Título centrado */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Encabezado */
+.header-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+.header-table td {
+    vertical-align: top;
+    padding: 5px 10px;
+}
+.header-left {
+    width: 50%;
+}
+.header-right {
+    width: 50%;
+    text-align: right;
+}
+
+/* Tabla de productos */
+table.productos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+table.productos th, table.productos td {
+    border: 1px solid #333;
+    padding: 8px;
+    text-align: left;
+}
+table.productos th {
+    background-color: #f2f2f2;
+}
+
+/* Total */
+.total-box {
+    margin-top: 10px;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* Botones */
+form {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+form .btn {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .header-left, .header-right {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 10px;
+    }
+    form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    form .btn {
+        width: 100%;
+    }
+}

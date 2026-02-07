@@ -1,0 +1,106 @@
+{% extends "navegacion.html" %}
+
+{% block title %}Nueva reservación de mesa{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+          <h4 class="mb-0">Nueva reservación de mesa</h4>
+        </div>
+
+        <div class="card-body">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} mt-2">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Nombre de contacto</label>
+                  {{ form.nombre_contacto }}
+                  <div class="text-danger small" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios" required>{{ form.nombre_contacto.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Teléfono</label>
+                  {{ form.telefono_contacto }}
+                  <div class="text" pattern="\d{4}-\d{4}" maxlength="9" format=  title="Solo números, máximo 10 dígitos" required>{{ form.telefono_contacto.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Mesa</label>
+                  {{ form.mesa }}
+                  <div class="text-danger small" pattern="[0-9]+" title="Solo números" required>{{ form.mesa.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Fecha y hora</label>
+                  {{ form.fecha_hora }}
+                  <div class="form-text">
+                    Selecciona fecha y hora de la reservación.
+                  </div>
+                  <div class="text-danger small" required>{{ form.fecha_hora.errors }}</div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="mb-3">
+                  <label class="form-label">Cantidad de personas</label>
+                  {{ form.cantidad_personas }}
+                  <div class="text-danger small" pattern="[0-9]+" maxlength="1" title="Solo números menores que 10" required>{{ form.cantidad_personas.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Tipo de reserva</label>
+                  {{ form.tipo_reserva }}
+                  <div class="text-danger small" >{{ form.tipo_reserva.errors }}</div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">Observaciones</label>
+                  {{ form.observaciones }}
+                  <div class="text-danger small">{{ form.observaciones.errors }}</div>
+                </div>
+
+                <div class="form-check mb-3">
+                  {{ form.confirmar_reserva_urgente }}
+                  <label class="form-check-label">
+                    {{ form.confirmar_reserva_urgente.label }}
+                  </label>
+                  <div class="text-danger small">{{ form.confirmar_reserva_urgente.errors }}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-3">
+              <a href="{% url 'listar_reservas_hoy' %}" class="btn btn-outline-secondary">
+                Volver
+              </a>
+              <button type="submit" class="btn btn-primary">
+                Guardar reservación
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

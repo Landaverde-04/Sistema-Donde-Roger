@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido de Cliente</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1cm;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 12px;
+            color: #333;
+        }
+        .header-table {
+            width: 100%;
+            margin-bottom: 10px;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+            padding: 5px;
+        }
+        .header-left {
+            width: 30%;
+        }
+        .logo-container img {
+            width: 100px;
+            height: auto;
+        }
+        .header-right {
+            width: 70%;
+            text-align: right;
+        }
+        .document-title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+        }
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .info-table td {
+            vertical-align: top;
+            padding: 8px 15px;
+        }
+        .info-left {
+            width: 50%;
+            border-right: 1px solid #ddd;
+        }
+        .info-right {
+            width: 50%;
+            padding-left: 20px;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #555;
+            display: inline-block;
+            min-width: 80px;
+        }
+        p {
+            margin: 5px 0;
+            line-height: 1.6;
+        }
+        table.productos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            border: 1px solid #333;
+        }
+        table.productos th, table.productos td {
+            border: 1px solid #333;
+            padding: 10px;
+            text-align: left;
+        }
+        table.productos th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+            color: #333;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .total-box {
+            margin-top: 15px;
+            text-align: right;
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+            padding: 10px;
+        }
+        .comentarios {
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-left: 3px solid #333;
+            background-color: #f5f5f5;
+        }
+        .comentarios strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado con logo y datos del restaurante -->
+    <table class="header-table">
+        <tr>
+            <td class="header-left">
+                <div class="logo-container">
+                    <img src="{{ logo_path }}" alt="Logo" width="100">
+                </div>
+            </td>
+            <td class="header-right">
+                <p><strong style="font-size: 14px;">Restaurante Donde Roger</strong></p>
+                <p><strong>Dirección:</strong> Av. Principal #123, Ciudad, País</p>
+                <p><strong>Teléfono:</strong> 7085-8927</p>
+                <p><strong>Correo:</strong> info@donderoger.com</p>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Título del documento -->
+    <div class="document-title">DETALLE DE PEDIDO</div>
+
+    <!-- Información del pedido y cliente -->
+    <table class="info-table">
+        <tr>
+            <td class="info-left">
+                <p><span class="info-label">Pedido Nº:</span> {{ pedido.numCorrelativo }}</p>
+                <p><span class="info-label">Fecha:</span> {{ pedido.fechaPedidoCliente }}</p>
+                <p><span class="info-label">Hora:</span> {{ pedido.horaPedidoCliente }}</p>
+                <p><span class="info-label">Tipo:</span> {{ pedido.tipoPedido.nombreTipoPedido }}</p>
+                
+                {% if pedido.tipoPedido.idTipoPedido == 1 and pedido.mesasPedido %}
+                <p><span class="info-label">Mesa:</span> {{ pedido.mesasPedido }}</p>
+                {% endif %}
+                
+                {% if pedido.tipoPedido.idTipoPedido == 2 and pedido.horaRecoger %}
+                <p><span class="info-label">Recoger el:</span> {{ pedido.horaRecoger|date:"d/m/Y H:i" }}</p>
+                {% endif %}
+                
+                {% if pedido.tipoPedido.idTipoPedido == 3 and pedido.direccionPedido %}
+                <p><span class="info-label">Dirección:</span> {{ pedido.direccionPedido }}</p>
+                {% endif %}
+            </td>
+            <td class="info-right">
+                {% if pedido.idCliente %}
+                <p><span class="info-label">Cliente:</span> {{ pedido.idCliente.nombreCliente }} {{ pedido.idCliente.apellidoCliente }}</p>
+                {% if pedido.idCliente.telefonoCliente %}
+                <p><span class="info-label">Teléfono:</span> {{ pedido.idCliente.telefonoCliente }}</p>
+                {% endif %}
+                {% elif pedido.encomendista %}
+                <p><span class="info-label">Encomendista:</span> {{ pedido.encomendista }}</p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <!-- Tabla de productos -->
+    <table class="productos">
+        <thead>
+            <tr>
+                <th style="width: 50%;">Producto</th>
+                <th style="width: 15%; text-align: center;">Cantidad</th>
+                <th style="width: 17%; text-align: right;">Precio Unit.</th>
+                <th style="width: 18%; text-align: right;">Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in detalles %}
+            <tr>
+                <td>{{ detalle.idProducto.nombreProductoMenu }}</td>
+                <td style="text-align: center;">{{ detalle.cantidadPedido }}</td>
+                <td style="text-align: right;">${{ detalle.idProducto.precioProductoMenu|floatformat:2 }}</td>
+                <td style="text-align: right;">${{ detalle.subtotalPedido|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="total-box">
+        TOTAL: ${{ pedido.totalPedido|floatformat:2 }}
+    </div>
+
+    {% if pedido.comentario %}
+    <div class="comentarios">
+        <strong>Comentarios:</strong> {{ pedido.comentario }}
+    </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,98 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+
+{% block title %}Crear Mesa{% endblock %}
+
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'CSS/listar_inventario.css' %}">
+</head>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger mt-2">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+
+            <!-- CARD -->
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Crear Nueva Mesa</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="numero" class="form-label fw-bold">Número de mesa</label>
+                            <input type="text" class="form-control" id="numero" name="numero" pattern="[0-9]+" maxlength="2" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="forma" class="form-label fw-bold">Forma de la mesa</label>
+                            <select class="form-select" id="forma" name="forma" required>
+                                <option value="CIRCULO">Círculo</option>
+                                <option value="RECTANGULO">Rectángulo</option>
+                                <option value="ROMBO">Rombo</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="estado" class="form-label fw-bold">Estado</label>
+                            <select class="form-select" id="estado" name="estado" required>
+                                <option value="libre">Libre</option>
+                                <option value="reserva">Reserva</option>
+                                <option value="ocupada">Ocupada</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="capacidad" class="form-label fw-bold">Capacidad</label>
+                            <input type="text" class="form-control" id="capacidad" placeholder="Capacidad menores a 10" pattern="[0-9]+" maxlength="1" name="capacidad" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="ubicacion" class="form-label fw-bold">Ubicación</label>
+                            <input type="text" class="form-control" id="ubicacion" name="ubicacion" required>
+                        </div>
+
+                        <div class="row">
+    <div class="col-md-6 mb-3">
+        <label for="fila" class="form-label fw-bold">Fila</label>
+        <input type="text" class="form-control" id="fila" name="fila" pattern="[1-7]+" maxlength="1" placeholder="Fila tiene que ser entre 1 y 7"  required>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="columna" class="form-label fw-bold">Columna</label>
+        <input type="text" class="form-control" id="columna" name="columna" pattern="[1-6]+" maxlength="1"  placeholder="Columna tiene que ser entre 1 y 6" required>
+    </div>
+</div>
+
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success px-5 py-2" style="border-radius:50px;">
+                                Crear Mesa
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

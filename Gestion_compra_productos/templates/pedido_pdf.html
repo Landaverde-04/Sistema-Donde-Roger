@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedido de Compra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            font-size: 12px;
+        }
+        .header-table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            vertical-align: top;
+        }
+        .header-left {
+            width: 50%;
+        }
+        .header-right {
+            width: 50%;
+            text-align: right;
+        }
+        table.productos {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table.productos th, table.productos td {
+            border: 1px solid #333;
+            padding: 5px;
+            text-align: left;
+        }
+        table.productos th {
+            background-color: #f2f2f2;
+        }
+        .total-box {
+            margin-top: 10px;
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Encabezado con tabla -->
+    <table class="header-table">
+        <tr>
+            <td class="header-left">
+                <p><strong>Proveedor:</strong> {{ pedido.proveedor.nombreEmpresa }}</p>
+                <p><strong>Encargado:</strong> {{ pedido.proveedor.nombreEncargado }} {{ pedido.proveedor.apellidoEncargado }}</p>
+                <p><strong>Correo:</strong> {{ pedido.proveedor.emailProveedor|default:"-" }}</p>
+                <p><strong>Teléfono:</strong> {{ pedido.proveedor.telProveedor|default:"-" }}</p>
+                <p><strong>Dirección:</strong> {{ pedido.proveedor.ubicacionProveedor|default:"-" }}</p>
+            </td>
+            <td class="header-right">
+                <p><strong>Restaurante Donde Roger</strong></p>
+                <p><strong>Dirección:</strong> Av. Principal #123, Ciudad, País</p>
+                <p><strong>Teléfono:</strong> 7085-8927</p>
+                <p><strong>Correo:</strong> info@donderoger.com</p>
+
+            </td>
+        </tr>
+    </table>
+
+    <!-- Tabla de productos -->
+    <table class="productos">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in pedido.detalles.all %}
+            <tr>
+                <td>{{ detalle.producto.nombreProductoProveedor }}</td>
+                <td>{{ detalle.cantidadPP }}</td>
+                <td>{{ detalle.producto.precioProductoProveedor|floatformat:2 }}</td>
+                <td>{{ detalle.subTotalPP|floatformat:2 }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if pedido.proveedor.tieneIva == True %}
+    <p><strong>IVA incluido en los precios.</strong></p>
+    {% endif %}
+    <div class="total-box">
+        Total: {{ pedido.totalPP|floatformat:2 }}
+    </div>
+</body>
+</html>

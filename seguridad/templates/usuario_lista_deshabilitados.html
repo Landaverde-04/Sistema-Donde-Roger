@@ -1,0 +1,140 @@
+{% extends 'navegacion.html' %}
+{% load static %}
+{% block content %}
+<head>
+<link rel="stylesheet" href="{% static 'CSS/listar_proveedores.css' %}" />
+<script src="{% static 'JS/usuario_lista.js' %}"></script>
+<title>Usuarios</title>
+</head>
+<div class="container mt-3">
+    <h2 class="mb-4">Lista de usuarios deshabilitados</h2>
+    <div class="div-table">
+    <table class="table table-striped w-85 mx-auto">
+        <thead>
+            <tr>
+                <th class="w-15">Usuario</th>
+                <th class="w-15">Empleado</th>
+                <th class="w-15">Correo</th>
+                <th class="w-7">Rol</th>
+                <th class="w-10">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% if usuarios_paginacion %}
+            {% for usuario in usuarios_paginacion %}
+                <tr>
+                    <td>{{ usuario.username }}</td>
+                    <td>{{ usuario.idEmpleado }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>
+                      {% for group in usuario.groups.all %}
+                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                    </td>
+                    <td>
+
+                      <button 
+                          type="button"
+                          class="btn btn-success"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modalEliminarUsuario"
+                          data-url="{% url 'habilitar_usuario' usuario.id %}"
+                          data-nombre="{{ usuario.username }}"
+                          >
+                        Habilitar
+                      </button>
+
+                    </td>
+                </tr>
+            {% endfor %}
+        {% else %}
+            <tr>
+                <td colspan="6" class="text-center">No hay usuarios registrados deshabilitados</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<!-- Modal de Éxito -->
+<div class="modal fade" id="mensajeModal" tabindex="-1" aria-labelledby="mensajeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-limon">
+        <h5 class="modal-title" id="mensajeModalLabel"><i class="bi bi-check-circle"></i> Registro satisfactorio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body" id="modalMensajeTexto">
+        Aquí va el mensaje
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Confirmación de Eliminación de Usuario -->
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1" aria-labelledby="modalEliminarUsuarioLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+     <form id="formEliminarUsuario" method="post" action="">
+  {% csrf_token %}
+  <div class="modal-header bg-danger text-white">
+    <h5 class="modal-title" id="modalEliminarUsuarioLabel">
+      <i class="bi bi-exclamation-octagon-fill me-2"></i>Confirmar habilitación
+    </h5>
+    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+  </div>
+  <div class="modal-body">
+    ¿Estás seguro que deseas habilitar al usuario <strong id="modalNombreUsuario"></strong>?
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+    <button type="submit" class="btn btn-success">Sí, Habilitar</button>
+  </div>
+</form>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  <input type="hidden" id="mensajeExito" value="{{ messages.0|escapejs }}">
+{% endif %}
+
+<nav aria-label="Paginación de usuarios">
+  <ul class="pagination justify-content-center">
+    {% if usuarios_paginacion.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1">Primera</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.previous_page_number }}">Anterior</a>
+      </li>
+    {% endif %}
+
+    {% for num in usuarios_paginacion.paginator.page_range %}
+      {% if usuarios_paginacion.number == num %}
+        <li class="page-item active">
+          <span class="page-link">{{ num }}</span>
+        </li>
+      {% elif num > usuarios_paginacion.number|add:'-3' and num < usuarios_paginacion.number|add:'3' %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+        </li>
+      {% endif %}
+    {% endfor %}
+
+    {% if usuarios_paginacion.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.next_page_number }}">Siguiente</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ usuarios_paginacion.paginator.num_pages }}">Última &raquo;</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+{% endblock %}

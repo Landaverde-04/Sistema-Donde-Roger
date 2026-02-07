@@ -1,0 +1,120 @@
+{% extends 'navegacion.html' %}
+{% block content %}
+<div class="container mt-3" style="max-width:900px">
+
+  <h3 class="mb-3">Registrar mantenimiento</h3>
+
+  <!-- Mensajes de éxito/error -->
+  {% if messages %}
+    {% for m in messages %}
+      <div class="alert alert-{{ m.tags|default:'info' }} alert-dismissible fade show">
+        {{ m }}
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- enctype obligatorio para imágenes -->
+  <form method="post" enctype="multipart/form-data" class="card card-body shadow-sm">
+    {% csrf_token %}
+    <div class="row g-3">
+
+      <!-- Maquinaria -->
+      <div class="col-md-6">
+        <label class="form-label">Maquinaria</label>
+        <select name="maquinaria" class="form-select" required>
+          <option value="" selected disabled>Seleccione...</option>
+          {% for m in maquinarias %}
+            <option value="{{ m.idMaquinaria }}"
+              {% if form.maquinaria == m.idMaquinaria|stringformat:"s" %}selected{% endif %}>
+              {{ m.nombreMaquinaria }} ({{ m.marcaMaquinaria }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Fecha -->
+      <div class="col-md-3">
+        <label class="form-label">Fecha</label>
+        <input
+          type="date"
+          name="fechaMantenimiento"
+          class="form-control"
+          value="{{ form.fechaMantenimiento }}"
+          required>
+      </div>
+
+      <!-- Correctivo -->
+      <div class="col-md-3 d-flex align-items-center">
+        <div class="form-check mt-4">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            name="esCorrectivo"
+            id="cbCorrectivo"
+            {% if form.esCorrectivo %}checked{% endif %}>
+          <label class="form-check-label" for="cbCorrectivo">Correctivo</label>
+        </div>
+      </div>
+
+      <!-- Técnico -->
+      <div class="col-md-6">
+        <label class="form-label">Técnico responsable</label>
+        <input
+          type="text"
+          name="nombreTecnico"
+          class="form-control"
+          value="{{ form.nombreTecnico }}"
+          required>
+      </div>
+
+      <!-- Observaciones -->
+      <div class="col-md-6">
+        <label class="form-label">Observaciones</label>
+        <textarea
+          name="observaciones"
+          rows="3"
+          class="form-control">{{ form.observaciones }}</textarea>
+      </div>
+
+      <!-- Fotos -->
+      <div class="col-md-4">
+        <label class="form-label">Foto antes</label>
+        <input
+          type="file"
+          name="fotoAntesURL"
+          class="form-control"
+          accept="image/png,image/jpeg">
+        <div class="form-text">Formatos permitidos: PNG o JPG</div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Foto después</label>
+        <input
+          type="file"
+          name="fotoDespuesURL"
+          class="form-control"
+          accept="image/png,image/jpeg">
+        <div class="form-text">Formatos permitidos: PNG o JPG</div>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Foto factura</label>
+        <input
+          type="file"
+          name="fotoFacturaURL"
+          class="form-control"
+          accept="image/png,image/jpeg">
+        <div class="form-text">Formatos permitidos: PNG o JPG</div>
+      </div>
+
+    </div>
+
+    <div class="mt-3 d-flex gap-2">
+      <button class="btn btn-primary" type="submit">Guardar</button>
+      <a class="btn btn-secondary" href="{% url 'lista_mantenimiento' %}">Cancelar</a>
+    </div>
+  </form>
+
+</div>
+{% endblock %}

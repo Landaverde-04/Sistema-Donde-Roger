@@ -1,0 +1,19 @@
+{% extends 'navegacion.html' %}
+{% block content %}
+<div class="container mt-3" style="max-width:680px">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">Detalle de maquinaria</div>
+    <div class="card-body">
+      <p><b>ID:</b> {{ maquinaria.idMaquinaria }}</p>
+      <p><b>Nombre:</b> {{ maquinaria.nombreMaquinaria }}</p>
+      <p><b>Marca:</b> {{ maquinaria.marcaMaquinaria }}</p>
+      <p><b>Fecha de compra:</b> {{ maquinaria.fechaCompraMaquinaria|date:"d/m/Y" }}</p>
+      <div class="d-flex gap-2">
+        <a class="btn btn-secondary" href="{% url 'lista_maquinaria' %}">Atrás</a>
+        <a class="btn btn-success" href="{% url 'modificar_maquinaria' maquinaria.idMaquinaria %}">Editar</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

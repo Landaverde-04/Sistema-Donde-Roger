@@ -11,6 +11,8 @@ urlpatterns = [
     path('eliminar_empleado/<str:idEmpleado>/', views.eliminar_empleado, name='eliminar_empleado'),
     path('marcar_asistencia/', views.marcar_asistencia, name='marcar_asistencia'),
     path('historial_asistencia/', views.historial_asistencia, name='historial_asistencia'),
+    path('empleado_lista_deshabilitados/', views.empleado_lista_deshabilitados, name='empleado_lista_deshabilitados'),
+    path('habilitar_empleado/<str:idEmpleado>/', views.habilitar_empleado, name='habilitar_empleado')
 ]
 
 
